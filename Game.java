@@ -1,7 +1,5 @@
 import java.util.Random;
 
-import javax.print.attribute.standard.NumberOfDocuments;
-
 /**
  * Defines the central game model for the Top Trumps card game implementation
  * Initialises the Players and Decks then runs the main game logic responding to
@@ -126,9 +124,10 @@ public class Game {
 	 * Transfers all players' cards in play into the communal pile
 	 */
 	private void roundDraw() {
+		draws++;
 		for(int i = 0; i <= numOfCompPlayers; i++) {
 			if(player[i].getDeck().hasCard()) {						//**** Relies on an external unimplemented or changeable design
-				player[i].getDeck().transferCardTo(communalPile());			//**** Relies on an external unimplemented or changeable design
+				player[i].getDeck().transferCardTo(communalPile);			//**** Relies on an external unimplemented or changeable design
 			}
 		}
 	}
@@ -143,6 +142,8 @@ public class Game {
 			currentPlayer = roundWinner;
 		}
 
+		currentPlayer.winRound();										//**** Relies on an external unimplemented or changeable design
+		
 		// Transfer cards in communal pile
 		while(communalPile.hasCard()) {									//**** Relies on an external unimplemented or changeable design
 			communalPile.transferCardTo(currentPlayer.getDeck());		//**** Relies on an external unimplemented or changeable design
