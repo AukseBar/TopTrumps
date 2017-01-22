@@ -95,9 +95,9 @@ public class Game {
 		// Iterate through each player that has a card; compare values, store highest, record any draw
 		for(int i = 0; i <= numOfCompPlayers; i++) {
 
-			if(player[i] != currentPlayer && player[i].hasCard()) {
+			if(player[i] != currentPlayer && player[i].getDeck().hasCard()) {		//**** Relies on an external unimplemented or changeable design
 
-				comparedPlayerValue = player[i].getDeck().getTopCard().getCategoryValue(chosenCategory);
+				comparedPlayerValue = player[i].getDeck().getTopCard().getCategoryValue(chosenCategory);		//**** Relies on an external unimplemented or changeable design
 
 				if(comparedPlayerValue > highestValue) {
 					highestValue = comparedPlayerValue;
@@ -107,7 +107,7 @@ public class Game {
 					drawValue = highestValue;
 				}
 				else {
-					continue;	// Else compared value is < highest value so continue loop
+					continue;	// Compared value is < highest value
 				}
 
 			}
@@ -122,27 +122,56 @@ public class Game {
 		}
 	}
 
+	/**
+	 * Transfers all players' cards in play into the communal pile
+	 */
 	private void roundDraw() {
-
+		for(int i = 0; i <= numOfCompPlayers; i++) {
+			if(player[i].getDeck().hasCard()) {						//**** Relies on an external unimplemented or changeable design
+				player[i].getDeck().transferCardTo(communalPile());			//**** Relies on an external unimplemented or changeable design
+			}
+		}
 	}
 	
 	/**
-	 * NOT FINISHED
-	 * @param roundWinner
+	 * Sets the currentPlayer to the roundWinner and transfers to them any cards in the communal pile from previous draws and cards
+	 * played in the previous round. Checks to see if the roundWinner has won the game.
+	 * @param roundWinner the winning player of the round
 	 */
 	private void roundWon(Player roundWinner) {
 		if(roundWinner != currentPlayer) {
 			currentPlayer = roundWinner;
-			// Give new currentPlayer everyone's top card (including their own as it goes to bottom)
 		}
-		else {
-			// Check if game has been won
-			// Else give currentplayer everyone's top card incl their own
+
+		// Transfer cards in communal pile
+		while(communalPile.hasCard()) {									//**** Relies on an external unimplemented or changeable design
+			communalPile.transferCardTo(currentPlayer.getDeck());		//**** Relies on an external unimplemented or changeable design
+		}
+		
+		// Give currentPlayer everyone's played card (including their own as it goes to bottom) & check for winner
+		boolean gameWon = true;
+		for(int i = 0; i <= numOfCompPlayers; i++) {
+			if(player[i].getDeck().hasCard()) {						//**** Relies on an external unimplemented or changeable design
+				player[i].getDeck().transferCardTo(currentPlayer.getDeck());			//**** Relies on an external unimplemented or changeable design
+				
+				// Does at least one other player have a card left after transfer
+				if(player[i] != currentPlayer && player[i].getDeck().hasCard()) {		//**** Relies on an external unimplemented or changeable design
+					gameWon = false;
+				}
+			}
+		}
+		
+		// True when only currentPlayer has cards so they have won the game
+		if(gameWon) {
+			endGame();
 		}
 	}
 
+	/**
+	 * Is this needed?
+	 */
 	private void endGame() {
-
+		
 	}
 
 	public boolean isGameInProgress() {
