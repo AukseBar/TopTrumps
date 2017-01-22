@@ -56,7 +56,7 @@ public class Game {
 	 * Iterates through each player dealing them the next top card from the deck until there are no cards left */
 	private void initPlayerDecks() {
 		mainDeck.shuffleDeck();
-		for(int i = 0, j = 0; i < mainDeck.getSize(); i++) {				//**** Relies on an external unimplemented or changeable design 
+		for(int i = 0, j = 0; i < mainDeck.getLength(); i++) {				//**** Relies on an external unimplemented or changeable design 
 			player[j].getDeck().addCard(mainDeck.getNextCard());			//**** Relies on an external unimplemented or changeable design 
 			if(j <= numOfCompPlayers) {
 				j++;
@@ -69,44 +69,56 @@ public class Game {
 
 	/**
 	 * Begins the next round; if currentPlayer is human it will wait for input, otherwise it will call for the computer 
-	 * player to choose a category then initiate the comparison between players  */
+	 * player to choose a category then initiate the comparison between players */
 	private void nextRound() {
 		totalRounds++;
-		if(!currentPlayer.isHuman()) {			//**** Relies on an external unimplemented or changeable design
-			calculateRoundResult(currentPlayer.chooseCategory());		// If currentPlayer is computer		//**** Relies on an external unimplemented or changeable design
-		}
-		else {
-			// Do nothing, wait for human player to confirm choice and thereby activate calculateRoundResult() directly
+		
+		switch(currentPlayer.isHuman()) {			//**** Relies on an external unimplemented or changeable design
+			case true: break;				// Wait for human player to confirm choice and advance to calculateRoundResult() directly
+			case false: calculateRoundResult(currentPlayer.chooseCategory());		// Computer chooses category and advance to calculateRoundResult()
 		}
 	}
 
 	/**
-	 * NOT FINISHED */
+	 * Finds the player with the highest value in the chosen category then advances to roundWon(), or roundDraw() if multiple highest values
+	 * @param chosenCategory an int which represents the array position of the chosen category on the card instance */
 	private void calculateRoundResult(int chosenCategory) {
 
-		int roundWinner = 0;		// Be optimistic, assume human player will win most of time
-		int highestValue = player[0].getDeck.getTopCard().getCategoryValue(chosenCategory);		//**** Relies on an external unimplemented or changeable design
+		// Assume current player will win most of the time
+		// Specification does not require to check if they are out of cards due to multiple consecutive draws
+		Player roundWinner = currentPlayer;
+		int highestValue = roundWinner.getDeck().getTopCard().getCategoryValue(chosenCategory);		//**** Relies on an external unimplemented or changeable design
+
 		int comparedPlayerValue;
 		int drawValue = 0;
 		
-		for(int i = 1; i <= numOfCompPlayers; i++) {
-			comparedPlayerValue = player[i].getDeck.getTopCard().getCategoryValue(chosenCategory);
+		// Iterate through each player that has a card; compare values, store highest, record any draw
+		for(int i = 0; i <= numOfCompPlayers; i++) {
 
-			if(comparedPlayerValue > highestValue) {
-				highestValue = comparedPlayerValue;
-				roundWinner = i;
+			if(player[i] != currentPlayer && player[i].hasCard()) {
+
+				comparedPlayerValue = player[i].getDeck().getTopCard().getCategoryValue(chosenCategory);
+
+				if(comparedPlayerValue > highestValue) {
+					highestValue = comparedPlayerValue;
+					roundWinner = player[i];
+				}
+				else if(comparedPlayerValue == highestValue) {
+					drawValue = highestValue;
+				}
+				else {
+					continue;	// Else compared value is < highest value so continue loop
+				}
+
 			}
-			else if(comparedPlayerValue == highestValue) {
-				drawValue = highestValue;
-			}
-			// Else compared value is < highest value so continue loop
 		}
-		
+
+		// Work out round result
 		if(highestValue == drawValue) {
 			roundDraw();
 		}
 		else {
-			roundWon(player[roundWinner]);
+			roundWon(roundWinner);
 		}
 	}
 
@@ -116,15 +128,16 @@ public class Game {
 	
 	/**
 	 * NOT FINISHED
-	 * @param winner
+	 * @param roundWinner
 	 */
-	private void roundWon(Player winner) {
-		if(winner != currentPlayer) {
-			currentPlayer = winner;
+	private void roundWon(Player roundWinner) {
+		if(roundWinner != currentPlayer) {
+			currentPlayer = roundWinner;
 			// Give new currentPlayer everyone's top card (including their own as it goes to bottom)
 		}
 		else {
 			// Check if game has been won
+			// Else give currentplayer everyone's top card incl their own
 		}
 	}
 
@@ -132,7 +145,7 @@ public class Game {
 
 	}
 
-	public boolean gameInProgress() {
+	public boolean isGameInProgress() {
 		return gameInProgress;
 	}
 
