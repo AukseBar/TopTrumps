@@ -21,6 +21,11 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+// for deck:
+import java.io.FileReader;
+import java.util.Scanner;
+
 import javax.swing.JRadioButton;
 import java.awt.FlowLayout;
 // @ TODO use * to shorten imports
@@ -41,6 +46,9 @@ public class GUI extends JFrame implements ActionListener {
 	//private JLabel label;
 	private ButtonGroup group;
 
+	//for deck
+	private Deck gameDeck;
+	private final int deckSize=40;
 
 	// @ TODO Add in all field declarations ie private...thingy and this.thingy
 	/**
@@ -260,9 +268,22 @@ public class GUI extends JFrame implements ActionListener {
 		
 	}
 	
-	public void initDeck(){
-			// This is for sorting the deck on app launch.. will be near the start of methods called.
-			
+	public void initDeck(){	
+		int deckSize=40;
+		Deck gameDeck=new Deck(); //create a deck
+		try{   					  //read file for card info
+			Scanner scanner = new Scanner(new FileReader("deck.txt"));
+			for (int i=0; i<deckSize+1; i++){
+					while (scanner.hasNextLine()){
+						if (i==0){}   // first line contains category names
+						// might want to work this first line into displaying category names in GUI
+						else{String info=scanner.nextLine();
+						     gameDeck.addCardToTop(info);}
+					}
+				}
+			scanner.close();
+		  }
+		catch(Exception e){}
 	}
 		
 	public void updatePlayerlist(){
