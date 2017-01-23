@@ -9,6 +9,7 @@ public class Deck {
 	private final int deckSize=40;
 	private Card[] mainDeck;
 	private int deckTopPointer; // points at the next available slot
+	private int dealPointer;
 	
 	public Deck(){
 		this.mainDeck= new Card[deckSize];
@@ -18,20 +19,30 @@ public class Deck {
 	/**
 	 * adds a card to the top of the deck array
 	 * @param String containing card info*/
-	public void addCard(String cardInfo){
-		if (deckTopPointer<40){    // make sure no more than 40 cards total
+	public void addCardToTop(String cardInfo){
+		//if (deckTopPointer<40){    // make sure no more than 40 cards total
 			Card newCard= new Card(cardInfo);
 			this.mainDeck[deckTopPointer]=newCard;
 			this.deckTopPointer++;
-		}
+		//}
 	}
 	
+	
+	//////////////// might not need this one, will possibly delete later
 	/**
 	 * adds a card to the top of the deck array
 	 * @param a Card object*/
-	public void addCard(Card cardIn){
+	public void addCardToTop(Card cardIn){
 		this.mainDeck[deckTopPointer]=cardIn;
 		this.deckTopPointer++;
+		System.out.println(deckTopPointer);
+	}
+	
+	/**
+	 * adds a card to the bottom of the deck
+	 * @param Card that is to be added*/
+	public void addCardToBottom(Card cardIn){
+		
 	}
 	
 	/**
@@ -50,24 +61,58 @@ public class Deck {
 	public void shuffleDeck(){
 		for (int i=0; i<deckSize-2;i++){
 			Random rNr= new Random();
-			int randomNr= i + rNr.nextInt((deckSize-i)+1);  // random needs to be between i and deckSize
+			int randomNr= i + rNr.nextInt((deckSize-i));  // random needs to be between i and deckSize
 			
 			Card temporal= mainDeck[i];    // swap cards at positions [i] and [randomNr]
 			mainDeck[i]=mainDeck[randomNr];
 			mainDeck[randomNr]=temporal;	
 		}
+		dealPointer=deckTopPointer; //prepared to deal cards
+		System.out.println(deckTopPointer);
 	}
 	
 	/**
-	 * fetches the Card at the top of the deck array.
+	 * fetches the Card at the top of the deck array
+	 * and removes that card from the top of the array
 	 **/
-	public Card getTopCard(){	     //////// Game Mechanics dependent---- need to deal with end of deck? -reset deckTopPointer?
-		return mainDeck[deckTopPointer-1];
+	public Card getTopCard(){
+		Card returnThisOne= mainDeck[deckTopPointer-1];
+		removeCard();
+		return returnThisOne;
 	}
 	
 	
+	/**
+	 * method for dealing cards
+	 * returns one card at a time
+	 * leaves the original deck intact*/
+	public Card dealCard(){
+		Card returnThisOne= mainDeck[dealPointer-1]; 
+		dealPointer--;
+		return returnThisOne;
+	}
 	
-	///////////////////////////////////// for testing- return the slot of the TOP CARD !!
-	public int getDeckTop(){ return deckTopPointer-1;}
+	/**
+	 * returns the size of the deck,
+	 * that is, counts the non-null slots in the deck
+	 * returns an integer*/
+	public int getSize(){
+		int size=0;
+		for (int i=0; i<deckSize;i++){
+			if (!(mainDeck[i]==null))
+				size++;
+		}
+		return size;
+	}
+	
+	/**
+	 * checks if deck has any cards left
+	 * returns a boolean*/
+	public Boolean hasCard(){
+		if (getSize()==0)
+			return false;
+		else
+			return true;
+	}
 	
 }
