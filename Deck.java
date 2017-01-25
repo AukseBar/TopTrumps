@@ -42,7 +42,10 @@ public class Deck {
 	 * adds a card to the bottom of the deck
 	 * @param Card that is to be added*/
 	public void addCardToBottom(Card cardIn){
-		
+		for (int i=deckTopPointer-1; i==0; i--)
+			mainDeck[i+1]=mainDeck[i];
+		mainDeck[0]=cardIn;
+		deckTopPointer++;
 	}
 	
 	/**
