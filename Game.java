@@ -10,8 +10,15 @@ import java.util.Random;
 
 public class Game {
 
-	protected static final int HUMAN_PLAYER = 0;	// Human player is always first position in player array
-	private boolean gameInProgress = false;
+	// Human player is always first position in player array
+	protected static final int HUMAN_PLAYER = 0;
+	
+	// Static game states
+	protected static final int STATE_GAME_WON = 1;
+	protected static final int STATE_ROUND_WON = 2;
+	protected static final int STATE_ROUND_DRAW = 3;
+	
+	// Instance variables
 	private Deck communalPile = new Deck();
 	private Deck mainDeck;
 	private Player[] player;
@@ -23,7 +30,7 @@ public class Game {
 	/**
 	 * Constructor for a Game instance
 	 * @param mainDeck a Deck instance containing the full deck of cards as read in
-	 * from a seperate file */
+	 * from a separate file */
 	public Game(Deck mainDeck) {
 		this.mainDeck = mainDeck;
 	}
@@ -33,21 +40,18 @@ public class Game {
 	 * @param numOfCompPlayers the number of opponents chosen by the human player when they start the game */
 	private void startGame(int numOfCompPlayers) {
 		this.numOfCompPlayers = numOfCompPlayers;
-		gameInProgress = true;
 		totalRounds = 0;
 		draws = 0;
 		player = new Player[numOfCompPlayers + 1];
 		player[HUMAN_PLAYER].setHuman(true);		//**** Relies on an external unimplemented or changeable design
 		initPlayerDecks();
 		currentPlayer = player[randomiseFirstPlayer()];
-		nextRound();
 	}
 
 	/**
-	 * @Return a randomised int within the range of active players */
+	 * @return a randomised int within the range of active players */
 	private int randomiseFirstPlayer() {
-		Random r = new Random();
-		return r.nextInt(numOfCompPlayers + 1);
+		return new Random().nextInt(numOfCompPlayers + 1);
 	}
 
 	/**
@@ -55,7 +59,7 @@ public class Game {
 	private void initPlayerDecks() {
 		mainDeck.shuffleDeck();
 		for(int i = 0, j = 0; i < mainDeck.getLength(); i++) {				//**** Relies on an external unimplemented or changeable design 
-			player[j].getDeck().addCard(mainDeck.getNextCard());			//**** Relies on an external unimplemented or changeable design 
+			player[j].getDeck().addCard(mainDeck.dealCard());			//**** Relies on an external unimplemented or changeable design 
 			if(j <= numOfCompPlayers) {
 				j++;
 			}
@@ -66,27 +70,23 @@ public class Game {
 	}
 
 	/**
-	 * Begins the next round; if currentPlayer is human it will wait for input, otherwise it will call for the computer 
-	 * player to choose a category then initiate the comparison between players */
-	private void nextRound() {
+	 * Finds the player with the highest value in the category as chosen by the current player then advances to roundWon(),
+	 * or roundDraw() if there is more than one player sharing the same highest value
+	 * @param chosenCategory an int which represents the array position of the chosen category on the card instance 
+	 * @return the static Game.STATE_* at the end of the round */
+	private int calculateRoundResult(int chosenCategory) {
 		totalRounds++;
 		
-		switch(currentPlayer.isHuman()) {			//**** Relies on an external unimplemented or changeable design
-			case true: break;				// Wait for human player to confirm choice and advance to calculateRoundResult() directly
-			case false: calculateRoundResult(currentPlayer.chooseCategory());		// Computer chooses category and advance to calculateRoundResult()
+		// Computer player must choose a category if they are the current player
+		if(!currentPlayer.isHuman()) {
+			chosenCategory = currentPlayer.chooseCategory();
 		}
-	}
-
-	/**
-	 * Finds the player with the highest value in the chosen category then advances to roundWon(), or roundDraw() if multiple highest values
-	 * @param chosenCategory an int which represents the array position of the chosen category on the card instance */
-	private void calculateRoundResult(int chosenCategory) {
-
-		// Assume current player will win most of the time
+		
+		// Assume current player will win most of the time, so set initial highest value to their choice
 		// Specification does not require to check if they are out of cards due to multiple consecutive draws
+		int highestValue = currentPlayer.getDeck().getTopCard().getCategoryValue(chosenCategory);		//**** Relies on an external unimplemented or changeable design
 		Player roundWinner = currentPlayer;
-		int highestValue = roundWinner.getDeck().getTopCard().getCategoryValue(chosenCategory);		//**** Relies on an external unimplemented or changeable design
-
+		
 		int comparedPlayerValue;
 		int drawValue = 0;
 		
@@ -111,12 +111,17 @@ public class Game {
 			}
 		}
 
-		// Work out round result
+		// Work out round result and return as static game state
 		if(highestValue == drawValue) {
 			roundDraw();
+			return STATE_ROUND_DRAW;
 		}
 		else {
-			roundWon(roundWinner);
+			// roundWon() also returns whether the game has been won as well as the round
+			switch(roundWon(roundWinner)) {
+				case STATE_ROUND_WON: return STATE_ROUND_WON;
+				case STATE_GAME_WON: return STATE_GAME_WON;
+			}
 		}
 	}
 
@@ -137,12 +142,12 @@ public class Game {
 	 * played in the previous round. Checks to see if the roundWinner has won the game.
 	 * @param roundWinner the winning player of the round
 	 */
-	private void roundWon(Player roundWinner) {
+	private int roundWon(Player roundWinner) {
 		if(roundWinner != currentPlayer) {
 			currentPlayer = roundWinner;
 		}
 
-		currentPlayer.winRound();										//**** Relies on an external unimplemented or changeable design
+		currentPlayer.wonRound();										//**** Relies on an external unimplemented or changeable design
 		
 		// Transfer cards in communal pile
 		while(communalPile.hasCard()) {									//**** Relies on an external unimplemented or changeable design
@@ -155,31 +160,24 @@ public class Game {
 			if(player[i].getDeck().hasCard()) {						//**** Relies on an external unimplemented or changeable design
 				player[i].getDeck().transferCardTo(currentPlayer.getDeck());			//**** Relies on an external unimplemented or changeable design
 				
-				// Does at least one other player have a card left after transfer
+				// Does at least one player other than the current have a card left after transfer
 				if(player[i] != currentPlayer && player[i].getDeck().hasCard()) {		//**** Relies on an external unimplemented or changeable design
-					gameWon = false;
+					gameWon = false;		// Thus gameWon will only stay true if no one except current player has cards left
 				}
 			}
 		}
 		
-		// True when only currentPlayer has cards so they have won the game
+		// Return end result of round
 		if(gameWon) {
-			endGame();
+			return STATE_GAME_WON;
 		}
-	}
-
-	/**
-	 * Is this needed?
-	 */
-	private void endGame() {
-		
-	}
-
-	public boolean isGameInProgress() {
-		return gameInProgress;
+		else {
+			return STATE_ROUND_WON;
+		}
 	}
 
 	public Player getCurrentPlayer() {
 		return currentPlayer;
 	}
+
 }
