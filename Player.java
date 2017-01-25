@@ -50,10 +50,15 @@ public class Player extends JFrame {   /* extend JFrame due to button pressed fo
 		
 	}
 	
-	private void getDeck(){
+	public getDeck(){  /* Method gets deck for each individual player. Makes Player & Deck completely dependent.
+					*/
+	
 		
 	}
 	
+	private void transferCard(){   /* Method transfers cards between players/communal deck upon rounds being completed. */
+		
+	}
 	
 	
 	/* Returns int of roundsWon */
