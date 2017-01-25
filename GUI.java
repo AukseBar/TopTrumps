@@ -88,12 +88,12 @@ public class GUI extends JFrame implements ActionListener {
 		this.lblNumberOfCpu = new JLabel("CPU Players:");
 		panel_top.add(lblNumberOfCpu);
 		
-		this.comboBoxPlayers = new JComboBox();
+		String [] NoOfPlayers = { "1", "2", "3", "4"};
+		
+		this.comboBoxPlayers = new JComboBox(NoOfPlayers);
+
 		//TEST DATA FOR CPU PLAYER NUMBERS NEEDS ALTERED////
-		this.comboBoxPlayers.addItem(new String("1"));
-		this.comboBoxPlayers.addItem(new String("2"));
-		this.comboBoxPlayers.addItem(new String("3"));
-		this.comboBoxPlayers.addItem(new String("4"));
+	
 		///////////////////////////////
 		panel_top.add(comboBoxPlayers);
 		
