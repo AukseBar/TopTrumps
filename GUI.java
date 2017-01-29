@@ -13,7 +13,7 @@ public class GUI extends JFrame implements ActionListener {
 	private JButton btnNewGame,btnPlayCard,btnViewStats,btnSaveStats;
 	private JTextArea areaCurrentStats,areaGameMessages;
 	private JComboBox comboBoxPlayers;
-	private JLabel lblNumberOfCpu,lblCurrentPlayers,lblBlank;
+	private JLabel lblNumberOfCpu,lblCurrentPlayers,lblName;
 	private JRadioButton radioButton_1, radioButton_2, radioButton_3, radioButton_4, radioButton_5;
 	private JTextField tfAttrib1,tfAttrib2,tfAttrib3,tfAttrib4,tfAttrib5,tfAttrib6;
 	private ButtonGroup radiogroup;
@@ -112,15 +112,51 @@ public class GUI extends JFrame implements ActionListener {
 		subpanel_show_attributes.setLayout(new GridLayout(0,1,0,0));
 		panel_middle.add(subpanel_show_attributes);
 		
-		this.lblBlank = new JLabel("Name:    ");
-		lblBlank.setHorizontalAlignment(SwingConstants.RIGHT);
-		
-		
+		this.lblName = new JLabel("Name:    ");
+		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
 		this.radioButton_1 = new JRadioButton("Height");
 		this.radioButton_2 = new JRadioButton("Weight");
 		this.radioButton_3 = new JRadioButton("Length");
 		this.radioButton_4 = new JRadioButton("Ferocity");
 		this.radioButton_5 = new JRadioButton("Intelligence");
+		
+		String name = "";
+		String cat1 = "";
+		String cat2 = "";
+		String cat3 = "";
+		String cat4 = "";
+		String cat5 = "";
+		
+		try{   					  //read file for CATEGORY INFO
+			Scanner sc = new Scanner(new FileReader("deck.txt"));
+			while (sc.hasNext())
+		      {				
+				name = sc.next();
+				cat1 = sc.next();
+				cat2 = sc.next();
+				cat3 = sc.next();
+				cat4 = sc.next();
+				cat5 = sc.next();		        
+		        // Close IMMEDIATELY AFTER READING FIRST LINE
+		        sc.close();
+		      }
+			
+		}
+		catch(Exception e){}
+		
+		name = name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase(); // maybe + ": "
+		cat1 = cat1.substring(0,1).toUpperCase() + cat1.substring(1).toLowerCase();
+		cat2 = cat2.substring(0,1).toUpperCase() + cat2.substring(1).toLowerCase();
+		cat3 = cat3.substring(0,1).toUpperCase() + cat3.substring(1).toLowerCase();
+		cat4 = cat4.substring(0,1).toUpperCase() + cat4.substring(1).toLowerCase();
+		cat5 = cat5.substring(0,1).toUpperCase() + cat5.substring(1).toLowerCase();
+		
+		this.lblName.setText(name);
+		this.radioButton_1.setText(cat1);
+        this.radioButton_2.setText(cat2);
+        this.radioButton_3.setText(cat3);
+        this.radioButton_4.setText(cat4);
+        this.radioButton_5.setText(cat5);
 		
 		radioButton_1.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		radioButton_2.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -135,7 +171,7 @@ public class GUI extends JFrame implements ActionListener {
 		radioButton_5.setBackground(new Color(134, 199, 156));
 		
 		// Add all in order
-		subpanel_show_attributes.add(lblBlank);
+		subpanel_show_attributes.add(lblName);
 		subpanel_show_attributes.add(radioButton_1);
 		subpanel_show_attributes.add(radioButton_2);
 		subpanel_show_attributes.add(radioButton_3);
@@ -150,11 +186,11 @@ public class GUI extends JFrame implements ActionListener {
 		radiogroup.add(radioButton_5);
 		
 		// TESTING BUTTON ACTIONS
-		this.radioButton_1.setActionCommand("Height");
-		this.radioButton_2.setActionCommand("Weight");
-		this.radioButton_3.setActionCommand("Length");
-		this.radioButton_4.setActionCommand("Ferocity");
-		this.radioButton_5.setActionCommand("Intelligence");
+		this.radioButton_1.setActionCommand(cat1);
+		this.radioButton_2.setActionCommand(cat2);
+		this.radioButton_3.setActionCommand(cat3);
+		this.radioButton_4.setActionCommand(cat4);
+		this.radioButton_5.setActionCommand(cat5);
 		/////////////////////////////////////////////////
 		
 		
