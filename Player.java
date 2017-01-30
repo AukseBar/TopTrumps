@@ -17,102 +17,47 @@ import javax.swing.JFrame;
  *  all players afterwards are computer players.*/
 
 
-
 public class Player {
-	
-	// Hplayer is always first position (0) in player array.
-		protected static final int HUMAN_PLAYER = 0;
-		
-		private int numOfCompPlayers;
-		private String hCategory;
-		private String cCategory;
-		boolean human = false;
-		private int roundsWon;
-		private Deck playerHand = new Deck();
-		private Player[] players;
-		
-		
-	public boolean isHuman(int numOfCompPlayers){
-		
-	int[] players = {numOfCompPlayers + 1};
-	
-		if (players[HUMAN_PLAYER]{
-		
-		boolean human = true;
-		return human;
-		}
+
+	private Deck playerHand;
+	boolean human = false;
+	private int roundsWon;
+
+
+	public Player() {
+		playerHand = new Deck();
 	}
 
-	
-	
-	public void chooseHcategory(){ // Separate category for human player.
-		
-		GUI frame = new GUI();
-			
-			if (GUI.radioButton_0.getAction() != null){  //Selects radio button value if not null.
-				String hCategory = GUI.radioButton_0.getText();	
-			}
-			else if (GUI.getRadioButton_1().getAction() != null){
-				String hCategory = GUI.radioButton_1.getText();
-			}
-			else if (GUI.getRadioButton_2().getAction() != null){
-				String hCategory = GUI.getRadioButton_2().getText();
-			}
-			else if (GUI.getRadioButton_3().getAction() != null){
-				String hCategory = GUI.getRadioButton_3().getText();
-			}
-			else if (GUI.getRadioButton_4().getAction() != null){
-				String hCategory = GUI.getRadioButton_4().getText();
-			}
-	}
+	public int chooseCategory(){  //selects category for computer player
 
-	
-	public int chooseCcategory(){  //selects category for computer player
-		
-		Card cards = new Card(cCategory);
-		
-		//Card returnThisOne; Select top card instead? 
-		
 		int compCategory  = Math.max(cards.getCategoryValue(Card.attrib1), cards.getCategoryValue(Card.attrib2), cards.getCategoryValue(Card.attrib3), cards.getCategoryValue(Card.attrib4), cards.getCategoryValue(Card.attrib5));
 		// Math.max selects highest value. 
-		
-		return compCategory;
+
+		return compCategory;		//****** This would return the highest value, what is actually wanted to be returned though is the attribute number (1-5) that this value belongs to
+	}
+
+	public void transferCardTo(Deck deck) {   // Method transfers cards from this deck to players' decks/communal deck upon rounds being completed. 
+
+		// get top card and transfer to the bottom of the deck passed as the argument
+	}
+
+	public void wonRound() {
+		//
+	}
+	
+	public int getRoundsWon() {
+		return roundsWon;
+	}
+
+	public Deck getDeck(){   // Makes Player & Deck completely dependent.
+		return playerHand;
+	}
+
+	public boolean isHuman(){
+		return human;
 	}
 
 	public void setHuman(boolean b) {
-		// TODO Auto-generated method stub
-		// game class refers to 'setHuman'
-	}
-	
-	public void getDeck(int numOfCompPlayers){   // Makes Player & Deck completely dependent.
-					
-		for (players[numOfCompPlayers + 1]){
-			
-			Deck hand = new Deck();  
-			// then split deck.
-		}
-		
-	}
-	
-	private void transferCard(){   // Method transfers cards between players/communal deck upon rounds being completed. 
-		
-		// get top card from non-round winners, transfer to round winner.
-		
-			
-	}
-	
-
-	
-	public int getRoundsWon() {
-		
-		
-		if (players[HUMAN_PLAYER] = Game.getRoundWinner){  //Relies on external class/method 
-		
-		this.roundsWon++;  //increments roundsWon 
-		}
-		return roundsWon;
+		human = b;
 	}
 }
-
-/*}
-*/

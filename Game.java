@@ -29,8 +29,7 @@ public class Game {
 
 	/**
 	 * Constructor for a Game instance
-	 * @param mainDeck a Deck instance containing the full deck of cards as read in
-	 * from a separate file */
+	 * @param mainDeck a Deck instance containing the full deck of cards as read in from a separate file */
 	public Game(Deck mainDeck) {
 		this.mainDeck = mainDeck;
 	}
@@ -43,7 +42,6 @@ public class Game {
 		totalRounds = 0;
 		draws = 0;
 		player = new Player[numOfCompPlayers + 1];
-		player[HUMAN_PLAYER].setHuman(true);		//**** Relies on an external unimplemented or changeable design
 		initPlayerDecks();
 		currentPlayer = player[randomiseFirstPlayer()];
 	}
@@ -58,8 +56,8 @@ public class Game {
 	 * Iterates through each player dealing them the next top card from the deck until there are no cards left */
 	private void initPlayerDecks() {
 		mainDeck.shuffleDeck();
-		for(int i = 0, j = 0; i < mainDeck.getLength(); i++) {				//**** Relies on an external unimplemented or changeable design 
-			player[j].getDeck().addCard(mainDeck.dealCard());			//**** Relies on an external unimplemented or changeable design 
+		for(int i = 0, j = 0; i < mainDeck.getSize(); i++) {
+			player[j].getDeck().addCardToTop(mainDeck.dealCard());
 			if(j <= numOfCompPlayers) {
 				j++;
 			}
@@ -73,18 +71,18 @@ public class Game {
 	 * Finds the player with the highest value in the category as chosen by the current player then advances to roundWon(),
 	 * or roundDraw() if there is more than one player sharing the same highest value
 	 * @param chosenCategory an int which represents the array position of the chosen category on the card instance 
-	 * @return the static Game.STATE_* at the end of the round */
-	private int calculateRoundResult(int chosenCategory) {
+	 * @return the game's state at the end of the round as a static int value defined within the Game class */
+	protected int calculateRoundResult(int chosenCategory) {
 		totalRounds++;
 		
 		// Computer player must choose a category if they are the current player
-		if(!currentPlayer.isHuman()) {
+		if(currentPlayer != player[HUMAN_PLAYER]) {
 			chosenCategory = currentPlayer.chooseCategory();
 		}
 		
 		// Assume current player will win most of the time, so set initial highest value to their choice
 		// Specification does not require to check if they are out of cards due to multiple consecutive draws
-		int highestValue = currentPlayer.getDeck().getTopCard().getCategoryValue(chosenCategory);		//**** Relies on an external unimplemented or changeable design
+		int highestValue = currentPlayer.getDeck().getTopCard().getCategoryValue(chosenCategory);
 		Player roundWinner = currentPlayer;
 		
 		int comparedPlayerValue;
@@ -93,9 +91,9 @@ public class Game {
 		// Iterate through each player that has a card; compare values, store highest, record any draw
 		for(int i = 0; i <= numOfCompPlayers; i++) {
 
-			if(player[i] != currentPlayer && player[i].getDeck().hasCard()) {		//**** Relies on an external unimplemented or changeable design
+			if(player[i] != currentPlayer && player[i].getDeck().hasCard()) {
 
-				comparedPlayerValue = player[i].getDeck().getTopCard().getCategoryValue(chosenCategory);		//**** Relies on an external unimplemented or changeable design
+				comparedPlayerValue = player[i].getDeck().getTopCard().getCategoryValue(chosenCategory);
 
 				if(comparedPlayerValue > highestValue) {
 					highestValue = comparedPlayerValue;
@@ -117,22 +115,24 @@ public class Game {
 			return STATE_ROUND_DRAW;
 		}
 		else {
-			// roundWon() also returns whether the game has been won as well as the round
-			switch(roundWon(roundWinner)) {
-				case STATE_ROUND_WON: return STATE_ROUND_WON;
-				case STATE_GAME_WON: return STATE_GAME_WON;
+			// roundWon() also returns whether the game has been won in addition to the round
+			if(roundWon(roundWinner) == STATE_ROUND_WON) {
+				return STATE_ROUND_WON;
+			}
+			else {
+				return STATE_GAME_WON;
 			}
 		}
 	}
 
 	/**
-	 * Transfers all players' cards in play into the communal pile
+	 * Transfers the top cards from all players participating in the round into the communal pile
 	 */
 	private void roundDraw() {
 		draws++;
 		for(int i = 0; i <= numOfCompPlayers; i++) {
-			if(player[i].getDeck().hasCard()) {						//**** Relies on an external unimplemented or changeable design
-				player[i].getDeck().transferCardTo(communalPile);			//**** Relies on an external unimplemented or changeable design
+			if(player[i].getDeck().hasCard()) {
+				player[i].transferCardTo(communalPile);
 			}
 		}
 	}
@@ -147,21 +147,21 @@ public class Game {
 			currentPlayer = roundWinner;
 		}
 
-		currentPlayer.wonRound();										//**** Relies on an external unimplemented or changeable design
+		currentPlayer.wonRound();
 		
 		// Transfer cards in communal pile
-		while(communalPile.hasCard()) {									//**** Relies on an external unimplemented or changeable design
-			communalPile.transferCardTo(currentPlayer.getDeck());		//**** Relies on an external unimplemented or changeable design
+		while(communalPile.hasCard()) {
+			currentPlayer.getDeck().addCardToBottom(communalPile.getTopCard());			//**** Bit messy? Possibly needs a method written
 		}
 		
 		// Give currentPlayer everyone's played card (including their own as it goes to bottom) & check for winner
 		boolean gameWon = true;
 		for(int i = 0; i <= numOfCompPlayers; i++) {
-			if(player[i].getDeck().hasCard()) {						//**** Relies on an external unimplemented or changeable design
-				player[i].getDeck().transferCardTo(currentPlayer.getDeck());			//**** Relies on an external unimplemented or changeable design
+			if(player[i].getDeck().hasCard()) {
+				player[i].transferCardTo(currentPlayer.getDeck());
 				
 				// Does at least one player other than the current have a card left after transfer
-				if(player[i] != currentPlayer && player[i].getDeck().hasCard()) {		//**** Relies on an external unimplemented or changeable design
+				if(player[i] != currentPlayer && player[i].getDeck().hasCard()) {
 					gameWon = false;		// Thus gameWon will only stay true if no one except current player has cards left
 				}
 			}
@@ -180,4 +180,11 @@ public class Game {
 		return currentPlayer;
 	}
 
+	public int getTotalRounds() {
+		return totalRounds;
+	}
+
+	public int getDraws() {
+		return draws;
+	}
 }
