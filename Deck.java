@@ -84,6 +84,13 @@ public class Deck {
 		return returnThisOne;
 	}
 	
+	/**
+	 * fetches the Card at the top of the deck array
+	 * but does not remove that card from the top of the array
+	 **/
+	public Card seeTopCard(){
+		return mainDeck[deckTopPointer-1];
+	}
 	
 	/**
 	 * method for dealing cards
@@ -106,6 +113,9 @@ public class Deck {
 				size++;
 		}
 		return size;
+		
+		//alternatively:
+		//return topDeckPointer;
 	}
 	
 	/**
@@ -113,6 +123,8 @@ public class Deck {
 	 * returns a boolean*/
 	public Boolean hasCard(){
 		if (getSize()==0)
+			//alternatively:
+			// if (topDeckPointer==0)
 			return false;
 		else
 			return true;
