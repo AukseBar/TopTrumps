@@ -14,9 +14,9 @@ public class Card {
     	this.title=info[0];					    // title is the first word in the String
     	this.attrib1=Integer.parseInt(info[1]); // the next four chunks have attribute values
     	this.attrib2=Integer.parseInt(info[2]);
-    	this.attrib2=Integer.parseInt(info[3]);
-    	this.attrib2=Integer.parseInt(info[4]);
-    	this.attrib2=Integer.parseInt(info[5]);
+    	this.attrib3=Integer.parseInt(info[3]);
+    	this.attrib4=Integer.parseInt(info[4]);
+    	this.attrib5=Integer.parseInt(info[5]);
 	}
 	
 
