@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 //for deck:
 import java.io.FileReader;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class GUI extends JFrame implements ActionListener {
@@ -15,7 +16,7 @@ public class GUI extends JFrame implements ActionListener {
 	private JComboBox comboBoxPlayers;
 	private JLabel lblNumberOfCpu,lblCurrentPlayers,lblName;
 	private JRadioButton radioButton_1, radioButton_2, radioButton_3, radioButton_4, radioButton_5;
-	private JTextField tfAttrib1,tfAttrib2,tfAttrib3,tfAttrib4,tfAttrib5,tfAttrib6;
+	private JTextField tfName,tfAttrib1,tfAttrib2,tfAttrib3,tfAttrib4,tfAttrib5;
 	private ButtonGroup radiogroup;
 	
 	//for deck
@@ -39,9 +40,13 @@ public class GUI extends JFrame implements ActionListener {
 		
 		
 		// Construct the top, middle and bottom with some helpers:
+		
 		layoutTop();
 		layoutMiddle();
 		layoutBottom();
+		// At bottom as it changes values in middle layout
+		initDeck();
+		
 		
 	}
 	
@@ -112,51 +117,13 @@ public class GUI extends JFrame implements ActionListener {
 		subpanel_show_attributes.setLayout(new GridLayout(0,1,0,0));
 		panel_middle.add(subpanel_show_attributes);
 		
-		this.lblName = new JLabel("Name:    ");
+		this.lblName = new JLabel("*Name:    ");
 		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
-		this.radioButton_1 = new JRadioButton("Height");
-		this.radioButton_2 = new JRadioButton("Weight");
-		this.radioButton_3 = new JRadioButton("Length");
-		this.radioButton_4 = new JRadioButton("Ferocity");
-		this.radioButton_5 = new JRadioButton("Intelligence");
-		
-		String name = "";
-		String cat1 = "";
-		String cat2 = "";
-		String cat3 = "";
-		String cat4 = "";
-		String cat5 = "";
-		
-		try{   					  //read file for CATEGORY INFO
-			Scanner sc = new Scanner(new FileReader("deck.txt"));
-			while (sc.hasNext())
-		      {				
-				name = sc.next();
-				cat1 = sc.next();
-				cat2 = sc.next();
-				cat3 = sc.next();
-				cat4 = sc.next();
-				cat5 = sc.next();		        
-		        // Close IMMEDIATELY AFTER READING FIRST LINE
-		        sc.close();
-		      }
-			
-		}
-		catch(Exception e){}
-		
-		name = name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase(); // maybe + ": "
-		cat1 = cat1.substring(0,1).toUpperCase() + cat1.substring(1).toLowerCase();
-		cat2 = cat2.substring(0,1).toUpperCase() + cat2.substring(1).toLowerCase();
-		cat3 = cat3.substring(0,1).toUpperCase() + cat3.substring(1).toLowerCase();
-		cat4 = cat4.substring(0,1).toUpperCase() + cat4.substring(1).toLowerCase();
-		cat5 = cat5.substring(0,1).toUpperCase() + cat5.substring(1).toLowerCase();
-		
-		this.lblName.setText(name);
-		this.radioButton_1.setText(cat1);
-        this.radioButton_2.setText(cat2);
-        this.radioButton_3.setText(cat3);
-        this.radioButton_4.setText(cat4);
-        this.radioButton_5.setText(cat5);
+		this.radioButton_1 = new JRadioButton("*Height");
+		this.radioButton_2 = new JRadioButton("*Weight");
+		this.radioButton_3 = new JRadioButton("*Length");
+		this.radioButton_4 = new JRadioButton("*Ferocity");
+		this.radioButton_5 = new JRadioButton("*Intelligence");
 		
 		radioButton_1.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		radioButton_2.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -185,12 +152,7 @@ public class GUI extends JFrame implements ActionListener {
 		radiogroup.add(radioButton_4);
 		radiogroup.add(radioButton_5);
 		
-		// TESTING BUTTON ACTIONS
-		this.radioButton_1.setActionCommand(cat1);
-		this.radioButton_2.setActionCommand(cat2);
-		this.radioButton_3.setActionCommand(cat3);
-		this.radioButton_4.setActionCommand(cat4);
-		this.radioButton_5.setActionCommand(cat5);
+
 		/////////////////////////////////////////////////
 		
 		
@@ -200,33 +162,33 @@ public class GUI extends JFrame implements ActionListener {
 		subpanel_categories.setLayout(new GridLayout(0,1,0,0));
 		panel_middle.add(subpanel_categories);
 		
+		this.tfName = new JTextField();
 		this.tfAttrib1 = new JTextField();
 		this.tfAttrib2 = new JTextField();
 		this.tfAttrib3 = new JTextField();
 		this.tfAttrib4 = new JTextField();
 		this.tfAttrib5 = new JTextField();
-		this.tfAttrib6 = new JTextField();
 		// Makes it blend into background colour
+		tfName.setBorder(null);
 		tfAttrib1.setBorder(null);
 		tfAttrib2.setBorder(null);
 		tfAttrib3.setBorder(null);
 		tfAttrib4.setBorder(null);
 		tfAttrib5.setBorder(null);
-		tfAttrib6.setBorder(null);
 		// Set box colours
+		tfName.setBackground(new Color(134, 199, 156));
 		tfAttrib1.setBackground(new Color(134, 199, 156));
 		tfAttrib2.setBackground(new Color(134, 199, 156));
 		tfAttrib3.setBackground(new Color(134, 199, 156));
 		tfAttrib4.setBackground(new Color(134, 199, 156));
 		tfAttrib5.setBackground(new Color(134, 199, 156));
-		tfAttrib6.setBackground(new Color(134, 199, 156));
 		// Add all in order
+		subpanel_categories.add(tfName);
 		subpanel_categories.add(tfAttrib1);
 		subpanel_categories.add(tfAttrib2);
 		subpanel_categories.add(tfAttrib3);
 		subpanel_categories.add(tfAttrib4);
 		subpanel_categories.add(tfAttrib5);
-		subpanel_categories.add(tfAttrib6);
 		
 		
 		}
@@ -260,25 +222,73 @@ public class GUI extends JFrame implements ActionListener {
 	}
 	
 	public void initDeck(){	
-		int deckSize=40;
+		
 		Deck gameDeck=new Deck(); //create a deck
+		String name = "";
+		String cat1 = "";
+		String cat2 = "";
+		String cat3 = "";
+		String cat4 = "";
+		String cat5 = "";
+		
 		try{   					  //read file for card info
 			Scanner scanner = new Scanner(new FileReader("deck.txt"));
-			for (int i=0; i<deckSize+1; i++){
-					while (scanner.hasNextLine()){
-						if (i==0){}   // first line contains category names
-						// might want to work this first line into displaying category names in GUI
-						else{String info=scanner.nextLine();
-						     gameDeck.addCardToTop(info);}
-					}
-				}
-			scanner.close();
+//			for (int i=0; i<deckSize; i++){
+			//scanner.nextLine();
+			name = scanner.next();
+			cat1 = scanner.next();
+			cat2 = scanner.next();
+			cat3 = scanner.next();
+			cat4 = scanner.next();
+			cat5 = scanner.next();	
+			scanner.nextLine();
+			
+					while (scanner.hasNextLine())
+					{
+//						if (i==0){
+//							System.out.println(scanner.nextLine());
+//						}   // first line contains category names
+//						// might want to work this first line into displaying category names in GUI
+//						else{
+							///////READ THE REST AND MAKE A NEW CARD FOR EACH NEXTLINE\\\\\\\\\\\
+							String info=scanner.nextLine();
+						    gameDeck.addCardToTop(info);
+						    System.out.println(info);
+						 
+						}
+					scanner.close();
+					//Test that deck is filled to 40
+					System.err.println(gameDeck.getSize() + " cards added from file");
+					
+					
+					
 		  }
-		catch(Exception e){}
+		catch(Exception e){ e.printStackTrace();}
+		// Caps on first letter
+		name = name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase() + ":   ";
+		cat1 = cat1.substring(0,1).toUpperCase() + cat1.substring(1).toLowerCase();
+		cat2 = cat2.substring(0,1).toUpperCase() + cat2.substring(1).toLowerCase();
+		cat3 = cat3.substring(0,1).toUpperCase() + cat3.substring(1).toLowerCase();
+		cat4 = cat4.substring(0,1).toUpperCase() + cat4.substring(1).toLowerCase();
+		cat5 = cat5.substring(0,1).toUpperCase() + cat5.substring(1).toLowerCase();
+		// Setup descriptions
+		this.lblName.setText(name);
+		this.radioButton_1.setText(cat1);
+        this.radioButton_2.setText(cat2);
+        this.radioButton_3.setText(cat3);
+        this.radioButton_4.setText(cat4);
+        this.radioButton_5.setText(cat5);
+		// TESTING BUTTON ACTIONS
+		this.radioButton_1.setActionCommand(cat1);
+		this.radioButton_2.setActionCommand(cat2);
+		this.radioButton_3.setActionCommand(cat3);
+		this.radioButton_4.setActionCommand(cat4);
+		this.radioButton_5.setActionCommand(cat5);
+		
 	}
 		
 	public void updatePlayerlist(){
-			//What for again??
+			
 			
 	}
 	
