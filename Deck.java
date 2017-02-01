@@ -35,7 +35,7 @@ public class Deck {
 	public void addCardToTop(Card cardIn){
 		this.mainDeck[deckTopPointer]=cardIn;
 		this.deckTopPointer++;
-		System.out.println(deckTopPointer);
+		//System.out.println(deckTopPointer);
 	}
 	
 	/**

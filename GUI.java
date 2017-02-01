@@ -20,8 +20,9 @@ public class GUI extends JFrame implements ActionListener {
 	private ButtonGroup radiogroup;
 	
 	//for deck
-	private Deck gameDeck;
 	private final int deckSize=40;
+	
+	private Game game;
 	
 	/**
 	 * Create the frame.
@@ -45,9 +46,8 @@ public class GUI extends JFrame implements ActionListener {
 		layoutMiddle();
 		layoutBottom();
 		// At bottom as it changes values in middle layout
-		initDeck();
 		
-		
+		game = new Game(initDeck());
 	}
 	
 	public void layoutTop(){
@@ -151,7 +151,7 @@ public class GUI extends JFrame implements ActionListener {
 		radiogroup.add(radioButton_3);
 		radiogroup.add(radioButton_4);
 		radiogroup.add(radioButton_5);
-		
+		radioButton_1.setSelected(true);
 
 		/////////////////////////////////////////////////
 		
@@ -214,6 +214,7 @@ public class GUI extends JFrame implements ActionListener {
 		this.btnPlayCard = new JButton("Play Card!");
 		btnPlayCard.setPreferredSize(new Dimension(160, 50));
 		btnPlayCard.setBackground(new Color(134, 199, 156));
+		btnPlayCard.setEnabled(false);
 		panel_bottom.add(btnPlayCard);
 		
 		// Action listeners on the bottom
@@ -221,7 +222,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 	}
 	
-	public void initDeck(){	
+	public Deck initDeck(){	
 		
 		Deck gameDeck=new Deck(); //create a deck
 		String name = "";
@@ -285,6 +286,7 @@ public class GUI extends JFrame implements ActionListener {
 		this.radioButton_4.setActionCommand(cat4);
 		this.radioButton_5.setActionCommand(cat5);
 		
+		return gameDeck;
 	}
 		
 	public void updatePlayerlist(){
@@ -292,20 +294,66 @@ public class GUI extends JFrame implements ActionListener {
 			
 	}
 	
+	private void newGame() {
+		 game.startGame(comboBoxPlayers.getSelectedIndex()+1);			// ******** better way to do the drop box??
+		 tfName.setText(game.getCurrentPlayer().getDeck().seeTopCard().getTitle());
+		 tfAttrib1.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(1)));
+		 tfAttrib2.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(2)));
+		 tfAttrib3.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(3)));
+		 tfAttrib4.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(4)));
+		 tfAttrib5.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(5)));
+		 btnPlayCard.setEnabled(true);
+	}
+	
+	private void playCard() {
+		if(radioButton_1.isSelected()) {
+			switch(game.calculateRoundResult(1)) {
+			case 1: 
+			case 2: roundWon();
+			case 3: 
+			}
+		}
+		if(radioButton_2.isSelected()) {
+			game.calculateRoundResult(2);
+		}
+		if(radioButton_3.isSelected()) {
+			game.calculateRoundResult(3);
+		}
+		if(radioButton_4.isSelected()) {
+			game.calculateRoundResult(4);
+		}
+		if(radioButton_5.isSelected()) {
+			game.calculateRoundResult(5);
+		}
+//		
+//		for(int i = 1; i < 5; i++) {
+//			
+//		}
+	}
+	
+	private void roundWon() {
+		btnPlayCard.setEnabled(false);
+		//updateGameMessages
+		areaGameMessages.setText("You won the round with blah blah");
+		//updatePlayerlist();
+	}
+	
 	public void actionPerformed(ActionEvent ae)
-	  {
+	{
 	    if (ae.getSource() == this.btnNewGame) {
-	      System.out.println("You pressed New Game");
-	      
+	    	//System.out.println("You pressed New Game");
+	    	newGame();
+	    	
 	    } else if (ae.getSource() == this.btnPlayCard) {
 	    	
+	    	playCard();
 	    	
-	    	// TESTING FOR SELECTIoN OF A BUTTON
-	    	ButtonModel buttonModel = this.radiogroup.getSelection();
-	    	String actionCommand = buttonModel.getActionCommand();
-            System.out.println("Selected Button: " + actionCommand);
-            ////////////////////////////////////////////////
-	    	System.out.println("You pressed Play Card");
+//	    	// TESTING FOR SELECTIoN OF A BUTTON
+//	    	ButtonModel buttonModel = this.radiogroup.getSelection();
+//	    	String actionCommand = buttonModel.getActionCommand();
+//            System.out.println("Selected Button: " + actionCommand);
+//            ////////////////////////////////////////////////
+//	    	System.out.println("You pressed Play Card");
 	    
 	    } else if (ae.getSource() == this.btnViewStats) {
 	    	System.out.println("You pressed View Stats");

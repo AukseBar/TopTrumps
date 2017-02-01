@@ -37,13 +37,17 @@ public class Game {
 	/**
 	 * Initialises a new game state and begins the first round of a new game
 	 * @param numOfCompPlayers the number of opponents chosen by the human player when they start the game */
-	private void startGame(int numOfCompPlayers) {
+	public void startGame(int numOfCompPlayers) {
 		this.numOfCompPlayers = numOfCompPlayers;
 		totalRounds = 0;
 		draws = 0;
 		player = new Player[numOfCompPlayers + 1];
+		for(int i=0; i<numOfCompPlayers+1;i++) {
+			player[i] = new Player();
+		}
 		initPlayerDecks();
-		currentPlayer = player[randomiseFirstPlayer()];
+		//currentPlayer = player[randomiseFirstPlayer()];
+		currentPlayer = player[0];
 	}
 
 	/**
@@ -57,8 +61,12 @@ public class Game {
 	private void initPlayerDecks() {
 		mainDeck.shuffleDeck();
 		for(int i = 0, j = 0; i < mainDeck.getSize(); i++) {
+			System.out.println("i: " + i);
+			System.out.println("j: " + j);
+			System.out.println(mainDeck.getSize());
 			player[j].getDeck().addCardToTop(mainDeck.dealCard());
-			if(j <= numOfCompPlayers) {
+			
+			if(j < numOfCompPlayers) {
 				j++;
 			}
 			else {
@@ -82,7 +90,7 @@ public class Game {
 		
 		// Assume current player will win most of the time, so set initial highest value to their choice
 		// Specification does not require to check if they are out of cards due to multiple consecutive draws
-		int highestValue = currentPlayer.getDeck().getTopCard().getCategoryValue(chosenCategory);
+		int highestValue = currentPlayer.getDeck().seeTopCard().getCategoryValue(chosenCategory);
 		Player roundWinner = currentPlayer;
 		
 		int comparedPlayerValue;
@@ -93,7 +101,7 @@ public class Game {
 
 			if(player[i] != currentPlayer && player[i].getDeck().hasCard()) {
 
-				comparedPlayerValue = player[i].getDeck().getTopCard().getCategoryValue(chosenCategory);
+				comparedPlayerValue = player[i].getDeck().seeTopCard().getCategoryValue(chosenCategory);
 
 				if(comparedPlayerValue > highestValue) {
 					highestValue = comparedPlayerValue;
@@ -172,6 +180,7 @@ public class Game {
 			return STATE_GAME_WON;
 		}
 		else {
+			
 			return STATE_ROUND_WON;
 		}
 	}
