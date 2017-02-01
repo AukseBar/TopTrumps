@@ -14,7 +14,7 @@ public class Player {
 	private Deck playerHand;
 	boolean human = false;
 	private int roundsWon;
-
+	private final int numOfAttributes = 5;
 
 	public Player() {
 		playerHand = new Deck();
@@ -27,9 +27,9 @@ public class Player {
 		
 		int max = hValue[0];
 		
-		for (int i = 1; i < hValue.length; i++)
+		for (int i = 1; i < numOfAttributes; i++)
 		{
-		     if (hValue[i] > max)
+		     if (c.getCategoryValue(i) > max)
 		     {
 		      max = hValue[i];
 		     }
