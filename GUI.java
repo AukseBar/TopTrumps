@@ -291,34 +291,25 @@ public class GUI extends JFrame implements ActionListener {
 		
 		return gameDeck;
 	}
-	
-	private void newGame() {
-		// Adds 1 to the position index to pass the number of computer players chosen
-		game.startGame(comboBoxPlayers.getSelectedIndex() + 1);
-		
+
+	public void displayNewRoundInfo(){
 		tfName.setText(game.getCurrentPlayer().getDeck().seeTopCard().getTitle());
 		tfAttrib1.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(1)));
 		tfAttrib2.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(2)));
 		tfAttrib3.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(3)));
 		tfAttrib4.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(4)));
 		tfAttrib5.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(5)));
-		
-		displayNewRoundInfo();
-		
-		btnPlayContinue.setEnabled(true);
-	}
 
-	public void displayNewRoundInfo(){
 		if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
+			btnPlayContinue.setText("Play Card!");
 			areaGameMessages.append("It is your go! Select a category then Play Card!\n");
 		}
 		else {
+			btnPlayContinue.setText("Continue");
 			areaGameMessages.append("It is " + game.getCurrentPlayer().getPlayerNumber() + "'s go! Are you ready?\nContinue...\n");
 		}
 
 		// update player list
-
-		// update new card attribs
 
 		// update cards left
 
@@ -359,28 +350,31 @@ public class GUI extends JFrame implements ActionListener {
 	}
 	
 	private void gameWon() {
+		btnPlayContinue.setEnabled(false);
+		
 		//updateGameMessages
-		String specificPlayer = "";
 		if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
-			specificPlayer = "YOU";
+			areaGameMessages.append("YOU'VE WON THE GAME with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
+				+ "\n\nWould you like to save the statistics from this game to the database?\n");
 		}
 		else {
-			specificPlayer = "PLAYER " + game.getCurrentPlayer().getPlayerNumber();
+			areaGameMessages.append("PLAYER " + game.getCurrentPlayer().getPlayerNumber() + " WON THE GAME with the "
+					+ game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
+					+ "\n\nWould you like to save the statistics from this game to the database?\n");
 		}
-		areaGameMessages.append(specificPlayer + " WON THE GAME with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
-				+ "\n\nWould you like to save the statistics from this game to the database?");
 	}
 	
 	private void roundWon() {
 		//updateGameMessages
-		String specificPlayer = "";
 		if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
-			specificPlayer = "You";
+			areaGameMessages.append("You've won the round with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
+				+ "\n\nWould you like to save the statistics from this game to the database?\n");
 		}
 		else {
-			specificPlayer = "Player " + game.getCurrentPlayer().getPlayerNumber();
+			areaGameMessages.append("Player " + game.getCurrentPlayer().getPlayerNumber() + " won the round with the "
+					+ game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
+					+ "\n\nWould you like to save the statistics from this game to the database?\n");
 		}
-		areaGameMessages.append(specificPlayer + " won the round with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!\n");
 		
 		displayNewRoundInfo();
 	}
@@ -391,8 +385,11 @@ public class GUI extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent ae) {
 	    if (ae.getSource() == this.btnNewGame) {
-	    	newGame();
-	    }
+			// Adds 1 to the position index to pass the number of computer players chosen
+			game.startGame(comboBoxPlayers.getSelectedIndex() + 1);
+			displayNewRoundInfo();
+			btnPlayContinue.setEnabled(true);
+		}
 	    else if (ae.getSource() == this.btnPlayContinue) {
 	    	if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
 		    	playCard();	    
