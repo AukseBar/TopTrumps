@@ -39,15 +39,18 @@ public class Game {
 	 * @param numOfCompPlayers the number of opponents chosen by the human player when they start the game */
 	public void startGame(int numOfCompPlayers) {
 		this.numOfCompPlayers = numOfCompPlayers;
-		totalRounds = 0;
-		draws = 0;
+		
 		player = new Player[numOfCompPlayers + 1];
-		for(int i=0; i<numOfCompPlayers+1;i++) {
-			player[i] = new Player();
+		for(int i = 0; i < numOfCompPlayers + 1; i++) {
+			player[i] = new Player(i);
 		}
+		
 		initPlayerDecks();
 		//currentPlayer = player[randomiseFirstPlayer()];
-		currentPlayer = player[0];
+		currentPlayer = player[0];									// **** For testing
+		
+		totalRounds = 0;
+		draws = 0;
 	}
 
 	/**
@@ -83,10 +86,10 @@ public class Game {
 	protected int calculateRoundResult(int chosenCategory) {
 		totalRounds++;
 		
-		// Computer player must choose a category if they are the current player
+		/*// Computer player must choose a category if they are the current player
 		if(currentPlayer != player[HUMAN_PLAYER]) {
 			chosenCategory = currentPlayer.chooseCategory();
-		}
+		}*/
 		
 		// Assume current player will win most of the time, so set initial highest value to their choice
 		// Specification does not require to check if they are out of cards due to multiple consecutive draws
@@ -97,7 +100,7 @@ public class Game {
 		int drawValue = 0;
 		
 		// Iterate through each player that has a card; compare values, store highest, record any draw
-		for(int i = 0; i <= numOfCompPlayers; i++) {
+		for(int i = 0; i < numOfCompPlayers + 1; i++) {
 
 			if(player[i] != currentPlayer && player[i].getDeck().hasCard()) {
 
@@ -123,8 +126,8 @@ public class Game {
 			return STATE_ROUND_DRAW;
 		}
 		else {
-			// roundWon() also returns whether the game has been won in addition to the round
-			if(roundWon(roundWinner) == STATE_ROUND_WON) {
+			// winState() return depends on whether the game has been won in addition to the round
+			if(winState(roundWinner) == STATE_ROUND_WON) {
 				return STATE_ROUND_WON;
 			}
 			else {
@@ -150,7 +153,7 @@ public class Game {
 	 * played in the previous round. Checks to see if the roundWinner has won the game.
 	 * @param roundWinner the winning player of the round
 	 */
-	private int roundWon(Player roundWinner) {
+	private int winState(Player roundWinner) {
 		if(roundWinner != currentPlayer) {
 			currentPlayer = roundWinner;
 		}

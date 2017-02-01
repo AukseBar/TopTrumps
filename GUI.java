@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class GUI extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JButton btnNewGame,btnPlayCard,btnViewStats,btnSaveStats;
+	private JButton btnNewGame,btnPlayContinue,btnViewStats,btnSaveStats;
 	private JTextArea areaCurrentStats,areaGameMessages;
 	private JComboBox comboBoxPlayers;
 	private JLabel lblNumberOfCpu,lblCurrentPlayers,lblName;
@@ -211,14 +211,14 @@ public class GUI extends JFrame implements ActionListener {
 		areaGameMessages.setColumns(25);
 		scrollPane.setViewportView(areaGameMessages);
 		
-		this.btnPlayCard = new JButton("Play Card!");
-		btnPlayCard.setPreferredSize(new Dimension(160, 50));
-		btnPlayCard.setBackground(new Color(134, 199, 156));
-		btnPlayCard.setEnabled(false);
-		panel_bottom.add(btnPlayCard);
+		this.btnPlayContinue = new JButton("Play Card!");
+		btnPlayContinue.setPreferredSize(new Dimension(160, 50));
+		btnPlayContinue.setBackground(new Color(134, 199, 156));
+		btnPlayContinue.setEnabled(false);
+		panel_bottom.add(btnPlayContinue);
 		
 		// Action listeners on the bottom
-		this.btnPlayCard.addActionListener(this);
+		this.btnPlayContinue.addActionListener(this);
 		
 	}
 	
@@ -232,7 +232,7 @@ public class GUI extends JFrame implements ActionListener {
 		String cat4 = "";
 		String cat5 = "";
 		
-		try{   					  //read file for card info
+		try {   					  //read file for card info
 			Scanner scanner = new Scanner(new FileReader("deck.txt"));
 //			for (int i=0; i<deckSize; i++){
 			//scanner.nextLine();
@@ -264,7 +264,10 @@ public class GUI extends JFrame implements ActionListener {
 					
 					
 		  }
-		catch(Exception e){ e.printStackTrace();}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+
 		// Caps on first letter
 		name = name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase() + ":   ";
 		cat1 = cat1.substring(0,1).toUpperCase() + cat1.substring(1).toLowerCase();
@@ -288,23 +291,39 @@ public class GUI extends JFrame implements ActionListener {
 		
 		return gameDeck;
 	}
-		
-	public void updatePlayerlist(){
-			
-			
-	}
 	
 	private void newGame() {
-		 game.startGame(comboBoxPlayers.getSelectedIndex()+1);			// ******** better way to do the drop box??
-		 tfName.setText(game.getCurrentPlayer().getDeck().seeTopCard().getTitle());
-		 tfAttrib1.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(1)));
-		 tfAttrib2.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(2)));
-		 tfAttrib3.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(3)));
-		 tfAttrib4.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(4)));
-		 tfAttrib5.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(5)));
-		 btnPlayCard.setEnabled(true);
+		// Adds 1 to the position index to pass the number of computer players chosen
+		game.startGame(comboBoxPlayers.getSelectedIndex() + 1);
+		
+		tfName.setText(game.getCurrentPlayer().getDeck().seeTopCard().getTitle());
+		tfAttrib1.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(1)));
+		tfAttrib2.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(2)));
+		tfAttrib3.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(3)));
+		tfAttrib4.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(4)));
+		tfAttrib5.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(5)));
+		
+		displayNewRoundInfo();
+		
+		btnPlayContinue.setEnabled(true);
 	}
-	
+
+	public void displayNewRoundInfo(){
+		if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
+			areaGameMessages.append("It is your go! Select a category then Play Card!\n");
+		}
+		else {
+			areaGameMessages.append("It is " + game.getCurrentPlayer().getPlayerNumber() + "'s go! Are you ready?\nContinue...\n");
+		}
+
+		// update player list
+
+		// update new card attribs
+
+		// update cards left
+
+	}
+
 	private void playCard() {
 		if(radioButton_1.isSelected()) {
 			switch(game.calculateRoundResult(1)) {
@@ -331,36 +350,62 @@ public class GUI extends JFrame implements ActionListener {
 //		}
 	}
 	
-	private void roundWon() {
-		btnPlayCard.setEnabled(false);
-		//updateGameMessages
-		areaGameMessages.setText("You won the round with blah blah");
-		//updatePlayerlist();
+	private void continueAction() {
+		switch(game.calculateRoundResult(game.getCurrentPlayer().chooseCategory())) {
+			case Game.STATE_GAME_WON: gameWon();
+			case Game.STATE_ROUND_WON: roundWon();
+			case Game.STATE_ROUND_DRAW: roundDraw();
+		}
 	}
 	
-	public void actionPerformed(ActionEvent ae)
-	{
+	private void gameWon() {
+		//updateGameMessages
+		String specificPlayer = "";
+		if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
+			specificPlayer = "YOU";
+		}
+		else {
+			specificPlayer = "PLAYER " + game.getCurrentPlayer().getPlayerNumber();
+		}
+		areaGameMessages.append(specificPlayer + " WON THE GAME with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
+				+ "\n\nWould you like to save the statistics from this game to the database?");
+	}
+	
+	private void roundWon() {
+		//updateGameMessages
+		String specificPlayer = "";
+		if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
+			specificPlayer = "You";
+		}
+		else {
+			specificPlayer = "Player " + game.getCurrentPlayer().getPlayerNumber();
+		}
+		areaGameMessages.append(specificPlayer + " won the round with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!\n");
+		
+		displayNewRoundInfo();
+	}
+	
+	private void roundDraw() {
+		
+	}
+	
+	public void actionPerformed(ActionEvent ae) {
 	    if (ae.getSource() == this.btnNewGame) {
-	    	//System.out.println("You pressed New Game");
 	    	newGame();
-	    	
-	    } else if (ae.getSource() == this.btnPlayCard) {
-	    	
-	    	playCard();
-	    	
-//	    	// TESTING FOR SELECTIoN OF A BUTTON
-//	    	ButtonModel buttonModel = this.radiogroup.getSelection();
-//	    	String actionCommand = buttonModel.getActionCommand();
-//            System.out.println("Selected Button: " + actionCommand);
-//            ////////////////////////////////////////////////
-//	    	System.out.println("You pressed Play Card");
-	    
-	    } else if (ae.getSource() == this.btnViewStats) {
+	    }
+	    else if (ae.getSource() == this.btnPlayContinue) {
+	    	if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
+		    	playCard();	    
+	    	}
+	    	else {
+		    	continueAction();
+	    	}
+	    }
+	    else if (ae.getSource() == this.btnViewStats) {
 	    	System.out.println("You pressed View Stats");
-	    	
-	    } else if (ae.getSource() == this.btnSaveStats) {
+	    }
+	    else if (ae.getSource() == this.btnSaveStats) {
 	    	System.out.println("You pressed Save Stats");
-	   	    }
-	  }
-
+	    }
+	}
 }
