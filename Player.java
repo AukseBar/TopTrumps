@@ -7,41 +7,36 @@
 
 public class Player {
 
-	private Deck playerHand;
-	boolean human = false;
-	private int roundsWon;
 	private final int numOfAttributes = 5;
+	private Deck playerHand;
+	private int playerNumber;
+	private int roundsWon;
 
-	public Player() {
+	public Player(int playerNumber) {
 		playerHand = new Deck();
+		this.playerNumber = playerNumber;
 	}
 
-	public int chooseCategory(){  //selects category for computer player
-		
+	public int chooseCategory() {  //selects highest attribute for computer player and returns its category index
 		Card c = playerHand.seeTopCard();
 		
-		int max = 0;
-		int index =0;
-		for (int i = 1; i < numOfAttributes; i++)
-		{	 int curr = c.getCategoryValue(i); 
-		     if (curr > max)
-		     {
-		      max = curr;
-		      index=i;
-		     }
+		int index = 1;
+		for(int max = 0, i = 1; i < numOfAttributes; i++) {
+			int categoryValue = c.getCategoryValue(i); 
+			if(categoryValue > max) {
+				max = categoryValue;
+				index = i;
+			}
 		}
-
 		return index;
 	}
 
 	public void transferCardTo(Deck deck) {   // Method transfers cards from this deck to players' decks/communal deck upon rounds being completed. 
-
 		deck.addCardToBottom(playerHand.getTopCard());
 	}
 
 	public void wonRound() {
-		// increments rounds won.
-		
+		// increments rounds won
 		roundsWon++;
 	}
 	
@@ -51,5 +46,9 @@ public class Player {
 
 	public Deck getDeck(){   // Makes Player & Deck completely dependent.
 		return playerHand;
+	}
+	
+	public int getPlayerNumber() {
+		return playerNumber;
 	}
 }
