@@ -1,0 +1,13 @@
+GUI:
+  roundDraw() - A
+  gameWin() - C
+  
+  -- playCard() - array?, -A 
+  continueAction(); -C
+    
+  - T
+  add btnContinue;
+  updatePlayerList();
+  add text areas for player lists--- another one for cards left, communal pile etc
+  
+  
