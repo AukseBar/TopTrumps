@@ -16,13 +16,23 @@ public class GUI extends JFrame implements ActionListener {
 	private JComboBox comboBoxPlayers;
 	private JLabel lblNumberOfCpu,lblCurrentPlayers,lblName;
 	private JRadioButton radioButton_1, radioButton_2, radioButton_3, radioButton_4, radioButton_5;
-	private JTextField tfName,tfAttrib1,tfAttrib2,tfAttrib3,tfAttrib4,tfAttrib5;
+	private JRadioButton[] radioButton;
+	private JTextField[] tfAttrib;
 	private ButtonGroup radiogroup;
 	
 	//for deck
 	private final int deckSize=40;
 	
 	private Game game;
+	
+	//TESTING
+	private JTextField textField;
+	private JLabel lblNewLabel;
+	private JPanel panel;
+	private JLabel lblNewLabel_1;
+	private JTextField textField_1;
+	private JLabel lblNewLabel_2;
+	private JTextField textField_2;
 	
 	/**
 	 * Create the frame.
@@ -117,41 +127,59 @@ public class GUI extends JFrame implements ActionListener {
 		subpanel_show_attributes.setLayout(new GridLayout(0,1,0,0));
 		panel_middle.add(subpanel_show_attributes);
 		
+		
+		this.radioButton = new JRadioButton[]{
+				new JRadioButton("*Height"),
+				new JRadioButton("*Weight"),
+				new JRadioButton("*Length"),
+				new JRadioButton("*Ferocity"),
+				new JRadioButton("*Intelligence")
+		};
+		
 		this.lblName = new JLabel("*Name:    ");
 		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
-		this.radioButton_1 = new JRadioButton("*Height");
-		this.radioButton_2 = new JRadioButton("*Weight");
-		this.radioButton_3 = new JRadioButton("*Length");
-		this.radioButton_4 = new JRadioButton("*Ferocity");
-		this.radioButton_5 = new JRadioButton("*Intelligence");
-		
-		radioButton_1.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-		radioButton_2.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-		radioButton_3.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-		radioButton_4.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-		radioButton_5.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-		
-		radioButton_1.setBackground(new Color(134, 199, 156));
-		radioButton_2.setBackground(new Color(134, 199, 156));
-		radioButton_3.setBackground(new Color(134, 199, 156));
-		radioButton_4.setBackground(new Color(134, 199, 156));
-		radioButton_5.setBackground(new Color(134, 199, 156));
+//		this.radioButton_1 = new JRadioButton("*Height");
+//		this.radioButton_2 = new JRadioButton("*Weight");
+//		this.radioButton_3 = new JRadioButton("*Length");
+//		this.radioButton_4 = new JRadioButton("*Ferocity");
+//		this.radioButton_5 = new JRadioButton("*Intelligence");
+//		
+//		radioButton_1.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+//		radioButton_2.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+//		radioButton_3.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+//		radioButton_4.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+//		radioButton_5.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+//		
+//		radioButton_1.setBackground(new Color(134, 199, 156));
+//		radioButton_2.setBackground(new Color(134, 199, 156));
+//		radioButton_3.setBackground(new Color(134, 199, 156));
+//		radioButton_4.setBackground(new Color(134, 199, 156));
+//		radioButton_5.setBackground(new Color(134, 199, 156));
 		
 		// Add all in order
 		subpanel_show_attributes.add(lblName);
-		subpanel_show_attributes.add(radioButton_1);
-		subpanel_show_attributes.add(radioButton_2);
-		subpanel_show_attributes.add(radioButton_3);
-		subpanel_show_attributes.add(radioButton_4);
-		subpanel_show_attributes.add(radioButton_5);
+//		subpanel_show_attributes.add(radioButton_1);
+//		subpanel_show_attributes.add(radioButton_2);
+//		subpanel_show_attributes.add(radioButton_3);
+//		subpanel_show_attributes.add(radioButton_4);
+//		subpanel_show_attributes.add(radioButton_5);
 		
 		this.radiogroup = new ButtonGroup();
-		radiogroup.add(radioButton_1);
-		radiogroup.add(radioButton_2);
-		radiogroup.add(radioButton_3);
-		radiogroup.add(radioButton_4);
-		radiogroup.add(radioButton_5);
-		radioButton_1.setSelected(true);
+//		radiogroup.add(radioButton_1);
+//		radiogroup.add(radioButton_2);
+//		radiogroup.add(radioButton_3);
+//		radiogroup.add(radioButton_4);
+//		radiogroup.add(radioButton_5);
+		for (int i =0; i <radioButton.length ; i++){
+			radioButton[i].setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+			radioButton[i].setBackground(new Color(134, 199, 156));
+			subpanel_show_attributes.add(radioButton[i]);
+			radiogroup.add(radioButton[i]);
+		}
+		
+		
+		
+		radioButton[0].setSelected(true);
 
 		/////////////////////////////////////////////////
 		
@@ -162,34 +190,50 @@ public class GUI extends JFrame implements ActionListener {
 		subpanel_categories.setLayout(new GridLayout(0,1,0,0));
 		panel_middle.add(subpanel_categories);
 		
-		this.tfName = new JTextField();
-		this.tfAttrib1 = new JTextField();
-		this.tfAttrib2 = new JTextField();
-		this.tfAttrib3 = new JTextField();
-		this.tfAttrib4 = new JTextField();
-		this.tfAttrib5 = new JTextField();
-		// Makes it blend into background colour
-		tfName.setBorder(null);
-		tfAttrib1.setBorder(null);
-		tfAttrib2.setBorder(null);
-		tfAttrib3.setBorder(null);
-		tfAttrib4.setBorder(null);
-		tfAttrib5.setBorder(null);
-		// Set box colours
-		tfName.setBackground(new Color(134, 199, 156));
-		tfAttrib1.setBackground(new Color(134, 199, 156));
-		tfAttrib2.setBackground(new Color(134, 199, 156));
-		tfAttrib3.setBackground(new Color(134, 199, 156));
-		tfAttrib4.setBackground(new Color(134, 199, 156));
-		tfAttrib5.setBackground(new Color(134, 199, 156));
-		// Add all in order
-		subpanel_categories.add(tfName);
-		subpanel_categories.add(tfAttrib1);
-		subpanel_categories.add(tfAttrib2);
-		subpanel_categories.add(tfAttrib3);
-		subpanel_categories.add(tfAttrib4);
-		subpanel_categories.add(tfAttrib5);
+//		this.tfName = new JTextField();
+//		this.tfAttrib1 = new JTextField();
+//		this.tfAttrib2 = new JTextField();
+//		this.tfAttrib3 = new JTextField();
+//		this.tfAttrib4 = new JTextField();
+//		this.tfAttrib5 = new JTextField();
+//		// Makes it blend into background colour
+//		tfName.setBorder(null);
+//		tfAttrib1.setBorder(null);
+//		tfAttrib2.setBorder(null);
+//		tfAttrib3.setBorder(null);
+//		tfAttrib4.setBorder(null);
+//		tfAttrib5.setBorder(null);
+//		// Set box colours
+//		tfName.setBackground(new Color(134, 199, 156));
+//		tfAttrib1.setBackground(new Color(134, 199, 156));
+//		tfAttrib2.setBackground(new Color(134, 199, 156));
+//		tfAttrib3.setBackground(new Color(134, 199, 156));
+//		tfAttrib4.setBackground(new Color(134, 199, 156));
+//		tfAttrib5.setBackground(new Color(134, 199, 156));
+//		// Add all in order
+//		subpanel_categories.add(tfName);
+//		subpanel_categories.add(tfAttrib1);
+//		subpanel_categories.add(tfAttrib2);
+//		subpanel_categories.add(tfAttrib3);
+//		subpanel_categories.add(tfAttrib4);
+//		subpanel_categories.add(tfAttrib5);
+//		
+		this.tfAttrib = new JTextField[]{
+				new JTextField(),
+				new JTextField(),
+				new JTextField(),
+				new JTextField(),
+				new JTextField(),
+				new JTextField()
+				
+		};
 		
+		for (int i =0; i <tfAttrib.length ; i++){
+			tfAttrib[i].setFont(new Font("Showcard Gothic", Font.PLAIN, 13));
+			tfAttrib[i].setBorder(null);
+			tfAttrib[i].setBackground(new Color(134, 199, 156));
+			subpanel_categories.add(tfAttrib[i]);
+			}
 		
 		}
 	
@@ -199,7 +243,36 @@ public class GUI extends JFrame implements ActionListener {
 		JPanel panel_bottom = new JPanel();
 		panel_bottom.setBackground(new Color(77, 132, 96));
 		contentPane.add(panel_bottom, BorderLayout.SOUTH);
-		panel_bottom.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panel_bottom.setLayout(new BoxLayout(panel_bottom, BoxLayout.X_AXIS));
+		
+		//////////////////////////////////
+		panel = new JPanel();
+		panel_bottom.add(panel);
+		panel.setLayout(new GridLayout(0, 2, 0, 0));
+		
+		lblNewLabel = new JLabel("Player list");
+		panel.add(lblNewLabel);
+		
+		textField = new JTextField();
+		panel.add(textField);
+		textField.setColumns(10);
+		
+		lblNewLabel_1 = new JLabel("Cards Left");
+		panel.add(lblNewLabel_1);
+		
+		textField_1 = new JTextField();
+		panel.add(textField_1);
+		textField_1.setColumns(10);
+		
+		lblNewLabel_2 = new JLabel("Communal Pile");
+		panel.add(lblNewLabel_2);
+		
+		textField_2 = new JTextField();
+		panel.add(textField_2);
+		textField_2.setColumns(10);
+		/////////////////////////////////////
+		
+		
 		// Add a scrollpane
 		JScrollPane scrollPane = new JScrollPane();
 		panel_bottom.add(scrollPane);
@@ -226,22 +299,27 @@ public class GUI extends JFrame implements ActionListener {
 		
 		Deck gameDeck=new Deck(); //create a deck
 		String name = "";
-		String cat1 = "";
-		String cat2 = "";
-		String cat3 = "";
-		String cat4 = "";
-		String cat5 = "";
+//		String cat1 = "";
+//		String cat2 = "";
+//		String cat3 = "";
+//		String cat4 = "";
+//		String cat5 = "";
+		String[] cat = {"","","","",""};
 		
 		try {   					  //read file for card info
 			Scanner scanner = new Scanner(new FileReader("deck.txt"));
 //			for (int i=0; i<deckSize; i++){
 			//scanner.nextLine();
 			name = scanner.next();
-			cat1 = scanner.next();
-			cat2 = scanner.next();
-			cat3 = scanner.next();
-			cat4 = scanner.next();
-			cat5 = scanner.next();	
+//			cat1 = scanner.next();
+//			cat2 = scanner.next();
+//			cat3 = scanner.next();
+//			cat4 = scanner.next();
+//			cat5 = scanner.next();	
+			for (int i =0; i <cat.length ; i++){
+				cat[i] = scanner.next();
+			}
+			
 			scanner.nextLine();
 			
 					while (scanner.hasNextLine())
@@ -270,35 +348,49 @@ public class GUI extends JFrame implements ActionListener {
 
 		// Caps on first letter
 		name = name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase() + ":   ";
-		cat1 = cat1.substring(0,1).toUpperCase() + cat1.substring(1).toLowerCase();
-		cat2 = cat2.substring(0,1).toUpperCase() + cat2.substring(1).toLowerCase();
-		cat3 = cat3.substring(0,1).toUpperCase() + cat3.substring(1).toLowerCase();
-		cat4 = cat4.substring(0,1).toUpperCase() + cat4.substring(1).toLowerCase();
-		cat5 = cat5.substring(0,1).toUpperCase() + cat5.substring(1).toLowerCase();
+//		cat1 = cat1.substring(0,1).toUpperCase() + cat1.substring(1).toLowerCase();
+//		cat2 = cat2.substring(0,1).toUpperCase() + cat2.substring(1).toLowerCase();
+//		cat3 = cat3.substring(0,1).toUpperCase() + cat3.substring(1).toLowerCase();
+//		cat4 = cat4.substring(0,1).toUpperCase() + cat4.substring(1).toLowerCase();
+//		cat5 = cat5.substring(0,1).toUpperCase() + cat5.substring(1).toLowerCase();
+		for (int i =0; i <cat.length ; i++){
+			cat[i] = cat[i].substring(0,1).toUpperCase() + cat[i].substring(1).toLowerCase();
+		}
 		// Setup descriptions
-		this.lblName.setText(name);
-		this.radioButton_1.setText(cat1);
-        this.radioButton_2.setText(cat2);
-        this.radioButton_3.setText(cat3);
-        this.radioButton_4.setText(cat4);
-        this.radioButton_5.setText(cat5);
-		// TESTING BUTTON ACTIONS
-		this.radioButton_1.setActionCommand(cat1);
-		this.radioButton_2.setActionCommand(cat2);
-		this.radioButton_3.setActionCommand(cat3);
-		this.radioButton_4.setActionCommand(cat4);
-		this.radioButton_5.setActionCommand(cat5);
+//		this.lblName.setText(name);
+//		this.radioButton_1.setText(cat1);
+//        this.radioButton_2.setText(cat2);
+//        this.radioButton_3.setText(cat3);
+//        this.radioButton_4.setText(cat4);
+//        this.radioButton_5.setText(cat5);
+//		// TESTING BUTTON ACTIONS
+//		this.radioButton_1.setActionCommand(cat1);
+//		this.radioButton_2.setActionCommand(cat2);
+//		this.radioButton_3.setActionCommand(cat3);
+//		this.radioButton_4.setActionCommand(cat4);
+//		this.radioButton_5.setActionCommand(cat5);
 		
+		this.lblName.setText(name);
+		
+		for (int i =0; i <radioButton.length ; i++){
+			this.radioButton[i].setText(cat[i]);
+			this.radioButton[i].setActionCommand(cat[i]);
+		}
 		return gameDeck;
 	}
 
 	public void displayNewRoundInfo(){
-		tfName.setText(game.getCurrentPlayer().getDeck().seeTopCard().getTitle());
-		tfAttrib1.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(1)));
-		tfAttrib2.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(2)));
-		tfAttrib3.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(3)));
-		tfAttrib4.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(4)));
-		tfAttrib5.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(5)));
+		tfAttrib[0].setText(game.getCurrentPlayer().getDeck().seeTopCard().getTitle());
+		
+		for (int i =1; i <tfAttrib.length ; i++){
+			tfAttrib[i].setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(i)));
+		}
+		
+//		tfAttrib1.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(1)));
+//		tfAttrib2.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(2)));
+//		tfAttrib3.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(3)));
+//		tfAttrib4.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(4)));
+//		tfAttrib5.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(5)));
 
 		if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
 			btnPlayContinue.setText("Play Card!");
@@ -316,23 +408,23 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	private void playCard() {
-		if(radioButton_1.isSelected()) {
+		if(radioButton[0].isSelected()) {
 			switch(game.calculateRoundResult(1)) {
 			case 1: 
 			case 2: roundWon();
 			case 3: 
 			}
 		}
-		if(radioButton_2.isSelected()) {
+		if(radioButton[1].isSelected()) {
 			game.calculateRoundResult(2);
 		}
-		if(radioButton_3.isSelected()) {
+		if(radioButton[2].isSelected()) {
 			game.calculateRoundResult(3);
 		}
-		if(radioButton_4.isSelected()) {
+		if(radioButton[3].isSelected()) {
 			game.calculateRoundResult(4);
 		}
-		if(radioButton_5.isSelected()) {
+		if(radioButton[4].isSelected()) {
 			game.calculateRoundResult(5);
 		}
 //		
