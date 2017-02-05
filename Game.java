@@ -48,7 +48,6 @@ public class Game {
 		initPlayerDecks();
 		//currentPlayer = player[randomiseFirstPlayer()];
 		currentPlayer = player[0];									// **** For testing
-		
 		totalRounds = 0;
 		draws = 0;
 	}

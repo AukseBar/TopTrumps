@@ -17,6 +17,7 @@ public class Card {
     	this.attrib3=Integer.parseInt(info[3]);
     	this.attrib4=Integer.parseInt(info[4]);
     	this.attrib5=Integer.parseInt(info[5]);
+    	// for testing draws::::::::::::::: this.attrib5=1;
 	}
 	
 

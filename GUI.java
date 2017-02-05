@@ -408,29 +408,15 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	private void playCard() {
-		if(radioButton[0].isSelected()) {
-			switch(game.calculateRoundResult(1)) {
-			case 1: 
-			case 2: roundWon();
-			case 3: 
+		for (int i=1; i<=radioButton.length; i++){
+			if (radioButton[i-1].isSelected()){
+				switch(game.calculateRoundResult(i)){
+				case 1: gameWon();
+				case 2: roundWon();
+				case 3: roundDraw();
+				}
 			}
 		}
-		if(radioButton[1].isSelected()) {
-			game.calculateRoundResult(2);
-		}
-		if(radioButton[2].isSelected()) {
-			game.calculateRoundResult(3);
-		}
-		if(radioButton[3].isSelected()) {
-			game.calculateRoundResult(4);
-		}
-		if(radioButton[4].isSelected()) {
-			game.calculateRoundResult(5);
-		}
-//		
-//		for(int i = 1; i < 5; i++) {
-//			
-//		}
 	}
 	
 	private void continueAction() {
@@ -463,15 +449,24 @@ public class GUI extends JFrame implements ActionListener {
 				+ "\n\nWould you like to save the statistics from this game to the database?\n");
 		}
 		else {
-			areaGameMessages.append("Player " + game.getCurrentPlayer().getPlayerNumber() + " won the round with the "
-					+ game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
+		//	System.out.println(game.getCurrentPlayer().getPlayerNumber());
+		//	System.out.println(game.getCurrentPlayer().getDeck());
+		//	System.out.println(game.getCurrentPlayer().getDeck().seeTopCard());
+		//	System.out.println(game.getCurrentPlayer().getDeck().seeTopCard().getTitle());
+			areaGameMessages.append("Player " + game.getCurrentPlayer().getPlayerNumber() + " won the round with the "+
+					game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
 					+ "\n\nWould you like to save the statistics from this game to the database?\n");
+		//problem--- seetopcard returns null, so getTitle() crashes
+			// seetopcard worked correctly in game.iniatPlayerDeck- are we sure currentPlayer is being set/updated correctly?
+		
 		}
 		
 		displayNewRoundInfo();
 	}
 	
 	private void roundDraw() {
+		areaGameMessages.append("It's a draw!");
+		//update communal pile
 		
 	}
 	
@@ -484,7 +479,8 @@ public class GUI extends JFrame implements ActionListener {
 		}
 	    else if (ae.getSource() == this.btnPlayContinue) {
 	    	if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
-		    	playCard();	    
+		    	playCard();	
+		    	System.out.println(game.getCurrentPlayer().getDeck().seeTopCard().getTitle());
 	    	}
 	    	else {
 		    	continueAction();
@@ -495,6 +491,7 @@ public class GUI extends JFrame implements ActionListener {
 	    }
 	    else if (ae.getSource() == this.btnSaveStats) {
 	    	System.out.println("You pressed Save Stats");
+	    	System.out.println(game.getCurrentPlayer().getPlayerNumber());
 	    }
 	}
 }
