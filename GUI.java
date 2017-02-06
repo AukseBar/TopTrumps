@@ -394,11 +394,11 @@ public class GUI extends JFrame implements ActionListener {
 
 		if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
 			btnPlayContinue.setText("Play Card!");
-			areaGameMessages.append("It is your go! Select a category then Play Card!\n");
+			areaGameMessages.append("\nIt is your go! Select a category then Play Card!\n");
 		}
 		else {
 			btnPlayContinue.setText("Continue");
-			areaGameMessages.append("It is " + game.getCurrentPlayer().getPlayerNumber() + "'s go! Are you ready?\nContinue...\n");
+			areaGameMessages.append("\nIt is " + game.getCurrentPlayer().getPlayerNumber() + "'s go! Are you ready?\nContinue...\n");
 		}
 
 		// update player list
@@ -411,9 +411,9 @@ public class GUI extends JFrame implements ActionListener {
 		for (int i=1; i<=radioButton.length; i++){
 			if (radioButton[i-1].isSelected()){
 				switch(game.calculateRoundResult(i)){
-				case 1: gameWon();
-				case 2: roundWon();
-				case 3: roundDraw();
+				case Game.STATE_GAME_WON: displayGameWonInfo();
+				case Game.STATE_ROUND_WON: displayRoundWonInfo();
+				case Game.STATE_ROUND_DRAW: displayRoundDrawInfo();
 				}
 			}
 		}
@@ -421,18 +421,18 @@ public class GUI extends JFrame implements ActionListener {
 	
 	private void continueAction() {
 		switch(game.calculateRoundResult(game.getCurrentPlayer().chooseCategory())) {
-			case Game.STATE_GAME_WON: gameWon();
-			case Game.STATE_ROUND_WON: roundWon();
-			case Game.STATE_ROUND_DRAW: roundDraw();
+			case Game.STATE_GAME_WON: displayGameWonInfo();
+			case Game.STATE_ROUND_WON: displayRoundWonInfo();
+			case Game.STATE_ROUND_DRAW: displayRoundDrawInfo();
 		}
 	}
 	
-	private void gameWon() {
+	private void displayGameWonInfo() {
 		btnPlayContinue.setEnabled(false);
 		
 		//updateGameMessages
 		if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
-			areaGameMessages.append("YOU'VE WON THE GAME with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
+			areaGameMessages.append("YOU WON THE GAME with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
 				+ "\n\nWould you like to save the statistics from this game to the database?\n");
 		}
 		else {
@@ -442,32 +442,22 @@ public class GUI extends JFrame implements ActionListener {
 		}
 	}
 	
-	private void roundWon() {
+	private void displayRoundWonInfo() {
 		//updateGameMessages
 		if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
-			areaGameMessages.append("You've won the round with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
-				+ "\n\nWould you like to save the statistics from this game to the database?\n");
+			areaGameMessages.append("You won the round with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!\n");
 		}
 		else {
-		//	System.out.println(game.getCurrentPlayer().getPlayerNumber());
-		//	System.out.println(game.getCurrentPlayer().getDeck());
-		//	System.out.println(game.getCurrentPlayer().getDeck().seeTopCard());
-		//	System.out.println(game.getCurrentPlayer().getDeck().seeTopCard().getTitle());
-			areaGameMessages.append("Player " + game.getCurrentPlayer().getPlayerNumber() + " won the round with the "+
-					game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
-					+ "\n\nWould you like to save the statistics from this game to the database?\n");
-		//problem--- seetopcard returns null, so getTitle() crashes
-			// seetopcard worked correctly in game.iniatPlayerDeck- are we sure currentPlayer is being set/updated correctly?
-		
+			areaGameMessages.append("Player " + game.getCurrentPlayer().getPlayerNumber() + " won the round with the "
+					+ game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!\n");
 		}
 		
 		displayNewRoundInfo();
 	}
 	
-	private void roundDraw() {
-		areaGameMessages.append("It's a draw!");
-		//update communal pile
-		
+	private void displayRoundDrawInfo() {
+		areaGameMessages.append("It's a draw!\n");
+		displayNewRoundInfo();
 	}
 	
 	public void actionPerformed(ActionEvent ae) {
@@ -488,6 +478,7 @@ public class GUI extends JFrame implements ActionListener {
 	    }
 	    else if (ae.getSource() == this.btnViewStats) {
 	    	System.out.println("You pressed View Stats");
+	    	StatsReportFrame statsFrame = new StatsReportFrame();
 	    }
 	    else if (ae.getSource() == this.btnSaveStats) {
 	    	System.out.println("You pressed Save Stats");

@@ -85,13 +85,9 @@ public class Game {
 	protected int calculateRoundResult(int chosenCategory) {
 		totalRounds++;
 		
-		/*// Computer player must choose a category if they are the current player
-		if(currentPlayer != player[HUMAN_PLAYER]) {
-			chosenCategory = currentPlayer.chooseCategory();
-		}*/
-		
-		// Assume current player will win most of the time, so set initial highest value to their choice
-		// Specification does not require to check if they are out of cards due to multiple consecutive draws
+		/* Assume current player will win most of the time, so set initial highest value to their choice
+		 * Specification does not require to check if they are out of cards due to multiple consecutive draws
+		 * so there is a very low chance of NPE */
 		int highestValue = currentPlayer.getDeck().seeTopCard().getCategoryValue(chosenCategory);
 		Player roundWinner = currentPlayer;
 		
@@ -166,7 +162,7 @@ public class Game {
 		
 		// Give currentPlayer everyone's played card (including their own as it goes to bottom) & check for winner
 		boolean gameWon = true;
-		for(int i = 0; i <= numOfCompPlayers; i++) {
+		for(int i = 0; i < numOfCompPlayers + 1; i++) {
 			if(player[i].getDeck().hasCard()) {
 				player[i].transferCardTo(currentPlayer.getDeck());
 				
