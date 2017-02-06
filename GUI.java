@@ -10,11 +10,17 @@ import java.util.Scanner;
 
 public class GUI extends JFrame implements ActionListener {
 
-	private JPanel contentPane;
+	private JPanel contentPane, panel_top,panel_middle, panel_bottom;
+	private JPanel panel_bottom_left, panel_bottom_right, subpanel_current_stats, subpanel_show_attributes, subpanel_categories;
 	private JButton btnNewGame,btnPlayContinue,btnViewStats,btnSaveStats;
-	private JTextArea areaCurrentStats,areaGameMessages;
+	private JTextArea areaCurrentStats,areaGameMessages,areaPlayerListing;
 	private JComboBox comboBoxPlayers;
-	private JLabel lblNumberOfCpu,lblCurrentPlayers,lblName;
+	private JLabel lblNumberOfCpu,lblName,lblPlayerListing,lblCardsLeft,lblCommunalPile;
+
+	private JScrollPane scrollPane, scrollPane_2;
+	
+	private JTextField tfCardsLeft;
+	private JTextField tfCommunal;
 
 	private JRadioButton[] radioButton;
 	private JTextField[] tfAttrib;
@@ -25,14 +31,6 @@ public class GUI extends JFrame implements ActionListener {
 	
 	private Game game;
 	
-	//TESTING
-	private JTextField textField;
-	private JLabel lblNewLabel;
-	private JPanel panel;
-	private JLabel lblNewLabel_1;
-	private JTextField textField_1;
-	private JLabel lblNewLabel_2;
-	private JTextField textField_2;
 	
 	/**
 	 * Create the frame.
@@ -62,7 +60,7 @@ public class GUI extends JFrame implements ActionListener {
 	
 	public void layoutTop(){
 		// Top 'menu' panel
-		JPanel panel_top = new JPanel();
+		this.panel_top = new JPanel();
 		//Layout and colour
 		panel_top.setBackground(new Color(77, 132, 96));
 		contentPane.add(panel_top, BorderLayout.NORTH);
@@ -92,18 +90,18 @@ public class GUI extends JFrame implements ActionListener {
 	
 	public void layoutMiddle(){
 		// Middle 'views' panel
-		JPanel panel_middle = new JPanel();
+		this.panel_middle = new JPanel();
 		contentPane.add(panel_middle, BorderLayout.CENTER);
 		panel_middle.setLayout(new GridLayout());
 		
 		// Left side sub-panel for current game statistics
 		// Panel properties
-		JPanel subpanel_current_stats = new JPanel();
+		this.subpanel_current_stats = new JPanel();
 		subpanel_current_stats.setBackground(new Color(134, 199, 156));
 		panel_middle.add(subpanel_current_stats);
 		subpanel_current_stats.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		// Label
-		this.lblCurrentPlayers = new JLabel("Current Game Statistics:");
+		
+		
 		//Current Statistics box properties
 		this.areaCurrentStats = new JTextArea();
 		
@@ -118,12 +116,12 @@ public class GUI extends JFrame implements ActionListener {
 		this.areaCurrentStats.setText(dino1 + "\n\n" + dino2);
 		
 		//Add all to panel (ordered)
-		subpanel_current_stats.add(lblCurrentPlayers);
+		
 		subpanel_current_stats.add(areaCurrentStats);
 		
 	
 		//Sub-panel for showing the attributes read from a card
-		JPanel subpanel_show_attributes = new JPanel();
+		this.subpanel_show_attributes = new JPanel();
 		subpanel_show_attributes.setBackground(new Color(134, 199, 156));
 		subpanel_show_attributes.setLayout(new GridLayout(0,1,0,0));
 		panel_middle.add(subpanel_show_attributes);
@@ -162,7 +160,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		
 		//Sub-panel for the actual data
-		JPanel subpanel_categories = new JPanel();
+		this.subpanel_categories = new JPanel();
 		subpanel_categories.setBackground(new Color(134, 199, 156));
 		subpanel_categories.setLayout(new GridLayout(0,1,0,0));
 		panel_middle.add(subpanel_categories);
@@ -190,60 +188,76 @@ public class GUI extends JFrame implements ActionListener {
 	public void layoutBottom(){
 		
 		// Bottom panel for in-game messages and save game button
-		JPanel panel_bottom = new JPanel();
-		panel_bottom.setBackground(new Color(77, 132, 96));
-		contentPane.add(panel_bottom, BorderLayout.SOUTH);
-		panel_bottom.setLayout(new BoxLayout(panel_bottom, BoxLayout.X_AXIS));
-		
-		//////////////////////////////////
-		panel = new JPanel();
-		panel_bottom.add(panel);
-		panel.setLayout(new GridLayout(0, 2, 0, 0));
-		
-		lblNewLabel = new JLabel("Player list");
-		panel.add(lblNewLabel);
-		
-		textField = new JTextField();
-		panel.add(textField);
-		textField.setColumns(10);
-		
-		lblNewLabel_1 = new JLabel("Cards Left");
-		panel.add(lblNewLabel_1);
-		
-		textField_1 = new JTextField();
-		panel.add(textField_1);
-		textField_1.setColumns(10);
-		
-		lblNewLabel_2 = new JLabel("Communal Pile");
-		panel.add(lblNewLabel_2);
-		
-		textField_2 = new JTextField();
-		panel.add(textField_2);
-		textField_2.setColumns(10);
-		/////////////////////////////////////
-		
-		
-		// Add a scrollpane
-		JScrollPane scrollPane = new JScrollPane();
-		panel_bottom.add(scrollPane);
-		
-		this.areaGameMessages = new JTextArea();
-		areaGameMessages.setBackground(new Color(134, 199, 156));
-		areaGameMessages.setEditable(false); // Toggle to allow editing
-		areaGameMessages.setRows(5);
-		areaGameMessages.setColumns(25);
-		areaGameMessages.setLineWrap(true);
-		areaGameMessages.setWrapStyleWord(true);
-		scrollPane.setViewportView(areaGameMessages);
-		
-		this.btnPlayContinue = new JButton("Play Card!");
-		btnPlayContinue.setPreferredSize(new Dimension(160, 50));
-		btnPlayContinue.setBackground(new Color(134, 199, 156));
-		btnPlayContinue.setEnabled(false);
-		panel_bottom.add(btnPlayContinue);
-		
-		// Action listeners on the bottom
-		this.btnPlayContinue.addActionListener(this);
+				this.panel_bottom = new JPanel();
+				panel_bottom.setBackground(new Color(77, 132, 96));
+				contentPane.add(panel_bottom, BorderLayout.SOUTH);
+				panel_bottom.setLayout(new BoxLayout(panel_bottom, BoxLayout.X_AXIS));
+				
+				//////////////////////////////////
+				//      Player Listing Area    //
+				
+				this.panel_bottom_left = new JPanel();
+				this.lblPlayerListing = new JLabel("Player Listing");
+				this.scrollPane_2 = new JScrollPane();
+				this.areaPlayerListing = new JTextArea();
+				
+				panel_bottom_left.setBackground(new Color(134, 199, 156));
+				panel_bottom_left.setLayout(new BoxLayout(panel_bottom_left, BoxLayout.Y_AXIS));
+				areaPlayerListing.setBackground(new Color(134, 199, 156));
+				scrollPane_2.setViewportView(areaPlayerListing);
+				areaPlayerListing.setRows(4);
+				areaPlayerListing.setColumns(10);
+				areaPlayerListing.setEditable(false);
+				
+				panel_bottom.add(panel_bottom_left);
+				panel_bottom_left.add(lblPlayerListing);
+				panel_bottom_left.add(scrollPane_2);
+				
+				
+				////////////////////////////////////
+				//       GAME MESSAGES           //
+				
+				// Add a scrollpane
+				this.scrollPane = new JScrollPane();
+				panel_bottom.add(scrollPane);
+				
+				this.areaGameMessages = new JTextArea();
+				areaGameMessages.setBackground(new Color(134, 199, 156));
+				areaGameMessages.setEditable(false); // Toggle to allow editing
+				areaGameMessages.setRows(5);
+				areaGameMessages.setColumns(25);
+				scrollPane.setViewportView(areaGameMessages);
+				
+				
+				////////////////////////////////////
+				//      Play card and other stats //		
+				this.panel_bottom_right = new JPanel();
+				panel_bottom_right.setBackground(new Color(134, 199, 156));
+				panel_bottom.add(panel_bottom_right);
+				panel_bottom_right.setLayout(new GridLayout(0, 1, 0, 0));
+				
+				
+				this.btnPlayContinue = new JButton("Play Card!");
+				this.lblCardsLeft = new JLabel("Cards Left");
+				this.tfCardsLeft = new JTextField();
+				this.lblCommunalPile = new JLabel("Communal Pile");
+				this.tfCommunal = new JTextField();
+				
+				tfCardsLeft.setBackground(new Color(134, 199, 156));
+				tfCommunal.setBackground(new Color(134, 199, 156));
+				btnPlayContinue.setBackground(new Color(134, 199, 156));
+				btnPlayContinue.setEnabled(false);
+				tfCardsLeft.setEnabled(false);
+				tfCommunal.setEnabled(false);
+				
+				panel_bottom_right.add(btnPlayContinue);
+				panel_bottom_right.add(lblCardsLeft);
+				panel_bottom_right.add(tfCardsLeft);
+				panel_bottom_right.add(lblCommunalPile);
+				panel_bottom_right.add(tfCommunal);
+				
+				// Action listeners on the bottom
+				this.btnPlayContinue.addActionListener(this);
 		
 	}
 	
