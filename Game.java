@@ -63,9 +63,7 @@ public class Game {
 	private void initPlayerDecks() {
 		mainDeck.shuffleDeck();
 		for(int i = 0, j = 0; i < mainDeck.getSize(); i++) {
-			System.out.println("i: " + i);
-			System.out.println("j: " + j);
-			System.out.println(mainDeck.getSize());
+			
 			player[j].getDeck().addCardToTop(mainDeck.dealCard());
 			
 			if(j < numOfCompPlayers) {
@@ -78,8 +76,8 @@ public class Game {
 	}
 
 	/**
-	 * Finds the player with the highest value in the category as chosen by the current player then advances to roundWon(),
-	 * or roundDraw() if there is more than one player sharing the same highest value
+	 * Finds the player with the highest value in the category chosen by the current player and returns the game state.
+	 * In the result of a win the current player is set to the round winner
 	 * @param chosenCategory an int which represents the array position of the chosen category on the card instance 
 	 * @return the game's state at the end of the round as a static int value defined within the Game class */
 	protected int calculateRoundResult(int chosenCategory) {
@@ -87,14 +85,14 @@ public class Game {
 		
 		/* Assume current player will win most of the time, so set initial highest value to their choice
 		 * Specification does not require to check if they are out of cards due to multiple consecutive draws
-		 * so there is a very low chance of NPE */
+		 * so there is a chance of NPE */
 		int highestValue = currentPlayer.getDeck().seeTopCard().getCategoryValue(chosenCategory);
 		Player roundWinner = currentPlayer;
 		
 		int comparedPlayerValue;
 		int drawValue = 0;
 		
-		// Iterate through each player that has a card; compare values, store highest, record any draw
+		// Iterate through each player that has a card; compare values, store highest, record any draws
 		for(int i = 0; i < numOfCompPlayers + 1; i++) {
 
 			if(player[i] != currentPlayer && player[i].getDeck().hasCard()) {
@@ -115,76 +113,66 @@ public class Game {
 			}
 		}
 
-		// Work out round result and return as static game state
+		// Work out round result and return as static int representing game state
 		if(highestValue == drawValue) {
-			roundDraw();
+			draws++;
 			return STATE_ROUND_DRAW;
 		}
 		else {
-			// winState() return depends on whether the game has been won in addition to the round
-			if(winState(roundWinner) == STATE_ROUND_WON) {
-				return STATE_ROUND_WON;
-			}
-			else {
-				return STATE_GAME_WON;
-			}
-		}
-	}
-
-	/**
-	 * Transfers the top cards from all players participating in the round into the communal pile
-	 */
-	private void roundDraw() {
-		draws++;
-		for(int i = 0; i <= numOfCompPlayers; i++) {
-			if(player[i].getDeck().hasCard()) {
-				player[i].transferCardTo(communalPile);
-			}
+			currentPlayer = roundWinner;
+			currentPlayer.wonRound();
+			return STATE_ROUND_WON;
 		}
 	}
 	
 	/**
-	 * Sets the currentPlayer to the roundWinner and transfers to them any cards in the communal pile from previous draws and cards
-	 * played in the previous round. Checks to see if the roundWinner has won the game.
-	 * @param roundWinner the winning player of the round
-	 */
-	private int winState(Player roundWinner) {
-		if(roundWinner != currentPlayer) {
-			currentPlayer = roundWinner;
+	 * Returns true if the game has been won by checking if anyone except the winner of the round
+	 * will have cards to play in the next round after their current card is transferred 
+	 * @return boolean representing whether the game has been won */
+	public boolean checkGameWon() {
+		for(int i = 0; i < numOfCompPlayers + 1; i++) {
+			if(player[i] != currentPlayer && player[i].getDeck().getSize() > 1) {				
+				return false;		// At least two players will have cards to play in the next round
+			}
 		}
-
-		currentPlayer.wonRound();
-		
-		// Transfer cards in communal pile
+		return true;				// Only the currentPlayer will have cards in the next round
+	}
+	
+	/**
+	 * Transfers to the round winner any cards in the communal pile from previous round draws
+	 * and all the cards played in this round */
+	public void transferCardsToWinner() {
+		// Transfer cards from communal pile
 		while(communalPile.hasCard()) {
-			currentPlayer.getDeck().addCardToBottom(communalPile.getTopCard());			//**** Bit messy? Possibly needs a method written
+			currentPlayer.getDeck().addCardToBottom(communalPile.getTopCard());
 		}
 		
-		// Give currentPlayer everyone's played card (including their own as it goes to bottom) & check for winner
-		boolean gameWon = true;
+		// Give currentPlayer everyone's played card (including their own as it goes to bottom)
 		for(int i = 0; i < numOfCompPlayers + 1; i++) {
 			if(player[i].getDeck().hasCard()) {
 				player[i].transferCardTo(currentPlayer.getDeck());
-				
-				// Does at least one player other than the current have a card left after transfer
-				if(player[i] != currentPlayer && player[i].getDeck().hasCard()) {
-					gameWon = false;		// Thus gameWon will only stay true if no one except current player has cards left
-				}
 			}
-		}
-		
-		// Return end result of round
-		if(gameWon) {
-			return STATE_GAME_WON;
-		}
-		else {
-			
-			return STATE_ROUND_WON;
 		}
 	}
 
+	/**
+	 * Transfers the top cards from all players participating in the round into the communal pile */
+	public void transferCardsToCommunal() {
+		for(int i = 0; i <= numOfCompPlayers; i++) {
+			if(player[i].getDeck().hasCard()) {			// Player has at least one card and thus has participated in the round
+				player[i].transferCardTo(communalPile);
+			}
+		}
+	}
+
+	// Accessors
+	
 	public Player getCurrentPlayer() {
 		return currentPlayer;
+	}
+	
+	public Player getHumanPlayer() {
+		return player[HUMAN_PLAYER];
 	}
 
 	public int getTotalRounds() {

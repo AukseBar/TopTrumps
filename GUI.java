@@ -299,53 +299,83 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	public void displayNewRoundInfo(){
-		tfAttrib[0].setText(game.getCurrentPlayer().getDeck().seeTopCard().getTitle());
+		tfAttrib[0].setText(game.getHumanPlayer().getDeck().seeTopCard().getTitle());
 		
 		for (int i =1; i <tfAttrib.length ; i++){
-			tfAttrib[i].setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(i)));
+			tfAttrib[i].setText(Integer.toString(game.getHumanPlayer().getDeck().seeTopCard().getCategoryValue(i)));
 		}
 		
 
-		if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
+		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
 			btnPlayContinue.setText("Play Card!");
 			areaGameMessages.append("\nIt is your go! Select a category then Play Card!\n");
 		}
 		else {
 			btnPlayContinue.setText("Continue");
-			areaGameMessages.append("\nIt is " + game.getCurrentPlayer().getPlayerNumber() + "'s go! Are you ready?\nContinue...\n");
+			areaGameMessages.append("\nIt is Player " + game.getCurrentPlayer().getPlayerNumber() + "'s go! Are you ready?\nContinue...\n");
 		}
 
 		// update player list
 
 		// update cards left
+		
+		repaint();
+		revalidate();
 
 	}
 
 	private void playCard() {
-		for (int i=1; i<=radioButton.length; i++){
+		for (int i = 1; i <= radioButton.length; i++){
 			if (radioButton[i-1].isSelected()){
 				switch(game.calculateRoundResult(i)){
-				case Game.STATE_GAME_WON: displayGameWonInfo();
-				case Game.STATE_ROUND_WON: displayRoundWonInfo();
-				case Game.STATE_ROUND_DRAW: displayRoundDrawInfo();
+				
+					case Game.STATE_ROUND_WON:
+						if(game.checkGameWon()) {
+							displayGameWonInfo();
+						}
+						else {
+							displayRoundWonInfo();
+							game.transferCardsToWinner();
+						}
+						break;		// From switch
+
+					case Game.STATE_ROUND_DRAW:
+						displayRoundDrawInfo();
+						game.transferCardsToCommunal();
+						break;		// From switch
 				}
+				break;				// From for loop
 			}
 		}
+		displayNewRoundInfo();
 	}
 	
 	private void continueAction() {
 		switch(game.calculateRoundResult(game.getCurrentPlayer().chooseCategory())) {
-			case Game.STATE_GAME_WON: displayGameWonInfo();
-			case Game.STATE_ROUND_WON: displayRoundWonInfo();
-			case Game.STATE_ROUND_DRAW: displayRoundDrawInfo();
+		
+			case Game.STATE_ROUND_WON:
+				if(game.checkGameWon()) {
+					displayGameWonInfo();
+				}
+				else {
+					displayRoundWonInfo();
+					game.transferCardsToWinner();
+				}
+				break;
+				
+			case Game.STATE_ROUND_DRAW:
+				displayRoundDrawInfo();
+				game.transferCardsToCommunal();
+				break;
 		}
+		displayNewRoundInfo();
 	}
 	
 	private void displayGameWonInfo() {
 		btnPlayContinue.setEnabled(false);
-		
+
 		//updateGameMessages
-		if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
+		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
 			areaGameMessages.append("YOU WON THE GAME with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
 				+ "\n\nWould you like to save the statistics from this game to the database?\n");
 		}
@@ -358,20 +388,17 @@ public class GUI extends JFrame implements ActionListener {
 	
 	private void displayRoundWonInfo() {
 		//updateGameMessages
-		if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
+		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
 			areaGameMessages.append("You won the round with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!\n");
 		}
 		else {
 			areaGameMessages.append("Player " + game.getCurrentPlayer().getPlayerNumber() + " won the round with the "
 					+ game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!\n");
-		}
-		
-		displayNewRoundInfo();
+		}		
 	}
 	
 	private void displayRoundDrawInfo() {
 		areaGameMessages.append("It's a draw!\n");
-		displayNewRoundInfo();
 	}
 	
 	public void actionPerformed(ActionEvent ae) {
@@ -382,9 +409,8 @@ public class GUI extends JFrame implements ActionListener {
 			btnPlayContinue.setEnabled(true);
 		}
 	    else if (ae.getSource() == this.btnPlayContinue) {
-	    	if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
+	    	if(game.getCurrentPlayer() == game.getHumanPlayer()) {
 		    	playCard();	
-		    	System.out.println(game.getCurrentPlayer().getDeck().seeTopCard().getTitle());
 	    	}
 	    	else {
 		    	continueAction();
