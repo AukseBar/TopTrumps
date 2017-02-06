@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 //for deck:
 import java.io.FileReader;
-import java.util.Arrays;
+
 import java.util.Scanner;
 
 public class GUI extends JFrame implements ActionListener {
@@ -15,7 +15,7 @@ public class GUI extends JFrame implements ActionListener {
 	private JTextArea areaCurrentStats,areaGameMessages;
 	private JComboBox comboBoxPlayers;
 	private JLabel lblNumberOfCpu,lblCurrentPlayers,lblName;
-	private JRadioButton radioButton_1, radioButton_2, radioButton_3, radioButton_4, radioButton_5;
+
 	private JRadioButton[] radioButton;
 	private JTextField[] tfAttrib;
 	private ButtonGroup radiogroup;
@@ -138,38 +138,14 @@ public class GUI extends JFrame implements ActionListener {
 		
 		this.lblName = new JLabel("*Name:    ");
 		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
-//		this.radioButton_1 = new JRadioButton("*Height");
-//		this.radioButton_2 = new JRadioButton("*Weight");
-//		this.radioButton_3 = new JRadioButton("*Length");
-//		this.radioButton_4 = new JRadioButton("*Ferocity");
-//		this.radioButton_5 = new JRadioButton("*Intelligence");
-//		
-//		radioButton_1.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-//		radioButton_2.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-//		radioButton_3.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-//		radioButton_4.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-//		radioButton_5.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-//		
-//		radioButton_1.setBackground(new Color(134, 199, 156));
-//		radioButton_2.setBackground(new Color(134, 199, 156));
-//		radioButton_3.setBackground(new Color(134, 199, 156));
-//		radioButton_4.setBackground(new Color(134, 199, 156));
-//		radioButton_5.setBackground(new Color(134, 199, 156));
+
 		
 		// Add all in order
 		subpanel_show_attributes.add(lblName);
-//		subpanel_show_attributes.add(radioButton_1);
-//		subpanel_show_attributes.add(radioButton_2);
-//		subpanel_show_attributes.add(radioButton_3);
-//		subpanel_show_attributes.add(radioButton_4);
-//		subpanel_show_attributes.add(radioButton_5);
+
 		
 		this.radiogroup = new ButtonGroup();
-//		radiogroup.add(radioButton_1);
-//		radiogroup.add(radioButton_2);
-//		radiogroup.add(radioButton_3);
-//		radiogroup.add(radioButton_4);
-//		radiogroup.add(radioButton_5);
+
 		for (int i =0; i <radioButton.length ; i++){
 			radioButton[i].setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 			radioButton[i].setBackground(new Color(134, 199, 156));
@@ -190,34 +166,7 @@ public class GUI extends JFrame implements ActionListener {
 		subpanel_categories.setLayout(new GridLayout(0,1,0,0));
 		panel_middle.add(subpanel_categories);
 		
-//		this.tfName = new JTextField();
-//		this.tfAttrib1 = new JTextField();
-//		this.tfAttrib2 = new JTextField();
-//		this.tfAttrib3 = new JTextField();
-//		this.tfAttrib4 = new JTextField();
-//		this.tfAttrib5 = new JTextField();
-//		// Makes it blend into background colour
-//		tfName.setBorder(null);
-//		tfAttrib1.setBorder(null);
-//		tfAttrib2.setBorder(null);
-//		tfAttrib3.setBorder(null);
-//		tfAttrib4.setBorder(null);
-//		tfAttrib5.setBorder(null);
-//		// Set box colours
-//		tfName.setBackground(new Color(134, 199, 156));
-//		tfAttrib1.setBackground(new Color(134, 199, 156));
-//		tfAttrib2.setBackground(new Color(134, 199, 156));
-//		tfAttrib3.setBackground(new Color(134, 199, 156));
-//		tfAttrib4.setBackground(new Color(134, 199, 156));
-//		tfAttrib5.setBackground(new Color(134, 199, 156));
-//		// Add all in order
-//		subpanel_categories.add(tfName);
-//		subpanel_categories.add(tfAttrib1);
-//		subpanel_categories.add(tfAttrib2);
-//		subpanel_categories.add(tfAttrib3);
-//		subpanel_categories.add(tfAttrib4);
-//		subpanel_categories.add(tfAttrib5);
-//		
+
 		this.tfAttrib = new JTextField[]{
 				new JTextField(),
 				new JTextField(),
@@ -299,23 +248,14 @@ public class GUI extends JFrame implements ActionListener {
 		
 		Deck gameDeck=new Deck(); //create a deck
 		String name = "";
-//		String cat1 = "";
-//		String cat2 = "";
-//		String cat3 = "";
-//		String cat4 = "";
-//		String cat5 = "";
+
 		String[] cat = {"","","","",""};
 		
 		try {   					  //read file for card info
 			Scanner scanner = new Scanner(new FileReader("deck.txt"));
-//			for (int i=0; i<deckSize; i++){
-			//scanner.nextLine();
+
 			name = scanner.next();
-//			cat1 = scanner.next();
-//			cat2 = scanner.next();
-//			cat3 = scanner.next();
-//			cat4 = scanner.next();
-//			cat5 = scanner.next();	
+
 			for (int i =0; i <cat.length ; i++){
 				cat[i] = scanner.next();
 			}
@@ -324,11 +264,6 @@ public class GUI extends JFrame implements ActionListener {
 			
 					while (scanner.hasNextLine())
 					{
-//						if (i==0){
-//							System.out.println(scanner.nextLine());
-//						}   // first line contains category names
-//						// might want to work this first line into displaying category names in GUI
-//						else{
 							///////READ THE REST AND MAKE A NEW CARD FOR EACH NEXTLINE\\\\\\\\\\\
 							String info=scanner.nextLine();
 						    gameDeck.addCardToTop(info);
@@ -348,27 +283,11 @@ public class GUI extends JFrame implements ActionListener {
 
 		// Caps on first letter
 		name = name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase() + ":   ";
-//		cat1 = cat1.substring(0,1).toUpperCase() + cat1.substring(1).toLowerCase();
-//		cat2 = cat2.substring(0,1).toUpperCase() + cat2.substring(1).toLowerCase();
-//		cat3 = cat3.substring(0,1).toUpperCase() + cat3.substring(1).toLowerCase();
-//		cat4 = cat4.substring(0,1).toUpperCase() + cat4.substring(1).toLowerCase();
-//		cat5 = cat5.substring(0,1).toUpperCase() + cat5.substring(1).toLowerCase();
+
 		for (int i =0; i <cat.length ; i++){
 			cat[i] = cat[i].substring(0,1).toUpperCase() + cat[i].substring(1).toLowerCase();
 		}
-		// Setup descriptions
-//		this.lblName.setText(name);
-//		this.radioButton_1.setText(cat1);
-//        this.radioButton_2.setText(cat2);
-//        this.radioButton_3.setText(cat3);
-//        this.radioButton_4.setText(cat4);
-//        this.radioButton_5.setText(cat5);
-//		// TESTING BUTTON ACTIONS
-//		this.radioButton_1.setActionCommand(cat1);
-//		this.radioButton_2.setActionCommand(cat2);
-//		this.radioButton_3.setActionCommand(cat3);
-//		this.radioButton_4.setActionCommand(cat4);
-//		this.radioButton_5.setActionCommand(cat5);
+
 		
 		this.lblName.setText(name);
 		
@@ -386,11 +305,6 @@ public class GUI extends JFrame implements ActionListener {
 			tfAttrib[i].setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(i)));
 		}
 		
-//		tfAttrib1.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(1)));
-//		tfAttrib2.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(2)));
-//		tfAttrib3.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(3)));
-//		tfAttrib4.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(4)));
-//		tfAttrib5.setText(Integer.toString(game.getCurrentPlayer().getDeck().seeTopCard().getCategoryValue(5)));
 
 		if(game.getCurrentPlayer().getPlayerNumber() == Game.HUMAN_PLAYER) {
 			btnPlayContinue.setText("Play Card!");
