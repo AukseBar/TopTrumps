@@ -1,4 +1,8 @@
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import javax.swing.JFrame;
 
@@ -16,6 +20,7 @@ public class StatsReportFrame extends JFrame{
 	private String password = "1105443Pp";
 	private Connection connection =null;
 	public String gamesPlayed;
+	private final String gameStatsFile = "gameStatsFile.txt";
 	
 
 	public StatsReportFrame ()
@@ -32,7 +37,9 @@ public class StatsReportFrame extends JFrame{
 		this.password = password;
 	}
 	
-	//set up connection
+	/*
+	 * sets up the database connection
+	 */
 	
 	public void newConnection()
 	{
@@ -60,25 +67,79 @@ public class StatsReportFrame extends JFrame{
 	
 	}
 	
-	//begin queries to get stats 
+	/*
+	 * TODO a method for saving stats to database
+	 */
+	
+	
+	
+	
+	
+	
+	
+	/*
+	 * instantiates
+	 * and runs the queries 
+	 * to get the game stats 
+	 */
 
-			public void getStats ()
+			public void getStats () throws IOException 
 			{
 						
 			Statement stmt1 = null;
 			String query1 = "SELECT game_number FROM TopTrumpsData;";
+			Statement stmt2 = null; 
+			String query2 = "SELECT player_zero_rounds FROM TopTrumpsData;";
+			Statement stmt3 = null;
+			String query3 = "SELECT player_one_rounds FROM TopTrumpsData;";
+			Statement stmt4 = null;
+			String query4 = "SELECT draws FROM TopTrumpsData;";
+			Statement stmt5 = null;
+			String query5 = "SELECT rounds_played FROM TopTrumpsData;";
 	
 			try 
 			{
 				stmt1 = connection.createStatement();
 				ResultSet rs1 = stmt1.executeQuery(query1);
-	
+				stmt2 = connection.createStatement();
+				ResultSet rs2 = stmt2.executeQuery(query2);
+				stmt3 = connection.createStatement();
+				ResultSet rs3 = stmt3.executeQuery(query3);
+				stmt4 = connection.createStatement();
+				ResultSet rs4 = stmt4.executeQuery(query4);
+				stmt5 = connection.createStatement();
+				ResultSet rs5 = stmt5.executeQuery(query5);
+				
+				
 			while (rs1.next())
 			{
 
-				String gamesPlayed = rs1.getString("game_number"); //realise this should be an int, can parse later 
-				System.out.println(gamesPlayed);
-
+				String gamesPlayed = rs1.getString("game_number"); 
+				System.out.println("Number of games played:" + " " + gamesPlayed);
+				
+			}
+			while (rs2.next())
+			{
+				String playerZero = rs2.getString("player_zero_rounds");
+				System.out.println("Player Zero rounds:" + " " + playerZero);
+			}
+			while (rs3.next())
+			{
+				String playerOne = rs3.getString("player_one_rounds");
+				System.out.println("Player one rounds:" + " " + playerOne);
+				
+			}
+			while (rs4.next())
+			{
+				String draws = rs4.getString("draws");
+				System.out.println("Draws:" + " " + draws);
+			
+			}
+			
+			while (rs5.next())
+			{
+				String roundsPlayed = rs5.getString("rounds_played");
+				System.out.println("Rounds played:" + " " + roundsPlayed);
 			}
 			}
 			catch (SQLException e)
@@ -86,14 +147,14 @@ public class StatsReportFrame extends JFrame{
 				e.printStackTrace();
 				System.out.print("SQL statement not found");
 			}
+			
+		writeStatsFile();
 	
 	}
-					public void actionPerformed (ActionEvent ae) {
-	
-						if (ae.getSource() == GUI.btnViewStats) //???????? Y U DO DIS
-							newConnection();
-							getStats();
-					}
+			
+		/**
+		 * closes the database connection
+		 */
 
 		public void closeConnection ()
 		{
@@ -111,10 +172,34 @@ public class StatsReportFrame extends JFrame{
 	
 		}
 
-        
-        public int viewStats(){
+		/*
+		 * TODO set up the report frame 
+		 */
+		
+	
+        public int viewStatsFrame(){
                
                 int stats = 0;
   
                 return stats; // TEST - CHANGE AS APPROPRIATE
         }
+        
+        /*
+         * writes the game stats to a file 
+         */
+        
+        
+        public void writeStatsFile () throws IOException
+        {
+        	
+        	File gameStatsFile = new File ("gameStatsFile.txt");
+        	gameStatsFile.createNewFile();
+        	FileWriter writeStats = new FileWriter(gameStatsFile);
+        	writeStats.write("testing file writing");
+        	writeStats.close();
+        }
+        
+        
+        
+        
+}
