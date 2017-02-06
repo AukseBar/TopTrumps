@@ -188,76 +188,76 @@ public class GUI extends JFrame implements ActionListener {
 	public void layoutBottom(){
 		
 		// Bottom panel for in-game messages and save game button
-				this.panel_bottom = new JPanel();
-				panel_bottom.setBackground(new Color(77, 132, 96));
-				contentPane.add(panel_bottom, BorderLayout.SOUTH);
-				panel_bottom.setLayout(new BoxLayout(panel_bottom, BoxLayout.X_AXIS));
-				
-				//////////////////////////////////
-				//      Player Listing Area    //
-				
-				this.panel_bottom_left = new JPanel();
-				this.lblPlayerListing = new JLabel("Player Listing");
-				this.scrollPane_2 = new JScrollPane();
-				this.areaPlayerListing = new JTextArea();
-				
-				panel_bottom_left.setBackground(new Color(134, 199, 156));
-				panel_bottom_left.setLayout(new BoxLayout(panel_bottom_left, BoxLayout.Y_AXIS));
-				areaPlayerListing.setBackground(new Color(134, 199, 156));
-				scrollPane_2.setViewportView(areaPlayerListing);
-				areaPlayerListing.setRows(4);
-				areaPlayerListing.setColumns(10);
-				areaPlayerListing.setEditable(false);
-				
-				panel_bottom.add(panel_bottom_left);
-				panel_bottom_left.add(lblPlayerListing);
-				panel_bottom_left.add(scrollPane_2);
-				
-				
-				////////////////////////////////////
-				//       GAME MESSAGES           //
-				
-				// Add a scrollpane
-				this.scrollPane = new JScrollPane();
-				panel_bottom.add(scrollPane);
-				
-				this.areaGameMessages = new JTextArea();
-				areaGameMessages.setBackground(new Color(134, 199, 156));
-				areaGameMessages.setEditable(false); // Toggle to allow editing
-				areaGameMessages.setRows(5);
-				areaGameMessages.setColumns(25);
-				scrollPane.setViewportView(areaGameMessages);
-				
-				
-				////////////////////////////////////
-				//      Play card and other stats //		
-				this.panel_bottom_right = new JPanel();
-				panel_bottom_right.setBackground(new Color(134, 199, 156));
-				panel_bottom.add(panel_bottom_right);
-				panel_bottom_right.setLayout(new GridLayout(0, 1, 0, 0));
-				
-				
-				this.btnPlayContinue = new JButton("Play Card!");
-				this.lblCardsLeft = new JLabel("Cards Left");
-				this.tfCardsLeft = new JTextField();
-				this.lblCommunalPile = new JLabel("Communal Pile");
-				this.tfCommunal = new JTextField();
-				
-				tfCardsLeft.setBackground(new Color(134, 199, 156));
-				tfCommunal.setBackground(new Color(134, 199, 156));
-				btnPlayContinue.setBackground(new Color(134, 199, 156));
-				btnPlayContinue.setEnabled(false);
-				tfCardsLeft.setEnabled(false);
-				tfCommunal.setEnabled(false);
-				
-				panel_bottom_right.add(btnPlayContinue);
-				panel_bottom_right.add(lblCardsLeft);
-				panel_bottom_right.add(tfCardsLeft);
-				panel_bottom_right.add(lblCommunalPile);
-				panel_bottom_right.add(tfCommunal);
-				
-				// Action listeners on the bottom
-				this.btnPlayContinue.addActionListener(this);
+		this.panel_bottom = new JPanel();
+		panel_bottom.setBackground(new Color(77, 132, 96));
+		contentPane.add(panel_bottom, BorderLayout.SOUTH);
+		panel_bottom.setLayout(new BoxLayout(panel_bottom, BoxLayout.X_AXIS));
+		
+		//////////////////////////////////
+		//      Player Listing Area    //
+		
+		this.panel_bottom_left = new JPanel();
+		this.lblPlayerListing = new JLabel("Player Listing");
+		this.scrollPane_2 = new JScrollPane();
+		this.areaPlayerListing = new JTextArea();
+		
+		panel_bottom_left.setBackground(new Color(134, 199, 156));
+		panel_bottom_left.setLayout(new BoxLayout(panel_bottom_left, BoxLayout.Y_AXIS));
+		areaPlayerListing.setBackground(new Color(134, 199, 156));
+		scrollPane_2.setViewportView(areaPlayerListing);
+		areaPlayerListing.setRows(4);
+		areaPlayerListing.setColumns(10);
+		areaPlayerListing.setEditable(false);
+		
+		panel_bottom.add(panel_bottom_left);
+		panel_bottom_left.add(lblPlayerListing);
+		panel_bottom_left.add(scrollPane_2);
+		
+		
+		////////////////////////////////////
+		//       GAME MESSAGES           //
+		
+		// Add a scrollpane
+		this.scrollPane = new JScrollPane();
+		panel_bottom.add(scrollPane);
+		
+		this.areaGameMessages = new JTextArea();
+		areaGameMessages.setBackground(new Color(134, 199, 156));
+		areaGameMessages.setEditable(false); // Toggle to allow editing
+		areaGameMessages.setRows(5);
+		areaGameMessages.setColumns(25);
+		scrollPane.setViewportView(areaGameMessages);
+		
+		
+		////////////////////////////////////
+		//      Play card and other stats //		
+		this.panel_bottom_right = new JPanel();
+		panel_bottom_right.setBackground(new Color(134, 199, 156));
+		panel_bottom.add(panel_bottom_right);
+		panel_bottom_right.setLayout(new GridLayout(0, 1, 0, 0));
+		
+		
+		this.btnPlayContinue = new JButton("Play Card!");
+		this.lblCardsLeft = new JLabel("Cards Left");
+		this.tfCardsLeft = new JTextField();
+		this.lblCommunalPile = new JLabel("Communal Pile");
+		this.tfCommunal = new JTextField();
+		
+		tfCardsLeft.setBackground(new Color(134, 199, 156));
+		tfCommunal.setBackground(new Color(134, 199, 156));
+		btnPlayContinue.setBackground(new Color(134, 199, 156));
+		btnPlayContinue.setEnabled(false);
+		tfCardsLeft.setEnabled(false);
+		tfCommunal.setEnabled(false);
+		
+		panel_bottom_right.add(btnPlayContinue);
+		panel_bottom_right.add(lblCardsLeft);
+		panel_bottom_right.add(tfCardsLeft);
+		panel_bottom_right.add(lblCommunalPile);
+		panel_bottom_right.add(tfCommunal);
+		
+		// Action listeners on the bottom
+		this.btnPlayContinue.addActionListener(this);
 		
 	}
 	
