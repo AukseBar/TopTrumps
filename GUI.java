@@ -77,6 +77,7 @@ public class GUI extends JFrame implements ActionListener {
 		this.btnNewGame.setBackground(new Color(134, 199, 156));
 		this.btnViewStats.setBackground(new Color(134, 199, 156));
 		this.btnSaveStats.setBackground(new Color(134, 199, 156));
+		this.btnSaveStats.setEnabled(false);
 		// Add all onto layout (in order)
 		panel_top.add(btnNewGame);
 		panel_top.add(lblNumberOfCpu);
@@ -386,6 +387,8 @@ public class GUI extends JFrame implements ActionListener {
 					+ game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
 					+ "\n\nWould you like to save the statistics from this game to the database?\n");
 		}
+		btnViewStats.setEnabled(true);
+		btnSaveStats.setEnabled(true);
 	}
 	
 	private void displayRoundWonInfo() {
@@ -409,6 +412,7 @@ public class GUI extends JFrame implements ActionListener {
 			game.startGame(comboBoxPlayers.getSelectedIndex() + 1);
 			displayNewRoundInfo();
 			btnPlayContinue.setEnabled(true);
+			btnViewStats.setEnabled(false);
 		}
 	    else if (ae.getSource() == this.btnPlayContinue) {
 	    	if(game.getCurrentPlayer() == game.getHumanPlayer()) {
