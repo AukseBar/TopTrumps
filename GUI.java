@@ -231,6 +231,8 @@ public class GUI extends JFrame implements ActionListener {
 		areaGameMessages.setEditable(false); // Toggle to allow editing
 		areaGameMessages.setRows(5);
 		areaGameMessages.setColumns(25);
+		areaGameMessages.setLineWrap(true);
+		areaGameMessages.setWrapStyleWord(true);
 		scrollPane.setViewportView(areaGameMessages);
 		
 		this.btnPlayContinue = new JButton("Play Card!");
