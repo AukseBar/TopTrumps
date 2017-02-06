@@ -167,6 +167,10 @@ public class Game {
 
 	// Accessors
 	
+	public Deck getCommunalPile(){
+		return communalPile;
+	}
+	
 	public Player getCurrentPlayer() {
 		return currentPlayer;
 	}

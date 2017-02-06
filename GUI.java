@@ -413,11 +413,17 @@ public class GUI extends JFrame implements ActionListener {
 		else {
 			areaGameMessages.append("Player " + game.getCurrentPlayer().getPlayerNumber() + " won the round with the "
 					+ game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!\n");
-		}		
+		}	
+		updateCommunalPile();
 	}
 	
 	private void displayRoundDrawInfo() {
 		areaGameMessages.append("It's a draw!\n");
+		updateCommunalPile();
+	}
+	
+	private void updateCommunalPile(){
+		tfCommunal.setText(String.format("%d",game.getCommunalPile().getSize()));
 	}
 	
 	public void actionPerformed(ActionEvent ae) {
