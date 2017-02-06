@@ -248,7 +248,9 @@ public class GUI extends JFrame implements ActionListener {
 		btnPlayContinue.setBackground(new Color(134, 199, 156));
 		btnPlayContinue.setEnabled(false);
 		tfCardsLeft.setEnabled(false);
+		tfCardsLeft.setDisabledTextColor(Color.BLACK);		
 		tfCommunal.setEnabled(false);
+		tfCommunal.setDisabledTextColor(Color.BLACK);
 		
 		panel_bottom_right.add(btnPlayContinue);
 		panel_bottom_right.add(lblCardsLeft);
@@ -426,6 +428,10 @@ public class GUI extends JFrame implements ActionListener {
 		tfCommunal.setText(String.format("%d",game.getCommunalPile().getSize()));
 	}
 	
+	private void updateCardsLeft(){
+    	tfCardsLeft.setText(String.format("%d",game.getHumanPlayer().getDeck().getSize()));
+	}
+	
 	public void actionPerformed(ActionEvent ae) {
 	    if (ae.getSource() == this.btnNewGame) {
 			// Adds 1 to the position index to pass the number of computer players chosen
@@ -433,6 +439,7 @@ public class GUI extends JFrame implements ActionListener {
 			displayNewRoundInfo();
 			btnPlayContinue.setEnabled(true);
 			btnViewStats.setEnabled(false);
+			updateCardsLeft();
 		}
 	    else if (ae.getSource() == this.btnPlayContinue) {
 	    	if(game.getCurrentPlayer() == game.getHumanPlayer()) {
@@ -441,6 +448,7 @@ public class GUI extends JFrame implements ActionListener {
 	    	else {
 		    	continueAction();
 	    	}
+	    	updateCardsLeft();
 	    }
 	    else if (ae.getSource() == this.btnViewStats) {
 	    	System.out.println("You pressed View Stats");
