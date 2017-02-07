@@ -405,6 +405,7 @@ public class GUI extends JFrame implements ActionListener {
 		}
 		btnViewStats.setEnabled(true);
 		btnSaveStats.setEnabled(true);
+		updatePlayerList();
 	}
 	
 	private void displayRoundWonInfo() {
@@ -417,6 +418,7 @@ public class GUI extends JFrame implements ActionListener {
 					+ game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!\n");
 		}	
 		updateCommunalPile();
+		updatePlayerList();
 	}
 	
 	private void displayRoundDrawInfo() {
@@ -432,6 +434,13 @@ public class GUI extends JFrame implements ActionListener {
     	tfCardsLeft.setText(String.format("%d",game.getHumanPlayer().getDeck().getSize()));
 	}
 	
+	private void updatePlayerList(){
+		areaPlayerListing.setText("Computer Players:\n");
+		for (int i=1; i<= comboBoxPlayers.getSelectedIndex()+1; i++)
+		areaPlayerListing.append("Player "+i+ ". Cards left: " + game.getPlayer(i).getDeck().getSize()+"\n");
+    	updateCardsLeft();
+	}
+	
 	public void actionPerformed(ActionEvent ae) {
 	    if (ae.getSource() == this.btnNewGame) {
 			// Adds 1 to the position index to pass the number of computer players chosen
@@ -439,7 +448,7 @@ public class GUI extends JFrame implements ActionListener {
 			displayNewRoundInfo();
 			btnPlayContinue.setEnabled(true);
 			btnViewStats.setEnabled(false);
-			updateCardsLeft();
+			updatePlayerList();
 		}
 	    else if (ae.getSource() == this.btnPlayContinue) {
 	    	if(game.getCurrentPlayer() == game.getHumanPlayer()) {
@@ -448,7 +457,6 @@ public class GUI extends JFrame implements ActionListener {
 	    	else {
 		    	continueAction();
 	    	}
-	    	updateCardsLeft();
 	    }
 	    else if (ae.getSource() == this.btnViewStats) {
 	    	System.out.println("You pressed View Stats");

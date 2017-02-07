@@ -186,4 +186,8 @@ public class Game {
 	public int getDraws() {
 		return draws;
 	}
+	
+	public Player getPlayer(int i){
+		return player[i];
+	}
 }
