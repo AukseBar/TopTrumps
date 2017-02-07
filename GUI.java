@@ -413,19 +413,37 @@ public class GUI extends JFrame implements ActionListener {
 	
 	private void displayRoundWonInfo(int chosenAttributeIndex) {
 		//updateGameMessages
-		Card winningCard= game.getCurrentPlayer().getDeck().seeTopCard();
-		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
+		Card winningCard= game.getCurrentPlayer().getDeck().seeTopCard(); //human's card
+		if(game.getCurrentPlayer() == game.getHumanPlayer()) {  //display human's card details
 			areaGameMessages.append("\nYou won the round with the " + winningCard.getTitle() + "(" + winningCard.getCategoryValue(chosenAttributeIndex)+")"+"");
-			for (int i=1; i<=comboBoxPlayers.getSelectedIndex()+1; i++){
-				Card loosingCard= game.getPlayer(i).getDeck().seeTopCard();
+			for (int i=1; i<=comboBoxPlayers.getSelectedIndex()+1; i++){ // display each cpu's card details
+				Card loosingCard= game.getPlayer(i).getDeck().seeTopCard(); //cpu's card
 				areaGameMessages.append(" against Player " +i+ "'s " + loosingCard.getTitle()+
 						"("+loosingCard.getCategoryValue(chosenAttributeIndex)+")\n");
 			}
 		}
 		else {
+			//for the winner of the round
 			areaGameMessages.append("Player " + game.getCurrentPlayer().getPlayerNumber() + " won the round with the "
-					+ game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!\n");
-		}	
+					+ winningCard.getTitle() +  "(" + winningCard.getCategoryValue(chosenAttributeIndex)+")"+"");
+			
+			for (int i=0; i<=comboBoxPlayers.getSelectedIndex()+1; i++){
+				if (i==game.getCurrentPlayer().getPlayerNumber()){  // skip the winner of the round
+					continue;
+				}
+			    else if (i==0){  //for human player's card
+			    	Card loosingCard= game.getPlayer(i).getDeck().seeTopCard(); //cpu's card
+					areaGameMessages.append(" against your " + loosingCard.getTitle()+
+						"("+loosingCard.getCategoryValue(chosenAttributeIndex)+")\n");
+				}   
+				//for the rest of the players
+			    else{
+			    	Card loosingCard= game.getPlayer(i).getDeck().seeTopCard(); //cpu's card
+					areaGameMessages.append(" against Player " +i+ "'s " + loosingCard.getTitle()+
+						"("+loosingCard.getCategoryValue(chosenAttributeIndex)+")\n");
+				}
+			   }
+			 }	
 		updateCommunalPile();
 		updatePlayerList();
 	}
