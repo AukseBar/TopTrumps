@@ -319,32 +319,6 @@ public class GUI extends JFrame implements ActionListener {
 		return gameDeck;
 	}
 
-	public void displayNewRoundInfo(){
-		tfAttrib[0].setText(game.getHumanPlayer().getDeck().seeTopCard().getTitle());
-		
-		for (int i =1; i <tfAttrib.length ; i++){
-			tfAttrib[i].setText(Integer.toString(game.getHumanPlayer().getDeck().seeTopCard().getCategoryValue(i)));
-		}
-		
-
-		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
-			btnPlayContinue.setText("Play Card!");
-			areaGameMessages.append("\nIt is your go! Select a category then Play Card!\n");
-		}
-		else {
-			btnPlayContinue.setText("Continue");
-			areaGameMessages.append("\nIt is Player " + game.getCurrentPlayer().getPlayerNumber() + "'s go! Are you ready?\nContinue...\n");
-		}
-
-		// update player list
-
-		// update cards left
-		
-		repaint();
-		revalidate();
-
-	}
-
 	private void playCard() {
 		for (int i = 1; i <= radioButton.length; i++){
 			if (radioButton[i-1].isSelected()){
@@ -357,18 +331,19 @@ public class GUI extends JFrame implements ActionListener {
 						else {
 							displayRoundWonInfo(i);
 							game.transferCardsToWinner();
+							displayNewRoundInfo();
 						}
 						break;		// From switch
 
 					case Game.STATE_ROUND_DRAW:
 						displayRoundDrawInfo();
 						game.transferCardsToCommunal();
+						displayNewRoundInfo();
 						break;		// From switch
 				}
 				break;				// From for loop
 			}
 		}
-		displayNewRoundInfo();
 	}
 	
 	private void continueAction() {
@@ -382,15 +357,43 @@ public class GUI extends JFrame implements ActionListener {
 				else {
 					displayRoundWonInfo(chosenCategory);
 					game.transferCardsToWinner();
+					displayNewRoundInfo();
 				}
 				break;
 				
 			case Game.STATE_ROUND_DRAW:
 				displayRoundDrawInfo();
 				game.transferCardsToCommunal();
+				displayNewRoundInfo();
 				break;
 		}
-		displayNewRoundInfo();
+	}
+	
+	public void displayNewRoundInfo(){
+		tfAttrib[0].setText(game.getHumanPlayer().getDeck().seeTopCard().getTitle());
+		
+		for (int i =1; i <tfAttrib.length ; i++){
+			tfAttrib[i].setText(Integer.toString(game.getHumanPlayer().getDeck().seeTopCard().getCategoryValue(i)));
+		}
+		
+
+		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
+			btnPlayContinue.setText("Play Card!");
+			areaGameMessages.append("It is your go! Select a category then Play Card!\n");
+		}
+		else {
+			btnPlayContinue.setText("Continue");
+			areaGameMessages.append("It is Player " + game.getCurrentPlayer().getPlayerNumber() + "'s go! Are you ready?\nContinue...\n");
+		}
+
+		// update player list
+
+		updateCardsLeft();
+		updateCommunalPile();
+		
+		repaint();
+		revalidate();
+
 	}
 	
 	private void displayGameWonInfo() {
@@ -398,13 +401,13 @@ public class GUI extends JFrame implements ActionListener {
 
 		//updateGameMessages
 		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
-			areaGameMessages.append("YOU WON THE GAME with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
-				+ "\n\nWould you like to save the statistics from this game to the database?\n");
+			areaGameMessages.append("\nYOU WON THE GAME with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!\n"
+				+ "\nWould you like to save the statistics from this game to the database?\n");
 		}
 		else {
-			areaGameMessages.append("PLAYER " + game.getCurrentPlayer().getPlayerNumber() + " WON THE GAME with the "
-					+ game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!"
-					+ "\n\nWould you like to save the statistics from this game to the database?\n");
+			areaGameMessages.append("\nPLAYER " + game.getCurrentPlayer().getPlayerNumber() + " WON THE GAME with the "
+					+ game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!\n"
+					+ "\nWould you like to save the statistics from this game to the database?\n");
 		}
 		btnViewStats.setEnabled(true);
 		btnSaveStats.setEnabled(true);
@@ -449,8 +452,7 @@ public class GUI extends JFrame implements ActionListener {
 	}
 	
 	private void displayRoundDrawInfo() {
-		areaGameMessages.append("It's a draw!\n");
-		updateCommunalPile();
+		areaGameMessages.append("\nIt's a draw!\n");
 	}
 	
 	private void updateCommunalPile(){
@@ -470,12 +472,10 @@ public class GUI extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent ae) {
 	    if (ae.getSource() == this.btnNewGame) {
-			// Adds 1 to the position index to pass the number of computer players chosen
-			game.startGame(comboBoxPlayers.getSelectedIndex() + 1);
+			game.startGame(Integer.parseInt(comboBoxPlayers.getSelectedItem().toString()));
 			displayNewRoundInfo();
 			btnPlayContinue.setEnabled(true);
 			btnViewStats.setEnabled(false);
-			updatePlayerList();
 		}
 	    else if (ae.getSource() == this.btnPlayContinue) {
 	    	if(game.getCurrentPlayer() == game.getHumanPlayer()) {
