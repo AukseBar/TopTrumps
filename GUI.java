@@ -226,6 +226,8 @@ public class GUI extends JFrame implements ActionListener {
 		areaGameMessages.setEditable(false); // Toggle to allow editing
 		areaGameMessages.setRows(5);
 		areaGameMessages.setColumns(25);
+		areaGameMessages.setLineWrap(true);
+		areaGameMessages.setWrapStyleWord(true);
 		scrollPane.setViewportView(areaGameMessages);
 		
 		
@@ -353,7 +355,7 @@ public class GUI extends JFrame implements ActionListener {
 							displayGameWonInfo();
 						}
 						else {
-							displayRoundWonInfo();
+							displayRoundWonInfo(i);
 							game.transferCardsToWinner();
 						}
 						break;		// From switch
@@ -370,14 +372,15 @@ public class GUI extends JFrame implements ActionListener {
 	}
 	
 	private void continueAction() {
-		switch(game.calculateRoundResult(game.getCurrentPlayer().chooseCategory())) {
+		int chosenCategory=game.calculateRoundResult(game.getCurrentPlayer().chooseCategory());
+		switch(chosenCategory) {
 		
 			case Game.STATE_ROUND_WON:
 				if(game.checkGameWon()) {
 					displayGameWonInfo();
 				}
 				else {
-					displayRoundWonInfo();
+					displayRoundWonInfo(chosenCategory);
 					game.transferCardsToWinner();
 				}
 				break;
@@ -408,10 +411,16 @@ public class GUI extends JFrame implements ActionListener {
 		updatePlayerList();
 	}
 	
-	private void displayRoundWonInfo() {
+	private void displayRoundWonInfo(int chosenAttributeIndex) {
 		//updateGameMessages
+		Card winningCard= game.getCurrentPlayer().getDeck().seeTopCard();
 		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
-			areaGameMessages.append("You won the round with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!\n");
+			areaGameMessages.append("\nYou won the round with the " + winningCard.getTitle() + "(" + winningCard.getCategoryValue(chosenAttributeIndex)+")"+"");
+			for (int i=1; i<=comboBoxPlayers.getSelectedIndex()+1; i++){
+				Card loosingCard= game.getPlayer(i).getDeck().seeTopCard();
+				areaGameMessages.append(" against Player " +i+ "'s " + loosingCard.getTitle()+
+						"("+loosingCard.getCategoryValue(chosenAttributeIndex)+")\n");
+			}
 		}
 		else {
 			areaGameMessages.append("Player " + game.getCurrentPlayer().getPlayerNumber() + " won the round with the "
