@@ -1,12 +1,13 @@
 
-/* Indicates if player is human or not, selects category for players (human or computer).
- * Returns int for roundsWon by each player. 
+/* This class indicates whether the player is human or not, 
+ * selects the card category for game-play and increments the number of games won. 
  * 
  */
 
 
 public class Player {
-
+	
+	//Instance variables
 	private final int numOfAttributes = 5;
 	private Deck playerHand;
 	private int playerNumber;
@@ -17,7 +18,8 @@ public class Player {
 		this.playerNumber = playerNumber;
 	}
 
-	public int chooseCategory() {  //selects highest attribute for computer player and returns its category index
+	//Method selects highest attribute for computer player and returns its category index.
+	public int chooseCategory() {  
 		Card c = playerHand.seeTopCard();
 		
 		int index = 1;
@@ -30,24 +32,29 @@ public class Player {
 		}
 		return index;
 	}
-
-	public void transferCardTo(Deck deck) {   // Method transfers cards from this deck to players' decks/communal deck upon rounds being completed. 
+	
+	// Method transfers cards from this deck to players' decks/communal deck upon rounds being completed. 
+	public void transferCardTo(Deck deck) {   
 		deck.addCardToBottom(playerHand.getTopCard());
 	}
 
+	//Method increments rounds won.
 	public void wonRound() {
-		// increments rounds won
-		roundsWon++;
+				roundsWon++;
 	}
 	
+	//Returns rounds won. 
 	public int getRoundsWon() {
 		return roundsWon;
 	}
 
-	public Deck getDeck(){   // Makes Player & Deck completely dependent.
+	
+	//Returns players' hand.
+	public Deck getDeck(){   
 		return playerHand;
 	}
 	
+	//Returns number of players. 
 	public int getPlayerNumber() {
 		return playerNumber;
 	}
