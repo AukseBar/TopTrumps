@@ -27,9 +27,13 @@ public class GUI extends JFrame implements ActionListener {
 	private ButtonGroup radiogroup;
 	
 	//for deck
-	private final int deckSize=40;
+	private Deck mainDeck;
+	private static final int DECK_SIZE = 40;
+	private static final int NUM_CATEGORIES = 5;
 	
-	private Game game;
+	private final Game game;
+	
+	private int numOfCompPlayers;
 	
 	
 	/**
@@ -47,6 +51,7 @@ public class GUI extends JFrame implements ActionListener {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
+		initMainDeck();
 		
 		// Construct the top, middle and bottom with some helpers:
 		
@@ -55,7 +60,7 @@ public class GUI extends JFrame implements ActionListener {
 		layoutBottom();
 		// At bottom as it changes values in middle layout
 		
-		game = new Game(initDeck());
+		game = new Game(mainDeck);
 	}
 	
 	public void layoutTop(){
@@ -127,15 +132,12 @@ public class GUI extends JFrame implements ActionListener {
 		panel_middle.add(subpanel_show_attributes);
 		
 		
-		this.radioButton = new JRadioButton[]{
-				new JRadioButton("*Height"),
-				new JRadioButton("*Weight"),
-				new JRadioButton("*Length"),
-				new JRadioButton("*Ferocity"),
-				new JRadioButton("*Intelligence")
-		};
+		this.radioButton = new JRadioButton[NUM_CATEGORIES];
+		for(int i = 0; i < NUM_CATEGORIES; i++) {
+			radioButton[i] = new JRadioButton(mainDeck.getCategoryName(i + 1));
+		}
 		
-		this.lblName = new JLabel("*Name:    ");
+		this.lblName = new JLabel("Description");
 		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
 
 		
@@ -265,58 +267,45 @@ public class GUI extends JFrame implements ActionListener {
 		
 	}
 	
-	public Deck initDeck(){	
-		
-		Deck gameDeck=new Deck(); //create a deck
-		String name = "";
+	public void initMainDeck(){
 
-		String[] cat = {"","","","",""};
-		
-		try {   					  //read file for card info
+		// Read file for card info
+		try {
 			Scanner scanner = new Scanner(new FileReader("deck.txt"));
+			scanner.useDelimiter("\\s+");
 
-			name = scanner.next();
-
-			for (int i =0; i <cat.length ; i++){
+			// Skip past first column  - always: "Description"
+			scanner.next();
+			
+			// Category names
+			String[] cat = new String[NUM_CATEGORIES];
+			for (int i = 0; i < NUM_CATEGORIES ; i++){
 				cat[i] = scanner.next();
 			}
-			
+			// Capitalise
+			for (int i =0; i <cat.length ; i++){
+				cat[i] = cat[i].substring(0,1).toUpperCase() + cat[i].substring(1).toLowerCase();
+			}
+
+			// Can now create the main deck
+			mainDeck = new Deck(DECK_SIZE, cat);
+
+			///////READ THE REST AND MAKE A NEW CARD FOR EACH NEXTLINE\\\\\\\\\\\
 			scanner.nextLine();
-			
-					while (scanner.hasNextLine())
-					{
-							///////READ THE REST AND MAKE A NEW CARD FOR EACH NEXTLINE\\\\\\\\\\\
-							String info=scanner.nextLine();
-						    gameDeck.addCardToTop(info);
-						    System.out.println(info);
-						 
-						}
-					scanner.close();
-					//Test that deck is filled to 40
-					System.err.println(gameDeck.getSize() + " cards added from file");
-					
-					
-					
-		  }
+			while (scanner.hasNextLine())
+			{
+				String info = scanner.nextLine();
+				mainDeck.addCardToTop(info);
+			}
+			scanner.close();
+		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-
-		// Caps on first letter
-		name = name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase() + ":   ";
-
-		for (int i =0; i <cat.length ; i++){
-			cat[i] = cat[i].substring(0,1).toUpperCase() + cat[i].substring(1).toLowerCase();
-		}
-
 		
-		this.lblName.setText(name);
-		
-		for (int i =0; i <radioButton.length ; i++){
-			this.radioButton[i].setText(cat[i]);
-			this.radioButton[i].setActionCommand(cat[i]);
-		}
-		return gameDeck;
+		// For assessment testing
+		System.out.println("INITIAL DECK:");
+		System.out.println(mainDeck.toString());
 	}
 
 	private void playCard() {
@@ -347,8 +336,8 @@ public class GUI extends JFrame implements ActionListener {
 	}
 	
 	private void continueAction() {
-		int chosenCategory=game.calculateRoundResult(game.getCurrentPlayer().chooseCategory());
-		switch(chosenCategory) {
+		int chosenCategory = game.getCurrentPlayer().chooseCategory();
+		switch(game.calculateRoundResult(chosenCategory)) {
 		
 			case Game.STATE_ROUND_WON:
 				if(game.checkGameWon()) {
@@ -370,89 +359,58 @@ public class GUI extends JFrame implements ActionListener {
 	}
 	
 	public void displayNewRoundInfo(){
-		tfAttrib[0].setText(game.getHumanPlayer().getDeck().seeTopCard().getTitle());
 		
+		// For assessment testing
+		for(int i = 0; i < numOfCompPlayers + 1; i++) {
+			if(i > 0) {
+				System.out.println("PLAYER " + i + "'S DECK:");
+				System.out.println(game.getPlayer(i).getDeck().toString());
+			}
+			else {
+				System.out.println("HUMAN PLAYER'S DECK:");
+				System.out.println(game.getHumanPlayer().getDeck().toString());
+			}
+		}
+		
+		// Update displayed card for human player
+		tfAttrib[0].setText(game.getHumanPlayer().getDeck().seeTopCard().getTitle());
 		for (int i =1; i <tfAttrib.length ; i++){
 			tfAttrib[i].setText(Integer.toString(game.getHumanPlayer().getDeck().seeTopCard().getCategoryValue(i)));
 		}
 		
-
+		// Update the game messages area for the context of the new round
 		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
 			btnPlayContinue.setText("Play Card!");
-			areaGameMessages.append("It is your go! Select a category then Play Card!\n");
+			areaGameMessages.append("\nIt is your go! Select a category then Play Card!\n");
 		}
 		else {
 			btnPlayContinue.setText("Continue");
-			areaGameMessages.append("It is Player " + game.getCurrentPlayer().getPlayerNumber() + "'s go! Are you ready?\nContinue...\n");
+			areaGameMessages.append("\nIt is Player " + game.getCurrentPlayer().getPlayerNumber() + "'s go! Are you ready?\nContinue...\n");
 		}
 
-		// update player list
-
-		updateCardsLeft();
+		// Update other GUI information areas
 		updateCommunalPile();
+		updateCardsLeft();
+		updatePlayerList();
 		
 		repaint();
 		revalidate();
-
-	}
-	
-	private void displayGameWonInfo() {
-		btnPlayContinue.setEnabled(false);
-
-		//updateGameMessages
-		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
-			areaGameMessages.append("\nYOU WON THE GAME with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!\n"
-				+ "\nWould you like to save the statistics from this game to the database?\n");
+		
+		// For assessment testing
+		System.out.print("CARDS IN PLAY:\n(choice) ");
+		if(game.getCurrentPlayer() != game.getHumanPlayer()) {
+			System.out.println("PLAYER " + game.getCurrentPlayer().getPlayerNumber() + "'S CARD: "
+					+ game.getCurrentPlayer().getDeck().seeTopCard().toString());
 		}
-		else {
-			areaGameMessages.append("\nPLAYER " + game.getCurrentPlayer().getPlayerNumber() + " WON THE GAME with the "
-					+ game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!\n"
-					+ "\nWould you like to save the statistics from this game to the database?\n");
-		}
-		btnViewStats.setEnabled(true);
-		btnSaveStats.setEnabled(true);
-		updatePlayerList();
-	}
-	
-	private void displayRoundWonInfo(int chosenAttributeIndex) {
-		//updateGameMessages
-		Card winningCard= game.getCurrentPlayer().getDeck().seeTopCard(); //human's card
-		if(game.getCurrentPlayer() == game.getHumanPlayer()) {  //display human's card details
-			areaGameMessages.append("\nYou won the round with the " + winningCard.getTitle() + "(" + winningCard.getCategoryValue(chosenAttributeIndex)+")"+"");
-			for (int i=1; i<=comboBoxPlayers.getSelectedIndex()+1; i++){ // display each cpu's card details
-				Card loosingCard= game.getPlayer(i).getDeck().seeTopCard(); //cpu's card
-				areaGameMessages.append(" against Player " +i+ "'s " + loosingCard.getTitle()+
-						"("+loosingCard.getCategoryValue(chosenAttributeIndex)+")\n");
+		else System.out.println("HUMAN PLAYER'S CARD: " + game.getCurrentPlayer().getDeck().seeTopCard().toString());
+		for(int i = 0; i < numOfCompPlayers + 1; i++) {
+			if(game.getPlayer(i) != game.getCurrentPlayer() && game.getPlayer(i).getDeck().hasCard()) {
+				if(i > 0) System.out.println("PLAYER " + i + "'S CARD: " + game.getPlayer(i).getDeck().seeTopCard().toString());
+				else System.out.println("HUMAN PLAYER'S CARD: " + game.getPlayer(i).getDeck().seeTopCard().toString());
 			}
 		}
-		else {
-			//for the winner of the round
-			areaGameMessages.append("Player " + game.getCurrentPlayer().getPlayerNumber() + " won the round with the "
-					+ winningCard.getTitle() +  "(" + winningCard.getCategoryValue(chosenAttributeIndex)+")"+"");
-			
-			for (int i=0; i<=comboBoxPlayers.getSelectedIndex()+1; i++){
-				if (i==game.getCurrentPlayer().getPlayerNumber()){  // skip the winner of the round
-					continue;
-				}
-			    else if (i==0){  //for human player's card
-			    	Card loosingCard= game.getPlayer(i).getDeck().seeTopCard(); //cpu's card
-					areaGameMessages.append(" against your " + loosingCard.getTitle()+
-						"("+loosingCard.getCategoryValue(chosenAttributeIndex)+")\n");
-				}   
-				//for the rest of the players
-			    else{
-			    	Card loosingCard= game.getPlayer(i).getDeck().seeTopCard(); //cpu's card
-					areaGameMessages.append(" against Player " +i+ "'s " + loosingCard.getTitle()+
-						"("+loosingCard.getCategoryValue(chosenAttributeIndex)+")\n");
-				}
-			   }
-			 }	
-		updateCommunalPile();
-		updatePlayerList();
-	}
-	
-	private void displayRoundDrawInfo() {
-		areaGameMessages.append("\nIt's a draw!\n");
+		System.out.println("---------------------------------\n");
+		
 	}
 	
 	private void updateCommunalPile(){
@@ -467,16 +425,83 @@ public class GUI extends JFrame implements ActionListener {
 		areaPlayerListing.setText("Computer Players:\n");
 		for (int i=1; i<= comboBoxPlayers.getSelectedIndex()+1; i++)
 		areaPlayerListing.append("Player "+i+ ". Cards left: " + game.getPlayer(i).getDeck().getSize()+"\n");
-    	updateCardsLeft();
+	}
+	
+	private void displayGameWonInfo() {
+		
+		// Set buttons for the current game context
+		btnPlayContinue.setEnabled(false);
+		btnViewStats.setEnabled(true);
+		btnSaveStats.setEnabled(true);
+
+		//  Update game messages for player
+		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
+			areaGameMessages.append("\nYOU WON THE GAME with the " + game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!\n"
+				+ "\nWould you like to save the statistics from this game to the database?\n");
+		}
+		else {
+			areaGameMessages.append("\nPLAYER " + game.getCurrentPlayer().getPlayerNumber() + " WON THE GAME with the "
+					+ game.getCurrentPlayer().getDeck().seeTopCard().getTitle() + "!!!\n"
+					+ "\nWould you like to save the statistics from this game to the database?\n");
+		}
+		
+		// For assessment testing
+		if(game.getCurrentPlayer() == game.getHumanPlayer()) System.out.println("The winner of the game is: YOU!");
+		else System.out.println("The winner of the game is: PLAYER " + game.getCurrentPlayer().getPlayerNumber() + "!\n YOU SUCK!");
+	}
+	
+	private void displayRoundWonInfo(int chosenAttributeIndex) {
+		//updateGameMessages
+		Card winningCard = game.getCurrentPlayer().getDeck().seeTopCard();
+		
+		if(game.getCurrentPlayer() == game.getHumanPlayer()) {  //display human's card details
+			areaGameMessages.append("\nYou won the round with the " + winningCard.getTitle() + "(" + winningCard.getCategoryValue(chosenAttributeIndex)+")"+"");
+			for (int i=1; i<=comboBoxPlayers.getSelectedIndex()+1; i++){ // display each cpu's card details
+				Card loosingCard= game.getPlayer(i).getDeck().seeTopCard(); //cpu's card
+				areaGameMessages.append(" Player " +i+ "'s " + loosingCard.getTitle()+
+						"("+loosingCard.getCategoryValue(chosenAttributeIndex)+")\n");
+			}
+		}
+		else {
+			//for the winner of the round
+			areaGameMessages.append("Player " + game.getCurrentPlayer().getPlayerNumber() + " won the round with the "
+					+ winningCard.getTitle() +  "(" + winningCard.getCategoryValue(chosenAttributeIndex)+")"+"");
+
+			for (int i=0; i<=comboBoxPlayers.getSelectedIndex()+1; i++){
+				if (i==game.getCurrentPlayer().getPlayerNumber()){  // skip the winner of the round
+					continue;
+				}
+				else if (i==0){  //for human player's card
+					Card loosingCard= game.getPlayer(i).getDeck().seeTopCard(); //cpu's card
+					areaGameMessages.append(" against your " + loosingCard.getTitle()+
+							"("+loosingCard.getCategoryValue(chosenAttributeIndex)+")\n");
+				}   
+				//for the rest of the players
+				else{
+					Card loosingCard= game.getPlayer(i).getDeck().seeTopCard(); //cpu's card
+					areaGameMessages.append(" against Player " +i+ "'s " + loosingCard.getTitle()+
+							"("+loosingCard.getCategoryValue(chosenAttributeIndex)+")\n");
+				}
+			}
+		}	
+	}
+
+	private void displayRoundDrawInfo() {
+		areaGameMessages.append("\nIt's a draw!\n");
 	}
 	
 	public void actionPerformed(ActionEvent ae) {
+		
+		// New Game
 	    if (ae.getSource() == this.btnNewGame) {
-			game.startGame(Integer.parseInt(comboBoxPlayers.getSelectedItem().toString()));
+	    	numOfCompPlayers = Integer.parseInt(comboBoxPlayers.getSelectedItem().toString());
+			game.startGame(numOfCompPlayers);
 			displayNewRoundInfo();
 			btnPlayContinue.setEnabled(true);
 			btnViewStats.setEnabled(false);
 		}
+	    
+	    // Play/Continue
 	    else if (ae.getSource() == this.btnPlayContinue) {
 	    	if(game.getCurrentPlayer() == game.getHumanPlayer()) {
 		    	playCard();	
@@ -485,13 +510,18 @@ public class GUI extends JFrame implements ActionListener {
 		    	continueAction();
 	    	}
 	    }
+	    
+	    // View Stats
 	    else if (ae.getSource() == this.btnViewStats) {
 	    	System.out.println("You pressed View Stats");
 	    	StatsReportFrame statsFrame = new StatsReportFrame();
 	    }
+	    
+	    // Save Stats
 	    else if (ae.getSource() == this.btnSaveStats) {
 	    	System.out.println("You pressed Save Stats");
 	    	System.out.println(game.getCurrentPlayer().getPlayerNumber());
 	    }
+	    
 	}
 }

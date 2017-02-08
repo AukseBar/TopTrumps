@@ -6,16 +6,20 @@ import java.util.Random;
 
 public class Deck {
 
-	private final int deckSize=40;
+	private final int deckCapacity;
 	private Card[] mainDeck;
 	private int deckTopPointer; // points at the next available slot
 	private int dealPointer;
+	private String[] category;
 	
-	public Deck(){
-		this.mainDeck= new Card[deckSize];
-		deckTopPointer=0;
+	public Deck(int deckSize, String[] category){
+		this.deckCapacity = deckSize;
+		this.category = category;
+		
+		mainDeck = new Card[deckSize];
+		deckTopPointer = 0;
 	}
-	
+		
 	/**
 	 * adds a card to the top of the deck array
 	 * @param String containing card info*/
@@ -63,16 +67,15 @@ public class Deck {
 	 * (pseudo)randomly shuffles the Card objects in the deck array
 	 * -based on Fisher-Yates array shuffle algorithm*/
 	public void shuffleDeck(){
-		for (int i=0; i<deckSize-2;i++){
+		for (int i=0; i<deckCapacity-2;i++){
 			Random rNr= new Random();
-			int randomNr= i + rNr.nextInt((deckSize-i));  // random needs to be between i and deckSize
+			int randomNr= i + rNr.nextInt((deckCapacity-i));  // random needs to be between i and deckSize
 			
 			Card temporal= mainDeck[i];    // swap cards at positions [i] and [randomNr]
 			mainDeck[i]=mainDeck[randomNr];
 			mainDeck[randomNr]=temporal;	
 		}
 		dealPointer=deckTopPointer; //prepared to deal cards
-		System.out.println(deckTopPointer);
 	}
 	
 	/**
@@ -109,7 +112,7 @@ public class Deck {
 	 * returns an integer*/
 	public int getSize(){
 		int size=0;
-		for (int i=0; i<deckSize;i++){
+		for (int i=0; i<deckCapacity;i++){
 			if (!(mainDeck[i]==null))
 				size++;
 		}
@@ -117,6 +120,27 @@ public class Deck {
 		
 		//alternatively:
 		//return topDeckPointer;
+	}
+	
+	public int getCapacity() {
+		return deckCapacity;
+	}
+	
+	public String getCategoryName(int categoryIndex) {
+		return category[categoryIndex - 1];
+	}
+	
+	public String[] getCategories() {
+		return category;
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		for(int i = 0; i < getSize(); i++) {
+			sb.append(mainDeck[i].toString() + "\n");
+		}
+		sb.append("\n---------------------------------\n");
+		return sb.toString();
 	}
 	
 	/**

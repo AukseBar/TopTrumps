@@ -9,11 +9,11 @@ public class Card {
 	 * @param String containing card info
 	 * */
 	public Card(String infor) {	  //takes a string and breaks it into chunks
-		this.infoText=infor;
-    	String [] info=infoText.split("\\s+");
-    	this.title=info[0];					    // title is the first word in the String
-    	for (int i=0; i<NrOfAttributes; i++){	// put category keywords into attribute array
-    		attribute[i]=Integer.parseInt(info[i+1]);
+		this.infoText = infor;
+    	String [] info = infoText.split("\\s+");
+    	this.title = info[0];					    	// title is the first word in the String
+    	for (int i = 0; i < NrOfAttributes; i++){		// put category keywords into attribute array
+    		attribute[i] = Integer.parseInt(info[i+1]);
     	}
 
     	// for testing draws::::::::::::::: this.attribute[4]=1;

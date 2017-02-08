@@ -8,14 +8,15 @@
 public class Player {
 	
 	//Instance variables
-	private final int numOfAttributes = 5;
+	private final int numOfCategories;
 	private Deck playerHand;
 	private int playerNumber;
 	private int roundsWon;
 
-	public Player(int playerNumber) {
-		playerHand = new Deck();
+	public Player(int playerNumber, Deck playerHand) {
 		this.playerNumber = playerNumber;
+		this.playerHand = playerHand;
+		numOfCategories = playerHand.getCategories().length;
 	}
 
 	//Method selects highest attribute for computer player and returns its category index.
@@ -23,11 +24,11 @@ public class Player {
 		Card c = playerHand.seeTopCard();
 		
 		int index = 1;
-		for(int max = 0, i = 1; i < numOfAttributes; i++) {
-			int categoryValue = c.getCategoryValue(i); 
+		for(int max = 0, i = 0; i < numOfCategories; i++) {
+			int categoryValue = c.getCategoryValue(i + 1);			// Categories count from 1
 			if(categoryValue > max) {
 				max = categoryValue;
-				index = i;
+				index = i + 1;			// Categories count from 1
 			}
 		}
 		return index;
