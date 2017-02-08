@@ -243,7 +243,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		
 		this.btnPlayContinue = new JButton("Play Card!");
-		this.lblCardsLeft = new JLabel("Cards Left");
+		this.lblCardsLeft = new JLabel("Your Cards Left");
 		this.tfCardsLeft = new JTextField();
 		this.lblCommunalPile = new JLabel("Communal Pile");
 		this.tfCommunal = new JTextField();
@@ -374,9 +374,11 @@ public class GUI extends JFrame implements ActionListener {
 		}
 		
 		// Update displayed card for human player
-		tfAttrib[0].setText(game.getHumanPlayer().getDeck().seeTopCard().getTitle());
-		for (int i =1; i <tfAttrib.length ; i++){
-			tfAttrib[i].setText(Integer.toString(game.getHumanPlayer().getDeck().seeTopCard().getCategoryValue(i)));
+		if(game.getHumanPlayer().getDeck().hasCard()) {
+			tfAttrib[0].setText(game.getHumanPlayer().getDeck().seeTopCard().getTitle());
+			for (int i =1; i <tfAttrib.length ; i++){
+				tfAttrib[i].setText(Integer.toString(game.getHumanPlayer().getDeck().seeTopCard().getCategoryValue(i)));
+			}
 		}
 		
 		// Set radio buttons enabled if the player has choice, or disabled otherwise
