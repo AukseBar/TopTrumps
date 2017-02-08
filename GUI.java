@@ -542,7 +542,9 @@ public class GUI extends JFrame implements ActionListener {
 	    // View Stats
 	    else if (ae.getSource() == this.btnViewStats) {
 	    	System.out.println("You pressed View Stats");
-	    	StatsReportFrame statsFrame = new StatsReportFrame();
+	    	StatsReportFrame newStatsFrame = new StatsReportFrame();
+	    	newStatsFrame.viewStatsFrame();
+		    
 	    }
 	    
 	    // Save Stats
