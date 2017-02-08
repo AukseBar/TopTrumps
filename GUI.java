@@ -516,6 +516,7 @@ public class GUI extends JFrame implements ActionListener {
 			displayNewRoundInfo();
 			btnPlayContinue.setEnabled(true);
 			btnViewStats.setEnabled(false);
+			btnSaveStats.setEnabled(false);
 		}
 	    
 	    // Play/Continue
@@ -534,7 +535,19 @@ public class GUI extends JFrame implements ActionListener {
 	    // Save Stats
 	    else if (ae.getSource() == this.btnSaveStats) {
 	    	System.out.println("You pressed Save Stats");
-	    	System.out.println(game.getCurrentPlayer().getPlayerNumber());
+	    	
+	    	System.err.println("Total rounds " + game.getTotalRounds());
+	    	
+	    	if(game.getCurrentPlayer() == game.getHumanPlayer()) {
+	    		System.err.println("Human Won");
+	    		
+	    	}
+	    	else{
+	    		
+	    		System.err.println("PLAYER " + game.getCurrentPlayer().getPlayerNumber() + " WON");
+	    	}
+	    	// ADD how many round each won.
+	    	
 	    }
 	    
 	}
