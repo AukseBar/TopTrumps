@@ -179,6 +179,12 @@ public class StatsReportFrame extends JFrame{
 	
         public int viewStatsFrame(){
                
+		
+		JFrame statsFrame = new JFrame();
+        	statsFrame.setVisible(true);
+        	statsFrame.setBounds(150, 150, 600, 500);
+        	statsFrame.setTitle("Game Statistics");       
+
                 int stats = 0;
   
                 return stats; // TEST - CHANGE AS APPROPRIATE
