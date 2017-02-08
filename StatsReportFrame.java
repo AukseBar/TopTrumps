@@ -1,3 +1,4 @@
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -5,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*;
 import javax.swing.JFrame;
+import javax.swing.JTextArea;
 
 /* Accesses SQL database and returns stat values - depending on Jbuttons pressed in GUI.
 saveStatsToDatabase()
@@ -186,7 +188,16 @@ public class StatsReportFrame extends JFrame{
         	statsFrame.setTitle("Game Statistics");       
 
                 int stats = 0;
-  
+                
+        // Adds Text area to stats frame:        
+        ScrollPane sp = new ScrollPane(); 
+        JTextArea areaStats = new JTextArea();
+			areaStats.setEditable(false);
+	        sp.add(areaStats);
+	        statsFrame.add(sp);
+                
+                
+                
                 return stats; // TEST - CHANGE AS APPROPRIATE
         }
         
