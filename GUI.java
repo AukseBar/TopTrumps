@@ -310,40 +310,30 @@ public class GUI extends JFrame implements ActionListener {
 		System.out.println(mainDeck.toString());
 	}
 
-	private void playCard() {
-		for (int i = 1; i <= radioButton.length; i++){
-			if (radioButton[i-1].isSelected()){
-				switch(game.calculateRoundResult(i)){
-				
-					case Game.STATE_ROUND_WON:
-						if(game.checkGameWon()) {
-							displayGameWonInfo();
-						}
-						else {
-							displayRoundWonInfo(i);
-							game.transferCardsToWinner();
-							displayNewRoundInfo();
-						}
-						break;		// From switch
-
-					case Game.STATE_ROUND_DRAW:
-						displayRoundDrawInfo();
-						game.transferCardsToCommunal();
-						displayNewRoundInfo();
-						break;		// From switch
+	private void playContinueAction() {
+		int chosenCategory = -1;
+		
+		// Play button pressed
+		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
+			for (int i = 1; i <= radioButton.length; i++) {
+				if (radioButton[i-1].isSelected()) {
+					chosenCategory = i;
+					break;
 				}
-				break;				// From for loop
 			}
 		}
-	}
-	
-	private void continueAction() {
-		int chosenCategory = game.getCurrentPlayer().chooseCategory();
-		switch(game.calculateRoundResult(chosenCategory)) {
+		// Continue button pressed
+		else {
+			chosenCategory = game.getCurrentPlayer().chooseCategory();
+		}
 		
+		// Switch to game updates based on round result
+		switch(game.calculateRoundResult(chosenCategory)) {
 			case Game.STATE_ROUND_WON:
 				if(game.checkGameWon()) {
 					displayGameWonInfo();
+					game.transferCardsToWinner();
+					displayNewRoundInfo();
 				}
 				else {
 					displayRoundWonInfo(chosenCategory);
@@ -351,7 +341,6 @@ public class GUI extends JFrame implements ActionListener {
 					displayNewRoundInfo();
 				}
 				break;
-				
 			case Game.STATE_ROUND_DRAW:
 				displayRoundDrawInfo();
 				game.transferCardsToCommunal();
@@ -359,7 +348,7 @@ public class GUI extends JFrame implements ActionListener {
 				break;
 		}
 	}
-	
+
 	public void displayNewRoundInfo(){
 		
 		// For assessment testing
@@ -531,12 +520,7 @@ public class GUI extends JFrame implements ActionListener {
 	    
 	    // Play/Continue
 	    else if (ae.getSource() == this.btnPlayContinue) {
-	    	if(game.getCurrentPlayer() == game.getHumanPlayer()) {
-		    	playCard();	
-	    	}
-	    	else {
-		    	continueAction();
-	    	}
+	    	playContinueAction();	
 	    }
 	    
 	    // View Stats
