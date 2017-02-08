@@ -14,9 +14,8 @@ public class Game {
 	protected static final int HUMAN_PLAYER = 0;
 	
 	// Static game states
-	protected static final int STATE_GAME_WON = 1;
-	protected static final int STATE_ROUND_WON = 2;
-	protected static final int STATE_ROUND_DRAW = 3;
+	protected static final int STATE_ROUND_WON = 1;
+	protected static final int STATE_ROUND_DRAW = 2;
 	
 	// Instance variables
 	private Deck communalPile;

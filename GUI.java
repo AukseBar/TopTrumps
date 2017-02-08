@@ -493,7 +493,7 @@ public class GUI extends JFrame implements ActionListener {
 					+ " (" + winningCard.getCategoryValue(chosenAttributeIndex)+") against:\n");
 			
 			// Iterate through all the players
-			for (int i = 0; i < numOfCompPlayers + 1; i++){
+			for (int i = 0; i < numOfCompPlayers + 1; i++) {
 				// Skipping the winner of the round and anyone who did not play in the round
 				if (game.getPlayer(i) == game.getCurrentPlayer() || !game.getPlayer(i).getDeck().hasCard()) {
 					continue;
