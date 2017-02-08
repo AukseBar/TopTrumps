@@ -183,6 +183,7 @@ public class GUI extends JFrame implements ActionListener {
 			tfAttrib[i].setFont(new Font("Showcard Gothic", Font.PLAIN, 13));
 			tfAttrib[i].setBorder(null);
 			tfAttrib[i].setBackground(new Color(134, 199, 156));
+			tfAttrib[i].setEditable(false);
 			subpanel_categories.add(tfAttrib[i]);
 			}
 		
