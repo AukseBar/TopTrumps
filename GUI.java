@@ -386,11 +386,11 @@ public class GUI extends JFrame implements ActionListener {
 		// Update the game messages area for the context of the new round
 		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
 			btnPlayContinue.setText("Play Card!");
-			areaGameMessages.append("\nIt is your go! Select a category then Play Card!\n");
+			areaGameMessages.append("\nIt is your go! Select a category then Play Card!");
 		}
 		else {
 			btnPlayContinue.setText("Continue");
-			areaGameMessages.append("\nIt is Player " + game.getCurrentPlayer().getPlayerNumber() + "'s go! Are you ready?\nContinue...\n");
+			areaGameMessages.append("\nIt is Player " + game.getCurrentPlayer().getPlayerNumber() + "'s go! Are you ready? Continue...");
 		}
 
 		// Update other GUI information areas
@@ -469,7 +469,7 @@ public class GUI extends JFrame implements ActionListener {
 			for (int i = 1; i < numOfCompPlayers + 1; i++) {
 				if(game.getPlayer(i).getDeck().hasCard()) {
 					losingCard = game.getPlayer(i).getDeck().seeTopCard();
-					areaGameMessages.append(" Player " + i + "'s " + losingCard.getTitle()
+					areaGameMessages.append("Player " + i + "'s " + losingCard.getTitle()
 					+ "(" + losingCard.getCategoryValue(chosenAttributeIndex) + ")\n");
 				}
 			}
@@ -477,7 +477,7 @@ public class GUI extends JFrame implements ActionListener {
 		// A computer player wins the round
 		else {
 			// Winning computer player's details
-			areaGameMessages.append("Player " + game.getCurrentPlayer().getPlayerNumber() + " won the round with the "
+			areaGameMessages.append("\nPlayer " + game.getCurrentPlayer().getPlayerNumber() + " won the round with the "
 					+ winningCard.getTitle() + "'s " + mainDeck.getCategoryName(chosenAttributeIndex)
 					+ " (" + winningCard.getCategoryValue(chosenAttributeIndex)+") against:\n");
 			
