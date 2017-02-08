@@ -135,6 +135,7 @@ public class GUI extends JFrame implements ActionListener {
 		this.radioButton = new JRadioButton[NUM_CATEGORIES];
 		for(int i = 0; i < NUM_CATEGORIES; i++) {
 			radioButton[i] = new JRadioButton(mainDeck.getCategoryName(i + 1));
+			radioButton[i].setEnabled(false);
 		}
 		
 		this.lblName = new JLabel("Description");
@@ -465,34 +466,46 @@ public class GUI extends JFrame implements ActionListener {
 	private void displayRoundWonInfo(int chosenAttributeIndex) {
 		//updateGameMessages
 		Card winningCard = game.getCurrentPlayer().getDeck().seeTopCard();
+		Card losingCard;
 		
-		if(game.getCurrentPlayer() == game.getHumanPlayer()) {  //display human's card details
-			areaGameMessages.append("\nYou won the round with the " + winningCard.getTitle() + "(" + winningCard.getCategoryValue(chosenAttributeIndex)+")"+"");
-			for (int i=1; i<=comboBoxPlayers.getSelectedIndex()+1; i++){ // display each cpu's card details
-				Card loosingCard= game.getPlayer(i).getDeck().seeTopCard(); //cpu's card
-				areaGameMessages.append(" Player " +i+ "'s " + loosingCard.getTitle()+
-						"("+loosingCard.getCategoryValue(chosenAttributeIndex)+")\n");
+		// Human player wins the round
+		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
+			areaGameMessages.append("\nYou won the round with the " + winningCard.getTitle() + "'s "
+					+ mainDeck.getCategoryName(chosenAttributeIndex) + " (" + winningCard.getCategoryValue(chosenAttributeIndex)
+					+ ") against:\n");
+			// Iterate through all computer players who played the round
+			for (int i = 1; i < numOfCompPlayers + 1; i++) {
+				if(game.getPlayer(i).getDeck().hasCard()) {
+					losingCard = game.getPlayer(i).getDeck().seeTopCard();
+					areaGameMessages.append(" Player " + i + "'s " + losingCard.getTitle()
+					+ "(" + losingCard.getCategoryValue(chosenAttributeIndex) + ")\n");
+				}
 			}
 		}
+		// A computer player wins the round
 		else {
-			//for the winner of the round
+			// Winning computer player's details
 			areaGameMessages.append("Player " + game.getCurrentPlayer().getPlayerNumber() + " won the round with the "
-					+ winningCard.getTitle() +  "(" + winningCard.getCategoryValue(chosenAttributeIndex)+")"+"");
-
-			for (int i=0; i<=comboBoxPlayers.getSelectedIndex()+1; i++){
-				if (i==game.getCurrentPlayer().getPlayerNumber()){  // skip the winner of the round
+					+ winningCard.getTitle() + "'s " + mainDeck.getCategoryName(chosenAttributeIndex)
+					+ " (" + winningCard.getCategoryValue(chosenAttributeIndex)+") against:\n");
+			
+			// Iterate through all the players
+			for (int i = 0; i < numOfCompPlayers + 1; i++){
+				// Skipping the winner of the round and anyone who did not play in the round
+				if (game.getPlayer(i) == game.getCurrentPlayer() || !game.getPlayer(i).getDeck().hasCard()) {
 					continue;
 				}
-				else if (i==0){  //for human player's card
-					Card loosingCard= game.getPlayer(i).getDeck().seeTopCard(); //cpu's card
-					areaGameMessages.append(" against your " + loosingCard.getTitle()+
-							"("+loosingCard.getCategoryValue(chosenAttributeIndex)+")\n");
+				// Human player's card
+				else if(game.getPlayer(i) == game.getHumanPlayer()) {
+					losingCard = game.getHumanPlayer().getDeck().seeTopCard();
+					areaGameMessages.append("Your " + losingCard.getTitle()
+							+ " (" + losingCard.getCategoryValue(chosenAttributeIndex) + ")\n");
 				}   
-				//for the rest of the players
+				// Rest of the computer players' cards
 				else{
-					Card loosingCard= game.getPlayer(i).getDeck().seeTopCard(); //cpu's card
-					areaGameMessages.append(" against Player " +i+ "'s " + loosingCard.getTitle()+
-							"("+loosingCard.getCategoryValue(chosenAttributeIndex)+")\n");
+					losingCard = game.getPlayer(i).getDeck().seeTopCard();
+					areaGameMessages.append("Player " + i + "'s " + losingCard.getTitle()+
+							" ("+losingCard.getCategoryValue(chosenAttributeIndex)+")\n");
 				}
 			}
 		}	
