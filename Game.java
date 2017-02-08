@@ -210,7 +210,7 @@ public class Game {
 		// Specification notes that the case where no players have cards does not need to be dealt with
 		if(!currentPlayer.getDeck().hasCard()) {
 			for(int i = 0; i <= numOfCompPlayers; i++) {
-				if(player[i].getDeck().hasCard()) {			// Player has at least one card and thus has participated in the round
+				if(player[i].getDeck().hasCard()) {
 					currentPlayer = player[i];
 				}
 			}

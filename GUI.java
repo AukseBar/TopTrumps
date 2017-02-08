@@ -378,6 +378,18 @@ public class GUI extends JFrame implements ActionListener {
 			tfAttrib[i].setText(Integer.toString(game.getHumanPlayer().getDeck().seeTopCard().getCategoryValue(i)));
 		}
 		
+		// Set radio buttons enabled if the player has choice, or disabled otherwise
+		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
+			for(JRadioButton b : radioButton) {
+				b.setEnabled(true);
+			}
+		}
+		else {
+			for(JRadioButton b : radioButton) {
+				b.setEnabled(false);
+			}
+		}
+		
 		// Update the game messages area for the context of the new round
 		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
 			btnPlayContinue.setText("Play Card!");
