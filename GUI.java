@@ -438,7 +438,7 @@ public class GUI extends JFrame implements ActionListener {
 	
 	private void updatePlayerList(){
 		areaPlayerListing.setText("Computer Players:\n");
-		for (int i=1; i<= comboBoxPlayers.getSelectedIndex()+1; i++)
+		for (int i=1; i<= numOfCompPlayers; i++)
 		areaPlayerListing.append("Player "+i+ ". Cards left: " + game.getPlayer(i).getDeck().getSize()+"\n");
 	}
 	
