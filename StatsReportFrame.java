@@ -81,12 +81,8 @@ public class StatsReportFrame extends JFrame{
 		
 		//game.getPlayer(i);
 			
-	//	int statsDraws = game.getDraws();
+		//int statsDraws = game.getDraws();
 
-		
-		Statement stmt0 = null;
-		String queryzero = "SELECT MAX(game_number), game_number FROM TopTrumpsData GROUP BY game_number;";
-		
 		/*
 		Statement stmt1 = null;
 		String queryD = "INSERT INTO TopTrumpsData (draws)" + "VALUES (3);";
@@ -107,9 +103,7 @@ public class StatsReportFrame extends JFrame{
 		
 		try {
 		
-		stmt0 = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ResultSet rsSave0 = stmt0.executeQuery(queryzero);
-			
+
 		/*stmt1 = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		ResultSet rsSave1 = stmt1.executeQuery(queryD);
 		stmt2 = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -121,83 +115,33 @@ public class StatsReportFrame extends JFrame{
 		stmt5 = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		ResultSet rsSave5 = stmt5.executeQuery(queryOneRounds);*/
 		
-		
-		if (!rsSave0.isBeforeFirst())
-		{
-			
-			//Statement stmt = null; 
-			String query = "INSERT INTO TopTrumpsData (game_number) VALUES (1);";
-			ResultSet rsSave0 = stmt0.executeQuery(queryzero);
-		}	
-		else 
-		{
-			
-		}
-		
-	/*while (!rsSave0.next())
-		{
-		System.out.println("9");
-		
-		}*/
-
-			/*int gamenumber = rsSave0.getInt("game_number");
-			rsSave0.updateInt("game_number", gamenumber);
-			rsSave0.updateRow();
-			*/
-		
-		
-		
-		}
 	
-	/*
-		while (rsSave1.next())
-		{
+		int nextGameNumber = 0;
+		Statement stmt = null;
+		String sql = "SELECT MAX(game_number) FROM TopTrumpsData;";
+		
+		try {
+		
+			stmt = connection.createStatement();
+			ResultSet resultSet = stmt.executeQuery(sql);
+
+			if(!resultSet.isBeforeFirst()) {
+				nextGameNumber = 1;			// Empty database so this will be the first row and game
+			}
+			else {
+				resultSet.next();			// Get the row returned by the MAX query
+				nextGameNumber = resultSet.getInt("max") + 1; // Get latest game number in database as it will be the 'max' and add one for the current game to be save
+			}
+
+			String sql2 = "INSERT INTO TopTrumpsData(game_number) VALUES(" + nextGameNumber + ")";
+			stmt.executeUpdate(sql2);
+		
+			// For next columns' data you will need to add it to the row using UPDATE as INSERT is just to create row
 			
-			int draws = rsSave1.getInt("draws");
-			rsSave1.updateInt("draws", draws);
-			rsSave1.updateRow();
-		}
-		while (rsSave2.next())
-		{
-			
-			String winner = rsSave2.getString("winning_player");
-			rsSave2.updateString("winning_player", winner);
-			rsSave2.updateRow();
-		}
-		while (rsSave3.next())
-		{
-			
-			int totalRounds = rsSave3.getInt("total_rounds");
-			rsSave3.updateInt("total_rounds", totalRounds);
-			rsSave3.updateRow();
-		}
-		while (rsSave4.next())
-		{
-			int zeroRounds = rsSave4.getInt("player_zero_rounds");
-			rsSave4.updateInt("player_zero_rounds", zeroRounds);
-			rsSave4.updateRow();
-		}
-		
-		while (rsSave5.next())
-		{
-			
-			int oneRounds = rsSave5.getInt("player_one_rounds");
-			rsSave5.updateInt("player_one_rounds", oneRounds);
-			rsSave5.updateRow();
-		
-		
-		}
-		
-		
-		
-		*/
-		
-		
-		
-		
-		
-		
-	//	}
+			String updateData = "UPDATE TopTrumpsData SET draws=1 WHERE game_number= " + nextGameNumber + ";";
+			stmt.executeUpdate(updateData);
+		}	
+
 	catch (SQLException e1) {
 		e1.printStackTrace ();
 		System.out.print("SQL statement not found");
