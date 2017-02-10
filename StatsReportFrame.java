@@ -184,7 +184,7 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 			String  player4String= "UPDATE TopTrumpsData SET player_four_rounds="+player[4]+" WHERE game_number= " + nextGameNumber + ";";		
 			String [] updateDataArray= {updateDraws, updateWinPlayer, roundsPlayed, humanRounds, player1String, player2String, player3String, player4String, };	
 			
-			for (int i=0; i<4+nrOfPlayers; i++) 
+			for (int i=0; i<3+nrOfPlayers; i++) 
 			stmt.executeUpdate(updateDataArray[i]);
 		}	
 		catch (SQLException e1) {
