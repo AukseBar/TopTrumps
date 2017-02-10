@@ -19,10 +19,10 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 	// Database connection
 	private Connection connection = null;
 	private String dbpath = "postgresql://yacata.dcs.gla.ac.uk:5432/";
-	private String dbname = "m_16_1105443p";
+	private String dbname = "m_16_2036032b";
 	private String tableName = "TopTrumpsData";
-	private String username = "1105443p";
-	private String password = "1105443p";
+	private String username = "m_16_2036032b";
+	private String password = "2036032b";
 	
 	// DB Columns
 	private int gamesPlayed;
@@ -137,44 +137,17 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 	 */
 	public void saveStats ()
 	{
-
-		//game.getDraws();
-		//game.getCurrentPlayer();
-		//game.getTotalRounds();
-		//game.getHumanPlayer();
-
-		//game.getPlayer(i);
-
-		//int statsDraws = game.getDraws();
-
-		/*
-		Statement stmt1 = null;
-		String queryD = "INSERT INTO TopTrumpsData (draws)" + "VALUES (3);";
-		Statement stmt2 = null;
-		String queryWin = "INSERT INTO TopTrumpsData (winning_player) VALUES (1);";
-		Statement stmt3 = null;
-		String queryRounds = "INSERT INTO TopTrumpsData (rounds_played) VALUES (20);";
-		Statement stmt4 = null;
-		String queryZeroRounds = "INSERT INTO TopTrumpsData (player_zero_rounds) VALUES (5);";
-		Statement stmt5 = null;
-		String queryOneRounds = "INSERT INTO TopTrumpsData (player_one_rounds) VALUES (6);";
-		Statement stmt6 = null;
-		String queryTwoRounds = "INSERT INTO TopTrumpsData (player_two_rounds) VALUES (9);";
-		Statement stmt7 = null;
-		String queryThreeRounds = "INSERT INTO TopTrumpsData (player_three_rounds) VALUES (0);";
-		Statement stmt8 = null;
-		String queryFourRounds = "INSERT INTO TopTrumpsData (player_four_rounds) VALUES (0);";*/		
-
-		/*stmt1 = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ResultSet rsSave1 = stmt1.executeQuery(queryD);
-		stmt2 = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ResultSet rsSave2 = stmt2.executeQuery(queryWin);
-		stmt3 = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ResultSet rsSave3 = stmt3.executeQuery(queryRounds);
-		stmt4 = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ResultSet rsSave4 = stmt4.executeQuery(queryZeroRounds);
-		stmt5 = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		ResultSet rsSave5 = stmt5.executeQuery(queryOneRounds);*/
+		int winPlayer=game.getCurrentPlayer().getPlayerNumber();
+		int nrRoundsPlayed=game.getTotalRounds();
+		
+		int human=game.getHumanPlayer().getPlayerNumber();
+		int nrOfPlayer= game.getNumOfPlayers();
+		int [] player= new int[4];
+		
+		for (int i=0; i<nrOfPlayer; i++){
+			player[i]=game.getPlayer(i).getRoundsWon();
+		}
+		int draws = game.getDraws();
 
 		
 		int nextGameNumber = -1;
@@ -201,10 +174,18 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 			String sql2 = "INSERT INTO TopTrumpsData(game_number) VALUES(" + nextGameNumber + ")";
 			stmt.executeUpdate(sql2);
 
-			// For next columns' data you will need to add it to the row using UPDATE as INSERT is just to create row
-
-			String updateData = "UPDATE TopTrumpsData SET draws=1 WHERE game_number= " + nextGameNumber + ";";
-			stmt.executeUpdate(updateData);
+			String updateDraws = "UPDATE TopTrumpsData SET draws="+draws+" WHERE game_number= " + nextGameNumber + ";";
+			String updateWinPlayer = "UPDATE TopTrumpsData SET winning_player="+winPlayer+" WHERE game_number= " + nextGameNumber + ";";
+			String roundsPlayed = "UPDATE TopTrumpsData SET rounds_played="+nrRoundsPlayed+" WHERE game_number= " + nextGameNumber + ";";			
+			String  humanRounds= "UPDATE TopTrumpsData SET player_zero_rounds="+human+" WHERE game_number= " + nextGameNumber + ";";
+			String  player1String= "UPDATE TopTrumpsData SET player_one_rounds="+player[0]+" WHERE game_number= " + nextGameNumber + ";";	
+			String  player2String= "UPDATE TopTrumpsData SET player_two_rounds="+player[1]+" WHERE game_number= " + nextGameNumber + ";";	
+			String  player3String= "UPDATE TopTrumpsData SET player_three_rounds="+player[2]+" WHERE game_number= " + nextGameNumber + ";";	
+			String  player4String= "UPDATE TopTrumpsData SET player_four_rounds="+player[3]+" WHERE game_number= " + nextGameNumber + ";";		
+			String [] updateDataArray= {updateDraws, updateWinPlayer, roundsPlayed, humanRounds, player1String, player2String, player3String, player4String, };	
+			
+			for (int i=0; i<3+nrOfPlayer; i++)
+			stmt.executeUpdate(updateDataArray[i]);
 		}	
 		catch (SQLException e1) {
 			e1.printStackTrace ();
