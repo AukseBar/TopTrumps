@@ -150,7 +150,7 @@ public class Game {
 		}
 		else {
 			currentPlayer = roundWinner;
-			currentPlayer.wonRound();
+	//		currentPlayer.wonRound();
 			return STATE_ROUND_WON;
 		}
 
@@ -191,11 +191,13 @@ public class Game {
 				player[i].transferCardTo(currentPlayer.getDeck());
 			}
 		}
+		currentPlayer.wonRound();
 	}
 
 	/**
 	 * Transfers the top cards from all players participating in the round into the communal pile */
 	public void transferCardsToCommunal() {
+		currentPlayer.wonRound();
 		for(int i = 0; i <= numOfCompPlayers; i++) {
 			if(player[i].getDeck().hasCard()) {			// Player has at least one card and thus has participated in the round
 				player[i].transferCardTo(communalPile);

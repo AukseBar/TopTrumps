@@ -23,6 +23,7 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 	private String tableName = "TopTrumpsData";
 	private String username = "m_16_2036032b";
 	private String password = "2036032b";
+	private JButton saveToFile;
 	
 	// DB Columns
 	private int gamesPlayed;
@@ -39,7 +40,7 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 
 	
 	public StatsReportFrame (Game game, boolean saveStats) throws SQLException
-	{
+	{	//newConnection();
 		this.game = game;
 		
 		if(!newConnection()) throw new SQLException("Connection failed!");
@@ -56,7 +57,7 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 		display.setEditable(false);
 		display.setText(buildReport());
 		add(display, BorderLayout.CENTER);
-		JButton saveToFile = new JButton("Save to File");
+		this.saveToFile = new JButton("Save to File");
 		saveToFile.addActionListener(this);
 		add(saveToFile, BorderLayout.SOUTH);
 		
@@ -127,7 +128,7 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 			return false;
 		}
 		finally {
-			closeConnection();
+//			closeConnection();
 		}
 		return true;				// Data found
 	}
@@ -267,7 +268,7 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 			File gameStatsFile = new File ("gameStatsFile.txt");
 			gameStatsFile.createNewFile();
 			FileWriter writeStats = new FileWriter(gameStatsFile);
-			writeStats.write("testing file writing");
+			writeStats.write(buildReport());
 			writeStats.close();
 		}
 		catch(IOException ex)
@@ -278,8 +279,11 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		
+		if (e.getSource() == this.saveToFile)
+		{
+			writeStatsFile();
+		}
 	}
 
 
