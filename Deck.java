@@ -12,6 +12,7 @@ public class Deck {
 	private int dealPointer;
 	private String[] category;
 	
+	
 	public Deck(int deckSize, String[] category){
 		this.deckCapacity = deckSize;
 		this.category = category;

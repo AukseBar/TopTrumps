@@ -1,13 +1,5 @@
-
 public class Main {
-
 	public static void main(String[] args) {
-		GUI frame = new GUI();
-		frame.setVisible(true);
-		
-		StatsReportFrame StatsReportFrame = new StatsReportFrame();
-		StatsReportFrame.newConnection();
-		
+		new GUI();		
 	}
-
 }

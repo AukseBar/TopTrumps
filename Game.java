@@ -240,4 +240,8 @@ public class Game {
 	public Player getPlayer(int i){
 		return player[i];
 	}
+	
+	public int getNumOfPlayers() {
+		return numOfCompPlayers + 1;
+	}
 }

@@ -5,7 +5,8 @@ import java.awt.event.ActionListener;
 
 //for deck:
 import java.io.FileReader;
-
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class GUI extends JFrame implements ActionListener {
@@ -33,6 +34,8 @@ public class GUI extends JFrame implements ActionListener {
 	
 	private final Game game;
 	
+	private StatsReportFrame statsFrame;
+	
 	private int numOfCompPlayers;
 	
 	
@@ -44,7 +47,8 @@ public class GUI extends JFrame implements ActionListener {
 		
 		setTitle("Top Trumps: Dinosaurs!");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 530);
+		//setBounds(100, 100, 600, 530);
+		
 		// Main Content Pane
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(102, 153, 153));
@@ -61,6 +65,9 @@ public class GUI extends JFrame implements ActionListener {
 		// At bottom as it changes values in middle layout
 		
 		game = new Game(mainDeck);
+		
+		pack();
+		setVisible(true);
 	}
 	
 	public void layoutTop(){
@@ -294,14 +301,14 @@ public class GUI extends JFrame implements ActionListener {
 
 			///////READ THE REST AND MAKE A NEW CARD FOR EACH NEXTLINE\\\\\\\\\\\
 			scanner.nextLine();
-			while (scanner.hasNextLine())
-			{
+			for(int i = 0; scanner.hasNextLine() && i < DECK_SIZE; i++) {
 				String info = scanner.nextLine();
 				mainDeck.addCardToTop(info);
 			}
+			System.out.println(mainDeck.getSize());
 			scanner.close();
 		}
-		catch(Exception e) {
+		catch(IOException e) {
 			e.printStackTrace();
 		}
 		
@@ -330,18 +337,20 @@ public class GUI extends JFrame implements ActionListener {
 		// Switch to game updates based on round result
 		switch(game.calculateRoundResult(chosenCategory)) {
 			case Game.STATE_ROUND_WON:
-				if(game.checkGameWon()) {
+				if(game.checkGameWon()) {		// Entire game won
 					displayGameWonInfo();
 					game.transferCardsToWinner();
-					displayNewRoundInfo();
+					updateCommunalPile();
+					updateCardsLeft();
+					updatePlayerList();
 				}
-				else {
+				else {							// Just round won
 					displayRoundWonInfo(chosenCategory);
 					game.transferCardsToWinner();
 					displayNewRoundInfo();
 				}
 				break;
-			case Game.STATE_ROUND_DRAW:
+			case Game.STATE_ROUND_DRAW:			// Round draw
 				displayRoundDrawInfo();
 				game.transferCardsToCommunal();
 				displayNewRoundInfo();
@@ -452,7 +461,7 @@ public class GUI extends JFrame implements ActionListener {
 		
 		// For assessment testing
 		if(game.getCurrentPlayer() == game.getHumanPlayer()) System.out.println("The winner of the game is: YOU!");
-		else System.out.println("The winner of the game is: PLAYER " + game.getCurrentPlayer().getPlayerNumber() + "!\n YOU SUCK!");
+		else System.out.println("The winner of the game is: PLAYER " + game.getCurrentPlayer().getPlayerNumber() + "!\n Better luck next time pal!");
 	}
 	
 	private void displayRoundWonInfo(int chosenAttributeIndex) {
@@ -526,28 +535,37 @@ public class GUI extends JFrame implements ActionListener {
 	    
 	    // View Stats
 	    else if (ae.getSource() == this.btnViewStats) {
-	    	System.out.println("You pressed View Stats");
-	    	StatsReportFrame newStatsFrame = new StatsReportFrame();
-	    	newStatsFrame.viewStatsFrame();
-		    
+	    	try {
+	    		statsFrame = new StatsReportFrame(game, false);
+	    	}
+	    	catch(SQLException ex) {
+	    		ex.printStackTrace();
+	    		JOptionPane.showMessageDialog(null, "Databse connection attempt failed.", "Error", JOptionPane.ERROR_MESSAGE);
+	    	}
+	    	
+	    	/*System.out.println("You pressed View Stats");*/
 	    }
 	    
 	    // Save Stats
 	    else if (ae.getSource() == this.btnSaveStats) {
-	    	System.out.println("You pressed Save Stats");
+	    	try {
+	    		statsFrame = new StatsReportFrame(game, true);
+	    	}
+	    	catch(SQLException ex) {
+	    		ex.printStackTrace();
+	    		JOptionPane.showMessageDialog(null, "Database connection attempt failed.", "Error", JOptionPane.ERROR_MESSAGE);
+	    	}
 	    	
+	    	/*System.out.println("You pressed Save Stats");
 	    	System.err.println("Total rounds " + game.getTotalRounds());
-	    	
 	    	if(game.getCurrentPlayer() == game.getHumanPlayer()) {
 	    		System.err.println("Human Won");
-	    		
 	    	}
 	    	else{
-	    		
 	    		System.err.println("PLAYER " + game.getCurrentPlayer().getPlayerNumber() + " WON");
 	    	}
 	    	// ADD how many round each won.
-	    	
+	    	*/
 	    }
 	    
 	}
