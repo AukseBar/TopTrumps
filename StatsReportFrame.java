@@ -140,13 +140,12 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 	{
 		int winPlayer=game.getCurrentPlayer().getPlayerNumber();
 		int nrRoundsPlayed=game.getTotalRounds();
+	//	int human=game.getHumanPlayer().getPlayerNumber();
+		int nrOfPlayers= game.getNumOfPlayers();
+		int [] player= new int[nrOfPlayers];
 		
-		int human=game.getHumanPlayer().getPlayerNumber();
-		int nrOfPlayer= game.getNumOfPlayers();
-		int [] player= new int[4];
-		
-		for (int i=0; i<nrOfPlayer; i++){
-			player[i]=game.getPlayer(i).getRoundsWon();
+		for (int i=0; i<nrOfPlayers; i++){
+			player[i]=game.getPlayer(i).getRoundsWon(); // player[0] is human player
 		}
 		int draws = game.getDraws();
 
@@ -178,14 +177,14 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 			String updateDraws = "UPDATE TopTrumpsData SET draws="+draws+" WHERE game_number= " + nextGameNumber + ";";
 			String updateWinPlayer = "UPDATE TopTrumpsData SET winning_player="+winPlayer+" WHERE game_number= " + nextGameNumber + ";";
 			String roundsPlayed = "UPDATE TopTrumpsData SET rounds_played="+nrRoundsPlayed+" WHERE game_number= " + nextGameNumber + ";";			
-			String  humanRounds= "UPDATE TopTrumpsData SET player_zero_rounds="+human+" WHERE game_number= " + nextGameNumber + ";";
-			String  player1String= "UPDATE TopTrumpsData SET player_one_rounds="+player[0]+" WHERE game_number= " + nextGameNumber + ";";	
-			String  player2String= "UPDATE TopTrumpsData SET player_two_rounds="+player[1]+" WHERE game_number= " + nextGameNumber + ";";	
-			String  player3String= "UPDATE TopTrumpsData SET player_three_rounds="+player[2]+" WHERE game_number= " + nextGameNumber + ";";	
-			String  player4String= "UPDATE TopTrumpsData SET player_four_rounds="+player[3]+" WHERE game_number= " + nextGameNumber + ";";		
+			String  humanRounds= "UPDATE TopTrumpsData SET player_zero_rounds="+player[0]+" WHERE game_number= " + nextGameNumber + ";";
+			String  player1String= "UPDATE TopTrumpsData SET player_one_rounds="+player[1]+" WHERE game_number= " + nextGameNumber + ";";	
+			String  player2String= "UPDATE TopTrumpsData SET player_two_rounds="+player[2]+" WHERE game_number= " + nextGameNumber + ";";	
+			String  player3String= "UPDATE TopTrumpsData SET player_three_rounds="+player[3]+" WHERE game_number= " + nextGameNumber + ";";	
+			String  player4String= "UPDATE TopTrumpsData SET player_four_rounds="+player[4]+" WHERE game_number= " + nextGameNumber + ";";		
 			String [] updateDataArray= {updateDraws, updateWinPlayer, roundsPlayed, humanRounds, player1String, player2String, player3String, player4String, };	
 			
-			for (int i=0; i<3+nrOfPlayer; i++)
+			for (int i=0; i<4+nrOfPlayers; i++) 
 			stmt.executeUpdate(updateDataArray[i]);
 		}	
 		catch (SQLException e1) {
