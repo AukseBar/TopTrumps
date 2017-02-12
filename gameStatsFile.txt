@@ -1,6 +1,0 @@
-
- Games Played:     25 
- Computer Wins:    14 
- Human Wins:       1 
- Average Draws:    1.00 
- Most Rounds:      89 

@@ -1,5 +1,3 @@
-import java.util.Random;
-
 /**
  * Defines the central game model for the Top Trumps card game implementation
  * Initialises the Players and Decks then runs the main game logic responding to
@@ -7,6 +5,8 @@ import java.util.Random;
  *
  * Written by Team HACKT for MSc SD Team Project
  */
+
+import java.util.Random;
 
 public class Game {
 
@@ -83,7 +83,7 @@ public class Game {
 
 	/**
 	 * Finds the player with the highest value in the category chosen by the current player and returns the game state.
-	 * In the result of a win the current player is set to the round winner
+	 * In the result of a win the current player variable is set to the round winner
 	 * @param chosenCategory an int which represents the array position of the chosen category on the card instance 
 	 * @return the game's state at the end of the round as a static int value defined within the Game class */
 	protected int calculateRoundResult(int chosenCategory) {
@@ -150,7 +150,7 @@ public class Game {
 		}
 		else {
 			currentPlayer = roundWinner;
-	//		currentPlayer.wonRound();
+			currentPlayer.wonRound();
 			return STATE_ROUND_WON;
 		}
 
@@ -191,13 +191,11 @@ public class Game {
 				player[i].transferCardTo(currentPlayer.getDeck());
 			}
 		}
-		currentPlayer.wonRound();
 	}
 
 	/**
 	 * Transfers the top cards from all players participating in the round into the communal pile */
 	public void transferCardsToCommunal() {
-		currentPlayer.wonRound();
 		for(int i = 0; i <= numOfCompPlayers; i++) {
 			if(player[i].getDeck().hasCard()) {			// Player has at least one card and thus has participated in the round
 				player[i].transferCardTo(communalPile);

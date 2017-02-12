@@ -1,29 +1,25 @@
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+/**
+ * Accesses SQL database to save and return stat values from previous games then display them in a frame
+ */
+
+import java.awt.*;
+import java.awt.event.*;
 import java.io.*;
 import java.sql.*;
-
 import javax.swing.*;
-
-/* Accesses SQL database and returns stat values - depending on Jbuttons pressed in GUI.
-saveStatsToDatabase()
-getStatsFromDatabase()
-viewStats()
- *
- */
 
 public class StatsReportFrame extends JFrame implements ActionListener {
 
 	private Connection connection = null;
-	private String dbpath = "postgresql://yacata.dcs.gla.ac.uk:5432/";
-	private String dbname = "m_16_2036032b";
+	//private String dbpath = "postgresql://yacata.dcs.gla.ac.uk:5432/";
+	String dbpath = "postgresql://localhost:5432/";
+	private String dbname = "m_16_1007016h";
 	private String tableName = "TopTrumpsData";
-	private String username = "m_16_2036032b";
-	private String password = "2036032b";
+	private String username = "postgres";
+	//private String password = "2036032b";
+	private String password = "1007016h";
 	private JButton saveToFile;
-	
+
 	// DB Columns
 	private int gamesPlayed;
 	private int computerWins;
@@ -31,36 +27,37 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 	private double avgDraws;
 	private int mostRounds;
 	private final int maxPlayers=5; // cannot have more than 5
-	
+
 	// Output file
 	private final String gameStatsFile = "gameStatsFile.txt";
-	
+
 	// Game instance
 	private Game game;
 
-	
-	public StatsReportFrame (Game game, boolean saveStats) throws SQLException
-	{	//newConnection();
+
+	public StatsReportFrame (Game game, boolean saveStats) throws SQLException {
 		this.game = game;
-		
+
 		if(!newConnection()) throw new SQLException("Connection failed!");
 		closeConnection();
-		
+
 		if(saveStats) saveStats();
-		
+
 		setTitle("Game Statistics");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);		// Don't want to exit program
 		setLocationRelativeTo(null);					// Centre
-		
+
 		JTextArea display = new JTextArea();
 		display.setFont(new Font("Courier", Font.PLAIN, 14));
 		display.setEditable(false);
 		display.setText(buildReport());
 		add(display, BorderLayout.CENTER);
-		this.saveToFile = new JButton("Save to File");
-		saveToFile.addActionListener(this);
-		add(saveToFile, BorderLayout.SOUTH);
-		
+		if(checkForData()) {
+			this.saveToFile = new JButton("Save to File");
+			saveToFile.addActionListener(this);
+			add(saveToFile, BorderLayout.SOUTH);
+		}
+
 		pack();
 		setVisible(true);
 	}
@@ -90,7 +87,7 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Closes the database connection */
 	public void closeConnection ()
@@ -115,7 +112,7 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sql = "SELECT * FROM TopTrumpsData;";
-		
+
 		try {
 			stmt = connection.createStatement();
 			rs = stmt.executeQuery(sql);
@@ -128,41 +125,37 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 			return false;
 		}
 		finally {
-//			closeConnection();
+			closeConnection();
 		}
 		return true;				// Data found
 	}
-	
-	/*
-	 * TODO a method for saving stats to database
-	 */
+
+	/**
+	 * Saves the stats from the last played game to the database */
 	public void saveStats ()
 	{
 		int winPlayer=game.getCurrentPlayer().getPlayerNumber();
 		int nrRoundsPlayed=game.getTotalRounds();
-	//	int human=game.getHumanPlayer().getPlayerNumber();
 		int nrOfPlayers= game.getNumOfPlayers();
 		int [] player= new int[maxPlayers];
-		
+
 		for (int i=0; i<nrOfPlayers; i++){
 			player[i]=game.getPlayer(i).getRoundsWon(); // player[0] is human player
 		}
 		int draws = game.getDraws();
 
-		
+
 		int nextGameNumber = -1;
-		
 		// If database is empty, set to 1
 		if(!checkForData()) {
 			nextGameNumber = 1;
 		}
-		
+
 		newConnection();
 		Statement stmt = null;
-		
 		try {
 			stmt = connection.createStatement();
-			
+
 			// If database wasn't empty variable will still be initialised at -1
 			if(nextGameNumber == -1) {
 				String sql = "SELECT MAX(game_number) FROM TopTrumpsData;";
@@ -170,7 +163,7 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 				resultSet.next();			// Get the row returned by the MAX query
 				nextGameNumber = resultSet.getInt("max") + 1; // Get latest game number in database as it will be the 'max' and add one for the current game to be save
 			}
-			
+
 			String sql2 = "INSERT INTO TopTrumpsData(game_number) VALUES(" + nextGameNumber + ")";
 			stmt.executeUpdate(sql2);
 
@@ -185,9 +178,9 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 			String  player3String= "UPDATE TopTrumpsData SET player_three_rounds="+player[3]+" WHERE game_number= " + nextGameNumber + ";";	
 			String  player4String= "UPDATE TopTrumpsData SET player_four_rounds="+player[4]+" WHERE game_number= " + nextGameNumber + ";";		
 			String [] updateDataArray= {updateDraws, updateWinPlayer, roundsPlayed, humanRounds, player1String, player2String, player3String, player4String, };	
-			
+
 			for (i=0; i<3+nrOfPlayers; i++) 
-			stmt.executeUpdate(updateDataArray[i]);
+				stmt.executeUpdate(updateDataArray[i]);
 		}	
 		catch (SQLException e1) {
 			e1.printStackTrace ();
@@ -197,17 +190,19 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 			closeConnection();
 		}
 	}
-	
-	
+
+	/**
+	 * Creates and returns a String of the formatted games data
+	 * @return a String of formatted game data or information saying there is none if applicable */
 	private String buildReport() {
 		// Check there is data before trying to access it
 		if(!checkForData()) {
 			return "There is not currently any saved data in the database";
 		}
-		
+
 		// Load variables from database
 		getStats();
-		
+
 		// Create and format the text to be returned to the display
 		StringBuilder sb = new StringBuilder();
 		sb.append(String.format("\n %-18s%d %n", "Games Played:", gamesPlayed));
@@ -215,13 +210,12 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 		sb.append(String.format(" %-18s%d %n", "Human Wins:", humanWins));
 		sb.append(String.format(" %-18s%.2f %n", "Average Draws:", avgDraws));
 		sb.append(String.format(" %-18s%d \n", "Most Rounds:", mostRounds));
-		
+
 		return sb.toString();
 	}
 
 	/**
-	 * Loads the instance variables for display with results of database queries
-	 */
+	 * Loads the instance variables for display with results of database queries */
 	public void getStats()
 	{
 		newConnection();
@@ -232,22 +226,22 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 		String humanWinsSQL = "SELECT COUNT(winning_player) FROM TopTrumpsData WHERE winning_player=0;";
 		String avgDrawsSQL = "SELECT AVG(draws) FROM TopTrumpsData;";
 		String maxRoundsSQL = "SELECT MAX(rounds_played) FROM TopTrumpsData;";
-		
+
 		try {
 			stmt = connection.createStatement();
-			
+
 			ResultSet rs1 = stmt.executeQuery(gamesPlayedSQL);
 			if(rs1.next()) gamesPlayed = rs1.getInt("max");
-			
+
 			ResultSet rs2 = stmt.executeQuery(computerWinsSQL);
 			if(rs2.next()) computerWins = rs2.getInt("count"); 
-			
+
 			ResultSet rs3 = stmt.executeQuery(humanWinsSQL);
 			if(rs3.next()) humanWins = rs3.getInt("count"); 
-			
+
 			ResultSet rs4 = stmt.executeQuery(avgDrawsSQL);
 			if(rs4.next()) avgDraws = rs4.getDouble("avg");
-			
+
 			ResultSet rs5 = stmt.executeQuery(maxRoundsSQL);
 			if(rs5.next()) mostRounds = rs5.getInt("max");
 		}
@@ -260,8 +254,7 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * writes the game stats to a file 
-	 */
+	 * Writes the game stats to a text file */
 	public void writeStatsFile ()
 	{
 
@@ -278,15 +271,12 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 		}
 	}
 
-	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+
 		if (e.getSource() == this.saveToFile)
 		{
 			writeStatsFile();
 		}
 	}
-
-
 
 }

@@ -1,3 +1,9 @@
+/**
+ * Controller and view class to allow a user to play a graphical implementation of the Top Trumps game
+ *
+ * Written by Team HACKT for MSc SD Team Project 2017
+ */
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -34,19 +40,15 @@ public class GUI extends JFrame implements ActionListener {
 	
 	private final Game game;
 	
-	private StatsReportFrame statsFrame;
-	
 	private int numOfCompPlayers;
 	
 	
 	/**
-	 * Create the frame.
-	 */
+	 * Create the frame */
 	public GUI() {
 		// JFrame settings
 		setTitle("Top Trumps: Dinosaurs!");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//setBounds(100, 100, 600, 530);
 		
 		// Main Content Pane
 		contentPane = new JPanel();
@@ -57,11 +59,9 @@ public class GUI extends JFrame implements ActionListener {
 		initMainDeck();
 		
 		// Construct the top, middle and bottom with some helpers:
-		
 		layoutTop();
 		layoutMiddle();
 		layoutBottom();
-		// At bottom as it changes values in middle layout
 		
 		game = new Game(mainDeck);
 		
@@ -122,8 +122,61 @@ public class GUI extends JFrame implements ActionListener {
 		this.areaCurrentStats.setColumns(8);
 		// Silliness HERE
 		this.areaCurrentStats.setFont(new Font("Monospaced", Font.BOLD, 3));
-		String dino1 = "$$$$$$$$$$$$$$$$$$$$$$$$$$$**\"\"\"\"`` ````\"\"\"#*R$$$$$$$$$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$$$$$$$*\"\"      ..........      `\"#$$$$$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$$$$#\"    .ue@$$$********$$$$Weu.   `\"*$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$#\"   ue$$*#\"\"              `\"\"*$$No.   \"R$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$P\"   u@$*\"`                         \"#$$o.  ^*$$$$$$$$$$$$$$\r\n$$$$$$$$$$$P\"  .o$R\"               . .WN.           \"#$Nu  `#$$$$$$$$$$$$\r\n$$$$$$$$$$\"  .@$#`       'ou  .oeW$$$$$$$$W            \"$$u  \"$$$$$$$$$$$\r\n$$$$$$$$#   o$#`      ueL  $$$$$$$$$$$$$$$$ku.           \"$$u  \"$$$$$$$$$\r\n$$$$$$$\"  x$P`        `\"$$u$$$$$$$$$$$$$$\"#$$$L            \"$o   *$$$$$$$\r\n$$$$$$\"  d$\"        #$u.2$$$$$$$$$$$$$$$$  #$$$Nu            $$.  #$$$$$$\r\n$$$$$\"  @$\"          $$$$$$$$$$$$$$$$$$$$k  $$#*$$u           #$L  #$$$$$\r\n$$$$\"  d$         #Nu@$$$$$$$$$$$$$$$$$$\"  x$$L #$$$o.         #$c  #$$$$\r\n$$$F  d$          .$$$$$$$$$$$$$$$$$$$$N  d$$$$  \"$$$$$u        #$L  #$$$\r\n$$$  :$F        ..`$$$$$$$$$$$$$$$$$$$$$$$$$$$`    R$$$$$eu.     $$   $$$\r\n$$!  $$        . R$$$$$$$$$$$$$$$$$$$$$$$$$$$$$.   @$$$$$$$$Nu   '$N  `$$\r\n$$  x$\"        Re$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$uu@\"``\"$$$$$$$i   #$:  $$\r\n$E  $$       c 8$$$$$$$$$$$$$$$$$$$$$G(   ``^*$$$$$$$WW$$$$$$$$N   $$  4$\r\n$~ :$$N. tL i)$$$$$$$$$$$$$$$$$$$$$$$$$N       ^#R$$$$$$$$$$$$$$$  9$  '$\r\n$  t$$$$u$$W$$$$$$$$$$$$$$!$$$$$$$$$$$$$&       . c?\"*$$$R$$$$$$$  '$k  $\r\n$  @$$$$$$$$$$$$$$$$$$$$\"E F!$$$$$$$$$$.\"        +.\"@\\* x .\"\"*$$\"   $B  $\r\n$  $$$$$$$$$$$$$$$$\"$)#F     $$$$$$$$$$$           `  -d>x\"*=.\"`    $$  $\r\n$  $$$$$$$$$$?$$R'$ `#d$\"\"    #$$$$$$$$$ > .                \"       $$  $\r\n$  $$$$$$$($$@$\"` P *@$.@#\"!    \"*$$$$$$$L!.                        $$  $\r\n$  9$$$$$$$L#$L  ! \" <$$`          \"*$$$$$NL:\"z  f                  $E  $\r\n$> ?$$$$ $$$b$^      .$c .ueu.        `\"$$$$b\"x\"#  \"               x$!  $\r\n$k  $$$$N$ \"$$L:$oud$$$` d$ .u.         \"$$$$$o.\" #f.              $$   $\r\n$$  R$\"\"$$o.$\"$$$$\"\"\" ue$$$P\"`\"c          \"$$$$$$Wo'              :$F  t$\r\n$$: '$&  $*$$u$$$$u.ud$R\" `    ^            \"#*****               @$   $$\r\n$$N  #$: E 3$$$$$$$$$\"                                           d$\"  x$$\r\n$$$k  $$   F *$$$$*\"                                            :$P   $$$\r\n$$$$  '$b                                                      .$P   $$$$\r\n$$$$b  `$b                                                    .$$   @$$$$\r\n$$$$$N  \"$N                                                  .$P   @$$$$$\r\n$$$$$$N  '*$c                                               u$#  .$$$$$$$\r\n$$$$$$$$.  \"$N.                                           .@$\"  x$$$$$$$$\r\n$$$$$$$$$o   #$N.                                       .@$#  .@$$$$$$$$$\r\n$$$$$$$$$$$u  `#$Nu                                   u@$#   u$$$$$$$$$$$\r\n$$$$$$$$$$$$$u   \"R$o.                             ue$R\"   u$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$o.  ^#$$bu.                     .uW$P\"`  .u$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$$$u   `\"#R$$Wou..... ....uueW$$*#\"   .u@$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$$$$$Nu.    `\"\"#***$$$$$***\"\"\"`    .o$$$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$$$$$$$$$$eu..               ...ed$$$$$$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$NWWeeeeedW@$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\r\n";
-		String dino2 = "\n\n\n888888888888                     \r\n     88                          \r\n     88                          \r\n     88  ,adPPYba,  8b,dPPYba,   \r\n     88 a8\"     \"8a 88P'    \"8a  \r\n     88 8b       d8 88       d8  \r\n     88 \"8a,   ,a8\" 88b,   ,a8\"  \r\n     88  `\"YbbdP\"'  88`YbbdP\"'   \r\n                    88           \r\n                    88           \r\n                                                                         \r\n888888888888                                                             \r\n     88                                                                  \r\n     88                                                                  \r\n     88 8b,dPPYba, 88       88 88,dPYba,,adPYba,  8b,dPPYba,  ,adPPYba,  \r\n     88 88P'   \"Y8 88       88 88P'   \"88\"    \"8a 88P'    \"8a I8[    \"\"  \r\n     88 88         88       88 88      88      88 88       d8  `\"Y8ba,   \r\n     88 88         \"8a,   ,a88 88      88      88 88b,   ,a8\" aa    ]8I  \r\n     88 88          `\"YbbdP'Y8 88      88      88 88`YbbdP\"'  `\"YbbdP\"'  \r\n                                                  88                     \r\n                                                  88                     \r\n                                                                                                \r\n88888888ba,   88                                                                                \r\n88      `\"8b  \"\"                                                                                \r\n88        `8b                                                                                   \r\n88         88 88 8b,dPPYba,   ,adPPYba,  ,adPPYba, ,adPPYYba, 88       88 8b,dPPYba, ,adPPYba,  \r\n88         88 88 88P'   `\"8a a8\"     \"8a I8[    \"\" \"\"     `Y8 88       88 88P'   \"Y8 I8[    \"\"  \r\n88         8P 88 88       88 8b       d8  `\"Y8ba,  ,adPPPPP88 88       88 88          `\"Y8ba,   \r\n88      .a8P  88 88       88 \"8a,   ,a8\" aa    ]8I 88,    ,88 \"8a,   ,a88 88         aa    ]8I  \r\n88888888Y\"'   88 88       88  `\"YbbdP\"'  `\"YbbdP\"' `\"8bbdP\"Y8  `\"YbbdP'Y8 88         `\"YbbdP\"'  ";
+		String dino1 = "$$$$$$$$$$$$$$$$$$$$$$$$$$$**\"\"\"\"`` ````\"\"\"#*R$$$$$$$$$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$"
+				+ "$$$$$$$$$$$$$*\"\"      ..........      `\"#$$$$$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$$$$#\"    .u"
+				+ "e@$$$********$$$$Weu.   `\"*$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$#\"   ue$$*#\"\"              "
+				+ "`\"\"*$$No.   \"R$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$P\"   u@$*\"`                         \"#$$o.  ^*"
+				+ "$$$$$$$$$$$$$$\r\n$$$$$$$$$$$P\"  .o$R\"               . .WN.           \"#$Nu  `#$$$$$$$$$$$$\r\n$$"
+				+ "$$$$$$$$\"  .@$#`       'ou  .oeW$$$$$$$$W            \"$$u  \"$$$$$$$$$$$\r\n$$$$$$$$#   o$#`      "
+				+ "ueL  $$$$$$$$$$$$$$$$ku.           \"$$u  \"$$$$$$$$$\r\n$$$$$$$\"  x$P`        `\"$$u$$$$$$$$$$$$$"
+				+ "$\"#$$$L            \"$o   *$$$$$$$\r\n$$$$$$\"  d$\"        #$u.2$$$$$$$$$$$$$$$$  #$$$Nu            "
+				+ "$$.  #$$$$$$\r\n$$$$$\"  @$\"          $$$$$$$$$$$$$$$$$$$$k  $$#*$$u           #$L  #$$$$$\r\n$$$$\"  "
+				+ "d$         #Nu@$$$$$$$$$$$$$$$$$$\"  x$$L #$$$o.         #$c  #$$$$\r\n$$$F  d$          .$$$$$$$$$$$"
+				+ "$$$$$$$$$N  d$$$$  \"$$$$$u        #$L  #$$$\r\n$$$  :$F        ..`$$$$$$$$$$$$$$$$$$$$$$$$$$$`    R$$$"
+				+ "$$eu.     $$   $$$\r\n$$!  $$        . R$$$$$$$$$$$$$$$$$$$$$$$$$$$$$.   @$$$$$$$$Nu   '$N  `$$\r\n$$  "
+				+ "x$\"        Re$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$uu@\"``\"$$$$$$$i   #$:  $$\r\n$E  $$       c 8$$$$$$$$$$$"
+				+ "$$$$$$$$$$G(   ``^*$$$$$$$WW$$$$$$$$N   $$  4$\r\n$~ :$$N. tL i)$$$$$$$$$$$$$$$$$$$$$$$$$N       ^#R$$$"
+				+ "$$$$$$$$$$$$  9$  '$\r\n$  t$$$$u$$W$$$$$$$$$$$$$$!$$$$$$$$$$$$$&       . c?\"*$$$R$$$$$$$  '$k  $\r\n$"
+				+ "  @$$$$$$$$$$$$$$$$$$$$\"E F!$$$$$$$$$$.\"        +.\"@\\* x .\"\"*$$\"   $B  $\r\n$  $$$$$$$$$$$$$$$$\""
+				+ "$)#F     $$$$$$$$$$$           `  -d>x\"*=.\"`    $$  $\r\n$  $$$$$$$$$$?$$R'$ `#d$\"\"    #$$$$$$$$$ > "
+				+ ".                \"       $$  $\r\n$  $$$$$$$($$@$\"` P *@$.@#\"!    \"*$$$$$$$L!.                       "
+				+ " $$  $\r\n$  9$$$$$$$L#$L  ! \" <$$`          \"*$$$$$NL:\"z  f                  $E  $\r\n$> ?$$$$ $$$b"
+				+ "$^      .$c .ueu.        `\"$$$$b\"x\"#  \"               x$!  $\r\n$k  $$$$N$ \"$$L:$oud$$$` d$ .u.   "
+				+ "      \"$$$$$o.\" #f.              $$   $\r\n$$  R$\"\"$$o.$\"$$$$\"\"\" ue$$$P\"`\"c          \"$$$$$$"
+				+ "Wo'              :$F  t$\r\n$$: '$&  $*$$u$$$$u.ud$R\" `    ^            \"#*****               @$   $$"
+				+ "\r\n$$N  #$: E 3$$$$$$$$$\"                                           d$\"  x$$\r\n$$$k  $$   F *$$$$"
+				+ "*\"                                            :$P   $$$\r\n$$$$  '$b                                  "
+				+ "                    .$P   $$$$\r\n$$$$b  `$b                                                    .$$   @"
+				+ "$$$$\r\n$$$$$N  \"$N                                                  .$P   @$$$$$\r\n$$$$$$N  '*$c     "
+				+ "                                          u$#  .$$$$$$$\r\n$$$$$$$$.  \"$N.                             "
+				+ "              .@$\"  x$$$$$$$$\r\n$$$$$$$$$o   #$N.                                       .@$#  .@$$$$$$$"
+				+ "$$\r\n$$$$$$$$$$$u  `#$Nu                                   u@$#   u$$$$$$$$$$$\r\n$$$$$$$$$$$$$u   \"R$o."
+				+ "                             ue$R\"   u$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$o.  ^#$$bu.                     .u"
+				+ "W$P\"`  .u$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$$$u   `\"#R$$Wou..... ....uueW$$*#\"   .u@$$$$$$$$$$$$$$$$$"
+				+ "\r\n$$$$$$$$$$$$$$$$$$$$Nu.    `\"\"#***$$$$$***\"\"\"`    .o$$$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$$$$$"
+				+ "$$$$$eu..               ...ed$$$$$$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$NWWeeeeedW@$$$$$$$"
+				+ "$$$$$$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\r\n";
+		String dino2 = "\n\n\n888888888888                     \r\n     88                          \r\n     88              "
+				+ "            \r\n     88  ,adPPYba,  8b,dPPYba,   \r\n     88 a8\"     \"8a 88P'    \"8a  \r\n     88 8b   "
+				+ "    d8 88       d8  \r\n     88 \"8a,   ,a8\" 88b,   ,a8\"  \r\n     88  `\"YbbdP\"'  88`YbbdP\"'   \r\n   "
+				+ "                 88           \r\n                    88           \r\n                                   "
+				+ "                                      \r\n888888888888                                                    "
+				+ "         \r\n     88                                                                  \r\n     88         "
+				+ "                                                         \r\n     88 8b,dPPYba, 88       88 88,dPYba,,adPYb"
+				+ "a,  8b,dPPYba,  ,adPPYba,  \r\n     88 88P'   \"Y8 88       88 88P'   \"88\"    \"8a 88P'    \"8a I8[    "
+				+ "\"\"  \r\n     88 88         88       88 88      88      88 88       d8  `\"Y8ba,   \r\n     88 88         "
+				+ "\"8a,   ,a88 88      88      88 88b,   ,a8\" aa    ]8I  \r\n     88 88          `\"YbbdP'Y8 88      88     "
+				+ " 88 88`YbbdP\"'  `\"YbbdP\"'  \r\n                                                  88                     "
+				+ "\r\n                                                  88                     \r\n                          "
+				+ "                                                                      \r\n88888888ba,   88                 "
+				+ "                                                               \r\n88      `\"8b  \"\"                     "
+				+ "                                                           \r\n88        `8b                               "
+				+ "                                                    \r\n88         88 88 8b,dPPYba,   ,adPPYba,  ,adPPYba, "
+				+ ",adPPYYba, 88       88 8b,dPPYba, ,adPPYba,  \r\n88         88 88 88P'   `\"8a a8\"     \"8a I8[    \"\" \""
+				+ "\"     `Y8 88       88 88P'   \"Y8 I8[    \"\"  \r\n88         8P 88 88       88 8b       d8  `\"Y8ba,  ,ad"
+				+ "PPPPP88 88       88 88          `\"Y8ba,   \r\n88      .a8P  88 88       88 \"8a,   ,a8\" aa    ]8I 88,    "
+				+ ",88 \"8a,   ,a88 88         aa    ]8I  \r\n88888888Y\"'   88 88       88  `\"YbbdP\"'  `\"YbbdP\"' `\"8bbdP"
+				+ "\"Y8  `\"YbbdP'Y8 88         `\"YbbdP\"'  ";
 		this.areaCurrentStats.setText(dino2 + "\n\n" + dino1);
 		
 		this.areaCurrentStats.setForeground(Color.WHITE);
@@ -153,28 +206,20 @@ public class GUI extends JFrame implements ActionListener {
 
 		
 		this.radiogroup = new ButtonGroup();
-
 		for (int i =0; i <radioButton.length ; i++){
 			radioButton[i].setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 			radioButton[i].setBackground(new Color(134, 199, 156));
 			subpanel_show_attributes.add(radioButton[i]);
 			radiogroup.add(radioButton[i]);
 		}
-		
-		
-		
 		radioButton[0].setSelected(true);
 
-		/////////////////////////////////////////////////
-		
-		
 		//Sub-panel for the actual data
 		this.subpanel_categories = new JPanel();
 		subpanel_categories.setBackground(new Color(134, 199, 156));
 		subpanel_categories.setLayout(new GridLayout(0,1,0,0));
 		panel_middle.add(subpanel_categories);
 		
-
 		this.tfAttrib = new JTextField[]{
 				new JTextField(),
 				new JTextField(),
@@ -182,21 +227,20 @@ public class GUI extends JFrame implements ActionListener {
 				new JTextField(),
 				new JTextField(),
 				new JTextField()
-				
 		};
-		
+
 		for (int i =0; i <tfAttrib.length ; i++){
 			tfAttrib[i].setFont(new Font("Showcard Gothic", Font.PLAIN, 13));
 			tfAttrib[i].setBorder(null);
 			tfAttrib[i].setBackground(new Color(134, 199, 156));
 			tfAttrib[i].setEditable(false);
 			subpanel_categories.add(tfAttrib[i]);
-			}
-		
 		}
-	
+
+	}
+
 	public void layoutBottom(){
-		
+
 		// Bottom panel for in-game messages and save game button
 		this.panel_bottom = new JPanel();
 		panel_bottom.setBackground(new Color(77, 132, 96));
@@ -205,7 +249,6 @@ public class GUI extends JFrame implements ActionListener {
 		
 		//////////////////////////////////
 		//      Player Listing Area    //
-		
 		this.panel_bottom_left = new JPanel();
 		this.lblPlayerListing = new JLabel("Player Listing");
 		this.scrollPane_2 = new JScrollPane();
@@ -223,7 +266,6 @@ public class GUI extends JFrame implements ActionListener {
 		panel_bottom_left.add(lblPlayerListing);
 		panel_bottom_left.add(scrollPane_2);
 		
-		
 		////////////////////////////////////
 		//       GAME MESSAGES           //
 		
@@ -240,14 +282,12 @@ public class GUI extends JFrame implements ActionListener {
 		areaGameMessages.setWrapStyleWord(true);
 		scrollPane.setViewportView(areaGameMessages);
 		
-		
 		////////////////////////////////////
 		//      Play card and other stats //		
 		this.panel_bottom_right = new JPanel();
 		panel_bottom_right.setBackground(new Color(134, 199, 156));
 		panel_bottom.add(panel_bottom_right);
 		panel_bottom_right.setLayout(new GridLayout(0, 1, 0, 0));
-		
 		
 		this.btnPlayContinue = new JButton("Play Card!");
 		this.lblCardsLeft = new JLabel("Your Cards Left");
@@ -275,9 +315,9 @@ public class GUI extends JFrame implements ActionListener {
 		
 	}
 	
+	/**
+	 * Reads the input deck text file into a String and creates the main deck and adds the cards to it */
 	public void initMainDeck(){
-
-		// Read file for card info
 		try {
 			Scanner scanner = new Scanner(new FileReader("deck.txt"));
 			scanner.useDelimiter("\\s+");
@@ -316,8 +356,11 @@ public class GUI extends JFrame implements ActionListener {
 		System.out.println(mainDeck.toString());
 	}
 
+	/**
+	 * Takes the human's selected category if they are current player, or else calls for the computer player's choice
+	 * Calculates the round result from selected choice and calls relevant game logic functions */
 	private void playContinueAction() {
-		int chosenCategory = -1;
+		int chosenCategory = -1;		// Initilaise for compiler 
 		
 		// Play button pressed
 		if(game.getCurrentPlayer() == game.getHumanPlayer()) {
@@ -357,6 +400,8 @@ public class GUI extends JFrame implements ActionListener {
 		}
 	}
 
+	/**
+	 * Updates the context dependent view screen that the human player sees */
 	public void displayNewRoundInfo(){
 		
 		// For assessment testing
@@ -440,6 +485,8 @@ public class GUI extends JFrame implements ActionListener {
 		areaPlayerListing.append("Player "+i+ ". Cards left: " + game.getPlayer(i).getDeck().getSize()+"\n");
 	}
 	
+	/**
+	 * Updates game messages if game is won */
 	private void displayGameWonInfo() {
 		
 		// Set buttons for the current game context
@@ -463,8 +510,9 @@ public class GUI extends JFrame implements ActionListener {
 		else System.out.println("The winner of the game is: PLAYER " + game.getCurrentPlayer().getPlayerNumber() + "!\n Better luck next time pal!");
 	}
 	
+	/**
+	 * Updates game messages if round is won */
 	private void displayRoundWonInfo(int chosenAttributeIndex) {
-		//updateGameMessages
 		Card winningCard = game.getCurrentPlayer().getDeck().seeTopCard();
 		Card losingCard;
 		
@@ -511,6 +559,8 @@ public class GUI extends JFrame implements ActionListener {
 		}	
 	}
 
+	/**
+	 * Updates game messages if round is drawn */
 	private void displayRoundDrawInfo() {
 		areaGameMessages.append("\nIt's a draw!\n");
 	}
@@ -535,37 +585,25 @@ public class GUI extends JFrame implements ActionListener {
 	    // View Stats
 	    else if (ae.getSource() == this.btnViewStats) {
 	    	try {
-	    		statsFrame = new StatsReportFrame(game, false);
+	    		new StatsReportFrame(game, false);
 	    	}
 	    	catch(SQLException ex) {
 	    		ex.printStackTrace();
 	    		JOptionPane.showMessageDialog(null, "Databse connection attempt failed.", "Error", JOptionPane.ERROR_MESSAGE);
 	    	}
 	    	
-	    	/*System.out.println("You pressed View Stats");*/
 	    }
 	    
 	    // Save Stats
 	    else if (ae.getSource() == this.btnSaveStats) {
 	    	try {
-	    		statsFrame = new StatsReportFrame(game, true);
+	    		new StatsReportFrame(game, true);
 	    	}
 	    	catch(SQLException ex) {
 	    		ex.printStackTrace();
 	    		JOptionPane.showMessageDialog(null, "Database connection attempt failed.", "Error", JOptionPane.ERROR_MESSAGE);
 	    	}
-	    	
-	    	/*System.out.println("You pressed Save Stats");
-	    	System.err.println("Total rounds " + game.getTotalRounds());
-	    	if(game.getCurrentPlayer() == game.getHumanPlayer()) {
-	    		System.err.println("Human Won");
-	    	}
-	    	else{
-	    		System.err.println("PLAYER " + game.getCurrentPlayer().getPlayerNumber() + " WON");
-	    	}
-	    	// ADD how many round each won.
-	    	*/
 	    }
-	    
 	}
+	
 }

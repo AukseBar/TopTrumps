@@ -1,6 +1,6 @@
 /**
  * Card game TopTrumps
- * as completed for IT Master Group project
+ * as completed for IT Master Group project 2017
  * by team H.A.C.K.T
  */
 
