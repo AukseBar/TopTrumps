@@ -198,14 +198,12 @@ public class GUI extends JFrame implements ActionListener {
 			radioButton[i].setEnabled(false);
 		}
 		// 'Description label 
-		this.lblName = new JLabel();
+		this.lblName = new JLabel("Description");
 		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
-
-		
-		// Add all in order
+		// Add label
 		subpanel_show_attributes.add(lblName);
 
-		
+		// ButtonGroup so that only one radiobutton selected.
 		this.radiogroup = new ButtonGroup();
 		for (int i =0; i <radioButton.length ; i++){
 			radioButton[i].setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -213,14 +211,16 @@ public class GUI extends JFrame implements ActionListener {
 			subpanel_show_attributes.add(radioButton[i]);
 			radiogroup.add(radioButton[i]);
 		}
+		// As a default, the first radiobutton is selected prior to a game
 		radioButton[0].setSelected(true);
 
-		//Sub-panel for the actual data
+		//Sub-panel for the attribute data
 		this.subpanel_categories = new JPanel();
 		subpanel_categories.setBackground(new Color(134, 199, 156));
 		subpanel_categories.setLayout(new GridLayout(0,1,0,0));
 		panel_middle.add(subpanel_categories);
 		
+		// Textfield array to view the attributes
 		this.tfAttrib = new JTextField[]{
 				new JTextField(),
 				new JTextField(),
@@ -229,7 +229,8 @@ public class GUI extends JFrame implements ActionListener {
 				new JTextField(),
 				new JTextField()
 		};
-
+		
+		// Set Textfield properties
 		for (int i =0; i <tfAttrib.length ; i++){
 			tfAttrib[i].setFont(new Font("Showcard Gothic", Font.PLAIN, 13));
 			tfAttrib[i].setBorder(null);
@@ -273,7 +274,7 @@ public class GUI extends JFrame implements ActionListener {
 		////////////////////////////////////
 		//       GAME MESSAGES           //
 		
-		// Add a scrollpane
+		// Add a scroll-pane to allow user to view history
 		this.scrollPane = new JScrollPane();
 		panel_bottom.add(scrollPane);
 		
@@ -314,7 +315,7 @@ public class GUI extends JFrame implements ActionListener {
 		panel_bottom_right.add(lblCommunalPile);
 		panel_bottom_right.add(tfCommunal);
 		
-		// Action listeners on the bottom
+		// Action listener on the game actions 'PlayContinue' button
 		this.btnPlayContinue.addActionListener(this);
 		
 	}
@@ -342,7 +343,7 @@ public class GUI extends JFrame implements ActionListener {
 			// Can now create the main deck
 			mainDeck = new Deck(DECK_SIZE, cat);
 
-			///////READ THE REST AND MAKE A NEW CARD FOR EACH NEXTLINE\\\\\\\\\\\
+			//Reads the rest of the file in line by line
 			scanner.nextLine();
 			for(int i = 0; scanner.hasNextLine() && i < DECK_SIZE; i++) {
 				String info = scanner.nextLine();
