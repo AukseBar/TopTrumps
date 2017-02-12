@@ -11,13 +11,11 @@ import javax.swing.*;
 public class StatsReportFrame extends JFrame implements ActionListener {
 
 	private Connection connection = null;
-	//private String dbpath = "postgresql://yacata.dcs.gla.ac.uk:5432/";
-	String dbpath = "postgresql://localhost:5432/";
-	private String dbname = "m_16_1007016h";
+	private String dbpath = "postgresql://yacata.dcs.gla.ac.uk:5432/";
+	private String dbname = "m_16_2036032b";
 	private String tableName = "TopTrumpsData";
-	private String username = "postgres";
-	//private String password = "2036032b";
-	private String password = "1007016h";
+	private String username = "m_16_2036032b";
+private String password = "2036032b";
 	private JButton saveToFile;
 
 	// DB Columns
