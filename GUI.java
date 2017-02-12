@@ -451,9 +451,6 @@ public class GUI extends JFrame implements ActionListener {
 		updateCardsLeft();
 		updatePlayerList();
 		
-		repaint();
-		revalidate();
-		
 		// For assessment testing
 		System.out.print("CARDS IN PLAY:\n(choice) ");
 		if(game.getCurrentPlayer() != game.getHumanPlayer()) {
