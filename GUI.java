@@ -29,7 +29,7 @@ public class GUI extends JFrame implements ActionListener {
 	
 	//for deck
 	private Deck mainDeck;
-	private static final int DECK_SIZE = 2;
+	private static final int DECK_SIZE = 40;
 	private static final int NUM_CATEGORIES = 5;
 	
 	private final Game game;
@@ -44,7 +44,6 @@ public class GUI extends JFrame implements ActionListener {
 	 */
 	public GUI() {
 		// JFrame settings
-		
 		setTitle("Top Trumps: Dinosaurs!");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//setBounds(100, 100, 600, 530);

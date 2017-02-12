@@ -16,7 +16,6 @@ viewStats()
 
 public class StatsReportFrame extends JFrame implements ActionListener {
 
-	// Database connection
 	private Connection connection = null;
 	private String dbpath = "postgresql://yacata.dcs.gla.ac.uk:5432/";
 	private String dbname = "m_16_2036032b";
@@ -31,6 +30,7 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 	private int humanWins;
 	private double avgDraws;
 	private int mostRounds;
+	private final int maxPlayers=5; // cannot have more than 5
 	
 	// Output file
 	private final String gameStatsFile = "gameStatsFile.txt";
@@ -142,7 +142,7 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 		int nrRoundsPlayed=game.getTotalRounds();
 	//	int human=game.getHumanPlayer().getPlayerNumber();
 		int nrOfPlayers= game.getNumOfPlayers();
-		int [] player= new int[nrOfPlayers];
+		int [] player= new int[maxPlayers];
 		
 		for (int i=0; i<nrOfPlayers; i++){
 			player[i]=game.getPlayer(i).getRoundsWon(); // player[0] is human player
@@ -174,17 +174,19 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 			String sql2 = "INSERT INTO TopTrumpsData(game_number) VALUES(" + nextGameNumber + ")";
 			stmt.executeUpdate(sql2);
 
+			// statements to insert new data
+			int i=0;
 			String updateDraws = "UPDATE TopTrumpsData SET draws="+draws+" WHERE game_number= " + nextGameNumber + ";";
 			String updateWinPlayer = "UPDATE TopTrumpsData SET winning_player="+winPlayer+" WHERE game_number= " + nextGameNumber + ";";
 			String roundsPlayed = "UPDATE TopTrumpsData SET rounds_played="+nrRoundsPlayed+" WHERE game_number= " + nextGameNumber + ";";			
 			String  humanRounds= "UPDATE TopTrumpsData SET player_zero_rounds="+player[0]+" WHERE game_number= " + nextGameNumber + ";";
-			String  player1String= "UPDATE TopTrumpsData SET player_one_rounds="+player[1]+" WHERE game_number= " + nextGameNumber + ";";	
+			String  player1String= "UPDATE TopTrumpsData SET player_one_rounds="+player[1]+" WHERE game_number= " + nextGameNumber + ";";
 			String  player2String= "UPDATE TopTrumpsData SET player_two_rounds="+player[2]+" WHERE game_number= " + nextGameNumber + ";";	
 			String  player3String= "UPDATE TopTrumpsData SET player_three_rounds="+player[3]+" WHERE game_number= " + nextGameNumber + ";";	
 			String  player4String= "UPDATE TopTrumpsData SET player_four_rounds="+player[4]+" WHERE game_number= " + nextGameNumber + ";";		
 			String [] updateDataArray= {updateDraws, updateWinPlayer, roundsPlayed, humanRounds, player1String, player2String, player3String, player4String, };	
 			
-			for (int i=0; i<3+nrOfPlayers; i++) 
+			for (i=0; i<3+nrOfPlayers; i++) 
 			stmt.executeUpdate(updateDataArray[i]);
 		}	
 		catch (SQLException e1) {
@@ -257,7 +259,7 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 		}
 	}
 
-	/*
+	/**
 	 * writes the game stats to a file 
 	 */
 	public void writeStatsFile ()

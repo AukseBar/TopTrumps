@@ -23,68 +23,70 @@ public class Deck {
 		
 	/**
 	 * adds a card to the top of the deck array
-	 * @param String containing card info*/
+	 * @param String containing card info
+	 **/
 	public void addCardToTop(String cardInfo){
-		//if (deckTopPointer<40){    // make sure no more than 40 cards total
-			Card newCard= new Card(cardInfo);
-			this.mainDeck[deckTopPointer]=newCard;
+			Card newCard = new Card(cardInfo);
+			this.mainDeck[deckTopPointer] = newCard;
 			this.deckTopPointer++;
-		//}
 	}
 	
-	
-	//////////////// might not need this one, will possibly delete later
+
 	/**
 	 * adds a card to the top of the deck array
-	 * @param a Card object*/
+	 * @param a Card object
+	 **/
 	public void addCardToTop(Card cardIn){
-		this.mainDeck[deckTopPointer]=cardIn;
+		this.mainDeck[deckTopPointer] = cardIn;
 		this.deckTopPointer++;
-		//System.out.println(deckTopPointer);
 	}
 	
 	/**
 	 * adds a card to the bottom of the deck
-	 * @param Card that is to be added*/
+	 * @param Card that is to be added
+	 **/
 	public void addCardToBottom(Card cardIn){
 		for (int i=deckTopPointer-1; i>=0; i--) {
-			mainDeck[i+1]=mainDeck[i];
+			mainDeck[i+1] = mainDeck[i];
 		}
-		mainDeck[0]=cardIn;
+		mainDeck[0] = cardIn;
 		deckTopPointer++;
 	}
 	
 	/**
 	 * removes a card from the top of the deck array
-	 * only works with a non-empty deck*/
+	 * only works with a non-empty deck
+	 **/
 	public void removeCard(){
 		if (deckTopPointer>0){
 			deckTopPointer--;
-			mainDeck[deckTopPointer]=null;
+			mainDeck[deckTopPointer] = null;
 		}
 	}
 	
 	/**
 	 * (pseudo)randomly shuffles the Card objects in the deck array
-	 * -based on Fisher-Yates array shuffle algorithm*/
+	 * -based on Fisher-Yates array shuffle algorithm
+	 **/
 	public void shuffleDeck(){
 		for (int i=0; i<deckCapacity-2;i++){
 			Random rNr= new Random();
 			int randomNr= i + rNr.nextInt((deckCapacity-i));  // random needs to be between i and deckSize
 			
-			Card temporal= mainDeck[i];    // swap cards at positions [i] and [randomNr]
-			mainDeck[i]=mainDeck[randomNr];
-			mainDeck[randomNr]=temporal;	
+			Card temporal = mainDeck[i];    // swap cards at positions [i] and [randomNr]
+			mainDeck[i] = mainDeck[randomNr];
+			mainDeck[randomNr] = temporal;	
 		}
-		dealPointer=deckTopPointer; //prepared to deal cards
+		dealPointer = deckTopPointer; //prepare to deal cards
 	}
 	
 	/**
 	 * fetches the Card at the top of the deck array
 	 * and removes that card from the top of the array
+	 * @return top Card
 	 **/
 	public Card getTopCard(){
-		Card returnThisOne= mainDeck[deckTopPointer-1];
+		Card returnThisOne = mainDeck[deckTopPointer-1];
 		removeCard();
 		return returnThisOne;
 	}
@@ -92,35 +94,29 @@ public class Deck {
 	/**
 	 * fetches the Card at the top of the deck array
 	 * but does not remove that card from the top of the array
+	 * @return top Card
 	 **/
 	public Card seeTopCard(){
-		return mainDeck[deckTopPointer-1];
+		return mainDeck[deckTopPointer-1];  //because pointer is at next empty slot
 	}
 	
 	/**
 	 * method for dealing cards
 	 * returns one card at a time
-	 * leaves the original deck intact*/
+	 * leaves the original deck intact
+	 **/
 	public Card dealCard(){
-		Card returnThisOne= mainDeck[dealPointer-1]; 
+		Card returnThisOne = mainDeck[dealPointer-1]; 
 		dealPointer--;
 		return returnThisOne;
 	}
 	
 	/**
-	 * returns the size of the deck,
-	 * that is, counts the non-null slots in the deck
-	 * returns an integer*/
+	 * accessor methods
+	 **/
+	
 	public int getSize(){
-		int size=0;
-		for (int i=0; i<deckCapacity;i++){
-			if (!(mainDeck[i]==null))
-				size++;
-		}
-		return size;
-		
-		//alternatively:
-		//return topDeckPointer;
+		return deckTopPointer;
 	}
 	
 	public int getCapacity() {
@@ -135,6 +131,11 @@ public class Deck {
 		return category;
 	}
 	
+	
+	/**
+	 * for printing out a deck
+	 * for testing
+	 **/
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		for(int i = 0; i < getSize(); i++) {
@@ -148,9 +149,7 @@ public class Deck {
 	 * checks if deck has any cards left
 	 * returns a boolean*/
 	public Boolean hasCard(){
-		if (getSize()==0)
-			//alternatively:
-			// if (topDeckPointer==0)
+		if (deckTopPointer==0)
 			return false;
 		else
 			return true;
