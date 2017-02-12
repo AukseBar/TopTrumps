@@ -8,7 +8,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.FileNotFoundException;
 //for deck:
 import java.io.FileReader;
 import java.io.IOException;
@@ -324,36 +324,44 @@ public class GUI extends JFrame implements ActionListener {
 	 * Reads the input deck text file into a String and creates the main deck and adds the cards to it */
 	public void initMainDeck(){
 		try {
-			Scanner scanner = new Scanner(new FileReader("deck.txt"));
-			scanner.useDelimiter("\\s+");
-
-			// Skip past first column  - always: "Description"
-			scanner.next();
 			
-			// Category names
-			String[] cat = new String[NUM_CATEGORIES];
-			for (int i = 0; i < NUM_CATEGORIES ; i++){
-				cat[i] = scanner.next();
-			}
-			// Capitalise
-			for (int i =0; i <cat.length ; i++){
-				cat[i] = cat[i].substring(0,1).toUpperCase() + cat[i].substring(1).toLowerCase();
-			}
+				Scanner scanner = new Scanner(new FileReader("deck.txt"));
+				scanner.useDelimiter("\\s+");
 
-			// Can now create the main deck
-			mainDeck = new Deck(DECK_SIZE, cat);
+				// Skip past first column  - always: "Description"
+				scanner.next();
+				
+				// Category names
+				String[] cat = new String[NUM_CATEGORIES];
+				for (int i = 0; i < NUM_CATEGORIES ; i++){
+					cat[i] = scanner.next();
+				}
+				// Capitalise
+				for (int i =0; i <cat.length ; i++){
+					cat[i] = cat[i].substring(0,1).toUpperCase() + cat[i].substring(1).toLowerCase();
+				}
 
-			//Reads the rest of the file in line by line
-			scanner.nextLine();
-			for(int i = 0; scanner.hasNextLine() && i < DECK_SIZE; i++) {
-				String info = scanner.nextLine();
-				mainDeck.addCardToTop(info);
-			}
-			System.out.println(mainDeck.getSize());
-			scanner.close();
+				// Can now create the main deck
+				mainDeck = new Deck(DECK_SIZE, cat);
+
+				//Reads the rest of the file in line by line
+				scanner.nextLine();
+				for(int i = 0; scanner.hasNextLine() && i < DECK_SIZE; i++) {
+					String info = scanner.nextLine();
+					mainDeck.addCardToTop(info);
+				}
+				System.out.println(mainDeck.getSize());
+				scanner.close();
+		} catch (FileNotFoundException ef) {
+				
+			ef.printStackTrace();
+			JOptionPane.showMessageDialog(null, "deck.txt was not found. Program will exit", "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
 		}
-		catch(IOException e) {
+		catch(Exception e) {
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "deck.txt was found but there was an exception. Program will exit", "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
 		}
 		
 		// For assessment testing
