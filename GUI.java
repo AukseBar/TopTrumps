@@ -17,18 +17,16 @@ import java.util.Scanner;
 
 public class GUI extends JFrame implements ActionListener {
 
+	//GUI elements
 	private JPanel contentPane, panel_top,panel_middle, panel_bottom;
-	private JPanel panel_bottom_left, panel_bottom_right, subpanel_current_stats, subpanel_show_attributes, subpanel_categories;
+	private JPanel panel_bottom_left, panel_bottom_right, subpanel_ascii, subpanel_show_attributes, subpanel_categories;
 	private JButton btnNewGame,btnPlayContinue,btnViewStats,btnSaveStats;
-	private JTextArea areaCurrentStats,areaGameMessages,areaPlayerListing;
+	private JTextArea areaAscii,areaGameMessages,areaPlayerListing;
 	private JComboBox comboBoxPlayers;
 	private JLabel lblNumberOfCpu,lblName,lblPlayerListing,lblCardsLeft,lblCommunalPile;
-
 	private JScrollPane scrollPane, scrollPane_2;
-	
 	private JTextField tfCardsLeft;
 	private JTextField tfCommunal;
-
 	private JRadioButton[] radioButton;
 	private JTextField[] tfAttrib;
 	private ButtonGroup radiogroup;
@@ -44,7 +42,7 @@ public class GUI extends JFrame implements ActionListener {
 	
 	
 	/**
-	 * Create the frame */
+	 * Create the main GUI frame */
 	public GUI() {
 		// JFrame settings
 		setTitle("Top Trumps: Dinosaurs!");
@@ -69,6 +67,9 @@ public class GUI extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 	
+	/**
+	 * Helper for north panel
+	 */
 	public void layoutTop(){
 		// Top 'menu' panel
 		this.panel_top = new JPanel();
@@ -99,29 +100,31 @@ public class GUI extends JFrame implements ActionListener {
 		this.btnSaveStats.addActionListener(this);
 		}
 	
+	/**
+	 * Helper for center panel
+	 */
 	public void layoutMiddle(){
 		// Middle 'views' panel
 		this.panel_middle = new JPanel();
 		contentPane.add(panel_middle, BorderLayout.CENTER);
 		panel_middle.setLayout(new GridLayout());
 		
-		// Left side sub-panel for current game statistics
+		// Left side sub-panel for Ascii art of the game.
 		// Panel properties
-		this.subpanel_current_stats = new JPanel();
-		subpanel_current_stats.setBackground(new Color(134, 199, 156));
-		panel_middle.add(subpanel_current_stats);
-		subpanel_current_stats.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
-		
-		//Current Statistics box properties
-		this.areaCurrentStats = new JTextArea();
-		
-		this.areaCurrentStats.setBackground(new Color(134, 199, 156));
-		this.areaCurrentStats.setEditable(false); // Toggle to allow editing
-		this.areaCurrentStats.setRows(8);
-		this.areaCurrentStats.setColumns(8);
-		// Silliness HERE
-		this.areaCurrentStats.setFont(new Font("Monospaced", Font.BOLD, 3));
+		this.subpanel_ascii = new JPanel();
+		subpanel_ascii.setBackground(new Color(134, 199, 156));
+		panel_middle.add(subpanel_ascii);
+		subpanel_ascii.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+				
+		//Ascii box properties
+		this.areaAscii = new JTextArea();
+		this.areaAscii.setBackground(new Color(134, 199, 156));
+		this.areaAscii.setEditable(false); // Toggle to allow editing
+		this.areaAscii.setRows(8);
+		this.areaAscii.setColumns(8);
+		this.areaAscii.setFont(new Font("Monospaced", Font.BOLD, 3));
+		this.areaAscii.setForeground(Color.WHITE);
+		// ASCII ART STRINGS STORED HERE. This string has been fully escaped.
 		String dino1 = "$$$$$$$$$$$$$$$$$$$$$$$$$$$**\"\"\"\"`` ````\"\"\"#*R$$$$$$$$$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$"
 				+ "$$$$$$$$$$$$$*\"\"      ..........      `\"#$$$$$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$$$$#\"    .u"
 				+ "e@$$$********$$$$Weu.   `\"*$$$$$$$$$$$$$$$$$$$\r\n$$$$$$$$$$$$$$$$#\"   ue$$*#\"\"              "
@@ -177,11 +180,9 @@ public class GUI extends JFrame implements ActionListener {
 				+ "PPPPP88 88       88 88          `\"Y8ba,   \r\n88      .a8P  88 88       88 \"8a,   ,a8\" aa    ]8I 88,    "
 				+ ",88 \"8a,   ,a88 88         aa    ]8I  \r\n88888888Y\"'   88 88       88  `\"YbbdP\"'  `\"YbbdP\"' `\"8bbdP"
 				+ "\"Y8  `\"YbbdP'Y8 88         `\"YbbdP\"'  ";
-		this.areaCurrentStats.setText(dino2 + "\n\n" + dino1);
-		
-		this.areaCurrentStats.setForeground(Color.WHITE);
-		
-		subpanel_current_stats.add(areaCurrentStats);
+		this.areaAscii.setText(dino2 + "\n\n" + dino1);
+		// Add to the panel
+		subpanel_ascii.add(areaAscii);
 		
 	
 		//Sub-panel for showing the attributes read from a card
@@ -190,14 +191,14 @@ public class GUI extends JFrame implements ActionListener {
 		subpanel_show_attributes.setLayout(new GridLayout(0,1,0,0));
 		panel_middle.add(subpanel_show_attributes);
 		
-		
+		// Radio button array construction
 		this.radioButton = new JRadioButton[NUM_CATEGORIES];
 		for(int i = 0; i < NUM_CATEGORIES; i++) {
 			radioButton[i] = new JRadioButton(mainDeck.getCategoryName(i + 1));
 			radioButton[i].setEnabled(false);
 		}
-		
-		this.lblName = new JLabel("Description");
+		// 'Description label 
+		this.lblName = new JLabel();
 		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
 
 		
@@ -239,6 +240,9 @@ public class GUI extends JFrame implements ActionListener {
 
 	}
 
+	/**
+	 * Helper for south panel
+	 */
 	public void layoutBottom(){
 
 		// Bottom panel for in-game messages and save game button
