@@ -15,7 +15,7 @@ public class StatsReportFrame extends JFrame implements ActionListener {
 	private String dbname = "m_16_2036032b";
 	private String tableName = "TopTrumpsData";
 	private String username = "m_16_2036032b";
-private String password = "2036032b";
+	private String password = "2036032b";
 	private JButton saveToFile;
 
 	// DB Columns
@@ -24,10 +24,7 @@ private String password = "2036032b";
 	private int humanWins;
 	private double avgDraws;
 	private int mostRounds;
-	private final int maxPlayers=5; // cannot have more than 5
-
-	// Output file
-	private final String gameStatsFile = "gameStatsFile.txt";
+	private final int maxPlayers=5; 	// cannot have more than 5
 
 	// Game instance
 	private Game game;
@@ -109,7 +106,7 @@ private String password = "2036032b";
 		newConnection();
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT * FROM TopTrumpsData;";
+		String sql = "SELECT * FROM " + tableName + ";";
 
 		try {
 			stmt = connection.createStatement();
@@ -156,25 +153,25 @@ private String password = "2036032b";
 
 			// If database wasn't empty variable will still be initialised at -1
 			if(nextGameNumber == -1) {
-				String sql = "SELECT MAX(game_number) FROM TopTrumpsData;";
+				String sql = "SELECT MAX(game_number) FROM " + tableName + ";";
 				ResultSet resultSet = stmt.executeQuery(sql);
 				resultSet.next();			// Get the row returned by the MAX query
 				nextGameNumber = resultSet.getInt("max") + 1; // Get latest game number in database as it will be the 'max' and add one for the current game to be save
 			}
 
-			String sql2 = "INSERT INTO TopTrumpsData(game_number) VALUES(" + nextGameNumber + ")";
+			String sql2 = "INSERT INTO " + tableName + "(game_number) VALUES(" + nextGameNumber + ")";
 			stmt.executeUpdate(sql2);
 
 			// statements to insert new data
 			int i=0;
-			String updateDraws = "UPDATE TopTrumpsData SET draws="+draws+" WHERE game_number= " + nextGameNumber + ";";
-			String updateWinPlayer = "UPDATE TopTrumpsData SET winning_player="+winPlayer+" WHERE game_number= " + nextGameNumber + ";";
-			String roundsPlayed = "UPDATE TopTrumpsData SET rounds_played="+nrRoundsPlayed+" WHERE game_number= " + nextGameNumber + ";";			
-			String  humanRounds= "UPDATE TopTrumpsData SET player_zero_rounds="+player[0]+" WHERE game_number= " + nextGameNumber + ";";
-			String  player1String= "UPDATE TopTrumpsData SET player_one_rounds="+player[1]+" WHERE game_number= " + nextGameNumber + ";";
-			String  player2String= "UPDATE TopTrumpsData SET player_two_rounds="+player[2]+" WHERE game_number= " + nextGameNumber + ";";	
-			String  player3String= "UPDATE TopTrumpsData SET player_three_rounds="+player[3]+" WHERE game_number= " + nextGameNumber + ";";	
-			String  player4String= "UPDATE TopTrumpsData SET player_four_rounds="+player[4]+" WHERE game_number= " + nextGameNumber + ";";		
+			String updateDraws = "UPDATE " + tableName + " SET draws="+draws+" WHERE game_number= " + nextGameNumber + ";";
+			String updateWinPlayer = "UPDATE " + tableName + " SET winning_player="+winPlayer+" WHERE game_number= " + nextGameNumber + ";";
+			String roundsPlayed = "UPDATE " + tableName + " SET rounds_played="+nrRoundsPlayed+" WHERE game_number= " + nextGameNumber + ";";			
+			String  humanRounds= "UPDATE " + tableName + " SET player_zero_rounds="+player[0]+" WHERE game_number= " + nextGameNumber + ";";
+			String  player1String= "UPDATE " + tableName + " SET player_one_rounds="+player[1]+" WHERE game_number= " + nextGameNumber + ";";
+			String  player2String= "UPDATE " + tableName + " SET player_two_rounds="+player[2]+" WHERE game_number= " + nextGameNumber + ";";	
+			String  player3String= "UPDATE " + tableName + " SET player_three_rounds="+player[3]+" WHERE game_number= " + nextGameNumber + ";";	
+			String  player4String= "UPDATE " + tableName + " SET player_four_rounds="+player[4]+" WHERE game_number= " + nextGameNumber + ";";		
 			String [] updateDataArray= {updateDraws, updateWinPlayer, roundsPlayed, humanRounds, player1String, player2String, player3String, player4String, };	
 
 			for (i=0; i<3+nrOfPlayers; i++) 
@@ -219,11 +216,11 @@ private String password = "2036032b";
 		newConnection();
 		Statement stmt = null;
 
-		String gamesPlayedSQL = "SELECT MAX(game_number) FROM TopTrumpsData;";
-		String computerWinsSQL = "SELECT COUNT(winning_player) FROM TopTrumpsData WHERE winning_player>0;";
-		String humanWinsSQL = "SELECT COUNT(winning_player) FROM TopTrumpsData WHERE winning_player=0;";
-		String avgDrawsSQL = "SELECT AVG(draws) FROM TopTrumpsData;";
-		String maxRoundsSQL = "SELECT MAX(rounds_played) FROM TopTrumpsData;";
+		String gamesPlayedSQL = "SELECT MAX(game_number) FROM " + tableName + ";";
+		String computerWinsSQL = "SELECT COUNT(winning_player) FROM " + tableName + " WHERE winning_player>0;";
+		String humanWinsSQL = "SELECT COUNT(winning_player) FROM " + tableName + " WHERE winning_player=0;";
+		String avgDrawsSQL = "SELECT AVG(draws) FROM " + tableName + ";";
+		String maxRoundsSQL = "SELECT MAX(rounds_played) FROM " + tableName + ";";
 
 		try {
 			stmt = connection.createStatement();
@@ -257,7 +254,7 @@ private String password = "2036032b";
 	{
 
 		try {
-			File gameStatsFile = new File ("gameStatsFile.txt");
+			File gameStatsFile = new File("gameStatsFile.txt");
 			gameStatsFile.createNewFile();
 			FileWriter writeStats = new FileWriter(gameStatsFile);
 			writeStats.write(buildReport());
